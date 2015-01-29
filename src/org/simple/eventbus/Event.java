@@ -25,10 +25,14 @@
 package org.simple.eventbus;
 
 /**
+ * 采用享元模式 TODO
+ * 
  * @author mrsimple
  */
 public final class Event {
     public static final String DEFAULT_TAG = "default";
+
+    Object subscriber;
     /**
      * 
      */

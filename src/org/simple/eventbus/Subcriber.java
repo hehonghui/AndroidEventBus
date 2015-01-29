@@ -37,7 +37,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Subcriber {
+    /**
+     * @return
+     */
     String tag() default Event.DEFAULT_TAG;
 
+    /**
+     * @return
+     */
     ThreadMode mode() default ThreadMode.MAIN;
 }

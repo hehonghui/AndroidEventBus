@@ -41,13 +41,17 @@ public class Subscription {
      */
     SubscribeMethod subscribeMethod;
 
+    /**
+     * @param subscriber
+     * @param method
+     */
     public Subscription(Object subscriber, SubscribeMethod method) {
         this.subscriber = subscriber;
         this.subscribeMethod = method;
     }
 
     /**
-     * 
+     * @param event
      */
     public void invoke(Object event) {
         try {

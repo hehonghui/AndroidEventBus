@@ -29,8 +29,9 @@ import android.util.Log;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -83,7 +84,6 @@ public final class EventBus {
                 }
             }
         }
-
         return sEventBusDefault;
     }
 
@@ -101,6 +101,9 @@ public final class EventBus {
         mDesc = desc;
     }
 
+    /**
+     * @param subscriber
+     */
     public void register(Object subscriber) {
         final Method[] allMethods = subscriber.getClass().getMethods();
         for (int i = 0; i < allMethods.length; i++) {
@@ -122,6 +125,11 @@ public final class EventBus {
         } // end for
     }
 
+    /**
+     * @param event
+     * @param method
+     * @param subscriber
+     */
     private void subscibe(Event event, SubscribeMethod method, Object subscriber) {
         CopyOnWriteArrayList<Subscription> subscriptionLists = mSubcriberMap
                 .get(event);
@@ -141,17 +149,28 @@ public final class EventBus {
      * @param subscriber
      */
     public void unregister(Object subscriber) {
-        Iterator<Entry<Event, CopyOnWriteArrayList<Subscription>>> iterator = mSubcriberMap
-                .entrySet().iterator();
+        Iterator<CopyOnWriteArrayList<Subscription>> iterator = mSubcriberMap
+                .values().iterator();
         while (iterator.hasNext()) {
-            Entry<Event, CopyOnWriteArrayList<Subscription>> item = iterator
-                    .next();
-            CopyOnWriteArrayList<Subscription> subscriptions = item.getValue();
-            for (Subscription subscription : subscriptions) {
-                if (subscription.subscriber.equals(subscriber)) {
-                    Log.d(getDescriptor(), "### 移除订阅");
-                    iterator.remove();
+            CopyOnWriteArrayList<Subscription> subscriptions = iterator.next();
+            if (subscriptions != null) {
+                //
+                List<Subscription> foundSubscriptions = new LinkedList<Subscription>();
+                Iterator<Subscription> subIterator = subscriptions.iterator();
+                while (subIterator.hasNext()) {
+                    Subscription subscription = subIterator.next();
+                    if (subscription.subscriber.equals(subscriber)) {
+                        Log.d(getDescriptor(), "### 移除订阅 " + subscriber.getClass().getName());
+                        foundSubscriptions.add(subscription);
+                    }
                 }
+
+                subscriptions.removeAll(foundSubscriptions);
+            }
+
+            // 如果针对某个Event的订阅者数量为空了,那么需要从map中清除
+            if (subscriptions == null || subscriptions.size() == 0) {
+                iterator.remove();
             }
         }
 
@@ -178,6 +197,9 @@ public final class EventBus {
         dispatchEvents(event);
     }
 
+    /**
+     * @param event
+     */
     private void dispatchEvents(Object event) {
         Queue<Event> eventsQueue = localEvents.get();
         while (eventsQueue.size() > 0) {
@@ -204,6 +226,9 @@ public final class EventBus {
         }
     }
 
+    /**
+     * @return
+     */
     public String getDescriptor() {
         return mDesc;
     }

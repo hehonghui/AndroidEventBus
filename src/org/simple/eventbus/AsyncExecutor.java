@@ -57,6 +57,8 @@ public class AsyncExecutor extends HandlerThread {
     }
 
     /**
+     * 将订阅的函数执行在异步线程中
+     * 
      * @param subscription
      * @param event
      */
