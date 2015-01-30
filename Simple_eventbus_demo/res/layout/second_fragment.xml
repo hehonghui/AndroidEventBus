@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cccccc"
+    android:orientation="vertical"
+    android:padding="3dp" >
+
+    <Button
+        android:id="@+id/my_button_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="回到到第一页" />
+
+    <Button
+        android:id="@+id/my_post_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="发布消息" />
+
+    <Button
+        android:id="@+id/my_post_event_tag_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="发布消息 ( tag == hello )" />
+
+    <Button
+        android:id="@+id/my_post_async_event_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="发布消息 ( mode == async )" />
+
+</LinearLayout>

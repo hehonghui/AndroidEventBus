@@ -183,7 +183,7 @@ public final class EventBus {
      * @param event
      */
     public void post(Object event) {
-        postWithTag(Event.DEFAULT_TAG, event);
+        postWithTag(event, Event.DEFAULT_TAG);
     }
 
     /**
@@ -192,7 +192,7 @@ public final class EventBus {
      * @param tag 事件的tag, 类似于BroadcastReceiver的action
      * @param event 要发布的事件
      */
-    public void postWithTag(String tag, Object event) {
+    public void postWithTag(Object event, String tag) {
         localEvents.get().offer(new Event(event.getClass(), tag));
         dispatchEvents(event);
     }
@@ -215,6 +215,9 @@ public final class EventBus {
      */
     private void invoke(Event holder, Object event) {
         CopyOnWriteArrayList<Subscription> subscriptions = mSubcriberMap.get(holder);
+        if (subscriptions == null) {
+            return;
+        }
         for (Subscription subscription : subscriptions) {
             final ThreadMode mode = subscription.subscribeMethod.threadMode;
             // 异步执行目标函数
