@@ -22,32 +22,13 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus;
+package org.simple.eventbus.handler;
 
-import java.lang.reflect.Method;
+import org.simple.eventbus.Subscription;
 
 /**
- * 订阅的函数
- * 
  * @author mrsimple
  */
-public class SubscribeMethod {
-    /**
-     * 订阅者
-     */
-    Method targetMethod;
-    /**
-     * 事件类型
-     */
-    Class<?> eventType;
-    /**
-     * 
-     */
-    ThreadMode threadMode;
-
-    public SubscribeMethod(Method md, Class<?> eventType, ThreadMode mode) {
-        this.targetMethod = md;
-        this.eventType = eventType;
-        this.threadMode = mode;
-    }
+public interface EventHandler {
+    public void handleEvent(Subscription subscription, Object event);
 }

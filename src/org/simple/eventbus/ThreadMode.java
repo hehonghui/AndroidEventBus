@@ -31,11 +31,11 @@ package org.simple.eventbus;
  */
 public enum ThreadMode {
     /**
-     * 执行在UI线程
+     * 将事件执行在UI线程
      */
     MAIN,
     /**
-     * 执行在一个子线程中
+     * 将事件执行在一个子线程中
      */
     ASYNC
 }

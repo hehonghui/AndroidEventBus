@@ -22,27 +22,34 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus.test.mock;
+package org.simple.eventbus.handler;
 
-import org.simple.eventbus.Subcriber;
+import org.simple.eventbus.Subscription;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
+ * 事件处理器
+ * 
  * @author mrsimple
  */
-public class MockFragment {
-    @Subcriber
-    void onEvent(Object event) {
-        System.out.println("invoke onEvent(Object event) in " + this.getClass().getName());
+public class DefaultEventHandler {
+
+    /**
+     * @param subscription
+     * @param event
+     */
+    public void handleEvent(Subscription subscription, Object event) {
+        try {
+            // 执行
+            subscription.targetMethod.invoke(subscription.subscriber, event);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Subcriber
-    void onEvent(Person person) {
-        System.out.println("invoke onEvent(Person person) in " + this.getClass().getName());
-        System.out.println("person name =  " + person.name);
-    }
-
-    @Subcriber
-    void hello(Object event) {
-        System.out.println("invoke hello in " + this.getClass().getName());
-    }
 }

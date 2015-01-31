@@ -26,11 +26,13 @@ package org.simple.eventbus.test;
 
 import junit.framework.TestCase;
 
-import org.simple.eventbus.Event;
-
+import org.simple.eventbus.EventType;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author mrsimple
+ */
 public class SubscriberHolderTest extends TestCase {
 
     protected void setUp() throws Exception {
@@ -45,11 +47,11 @@ public class SubscriberHolderTest extends TestCase {
      * 检测SubscriberHolder作为map的key的唯一性
      */
     public void testKeysInMap() {
-        Map<Event, String> map = new HashMap<Event, String>();
+        Map<EventType, String> map = new HashMap<EventType, String>();
 
         String tag = "default";
         for (int i = 0; i < 10; i++) {
-            map.put(new Event(String.class, tag), tag + i);
+            map.put(new EventType(String.class, tag), tag + i);
         }
 
         assertEquals(1, map.size());

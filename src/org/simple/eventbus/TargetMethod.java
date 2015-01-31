@@ -27,38 +27,42 @@ package org.simple.eventbus;
 import java.lang.reflect.Method;
 
 /**
- * 订阅者对象,包含订阅者和目标方法
+ * 订阅某个事件的函数类,包含了函数信息、参数名、执行的线程模式
  * 
  * @author mrsimple
  */
-public class Subscription {
+ class TargetMethod {
     /**
-     * 
+     * 订阅者的目标函数
      */
-    public Object subscriber;
+    public Method method;
     /**
-     * 
+     * 事件类型
      */
-    public Method targetMethod;
-    
-    public ThreadMode threadMode ;
+    public Class<?> eventType;
+    /**
+     * 处理事件的线程模式
+     */
+    public ThreadMode threadMode;
 
     /**
-     * @param subscriber
-     * @param method
+     * @param md
+     * @param eventType
+     * @param mode
      */
-    public Subscription(Object subscriber, TargetMethod targetMethod) {
-        this.subscriber = subscriber;
-        this.targetMethod = targetMethod.method;
-        this.threadMode = targetMethod.threadMode ;
+    public TargetMethod(Method md, Class<?> eventType, ThreadMode mode) {
+        this.method = md;
+        this.method.setAccessible(true);
+        this.eventType = eventType;
+        this.threadMode = mode;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((subscriber == null) ? 0 : subscriber.hashCode());
-        result = prime * result + ((targetMethod == null) ? 0 : targetMethod.hashCode());
+        result = prime * result + ((eventType == null) ? 0 : eventType.hashCode());
+        result = prime * result + ((method == null) ? 0 : method.getName().hashCode());
         return result;
     }
 
@@ -70,16 +74,16 @@ public class Subscription {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Subscription other = (Subscription) obj;
-        if (subscriber == null) {
-            if (other.subscriber != null)
+        TargetMethod other = (TargetMethod) obj;
+        if (eventType == null) {
+            if (other.eventType != null)
                 return false;
-        } else if (!subscriber.equals(other.subscriber))
+        } else if (!eventType.equals(other.eventType))
             return false;
-        if (targetMethod == null) {
-            if (other.targetMethod != null)
+        if (method == null) {
+            if (other.method != null)
                 return false;
-        } else if (!targetMethod.equals(other.targetMethod))
+        } else if (!method.getName().equals(other.method.getName()))
             return false;
         return true;
     }

@@ -22,16 +22,22 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus.demo;
+package org.simple.eventbus.test;
 
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.test.suitebuilder.TestSuiteBuilder;
 
-public class MainActivity extends FragmentActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
+/**
+ * @author mrsimple
+ */
+public class BusTestSuite extends TestSuite {
+    public static Test suite() {
+        return new TestSuiteBuilder(BusTestSuite.class)
+                .includePackages(
+                        "org.simple.eventbus.test.EventBusTest",
+                        "org.simple.eventbus.test.SubscriberHolderTest")
+                .build();
     }
-
 }

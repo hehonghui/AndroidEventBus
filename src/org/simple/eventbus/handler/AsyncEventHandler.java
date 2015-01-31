@@ -22,38 +22,56 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus;
+package org.simple.eventbus.handler;
 
 import android.os.Handler;
 import android.os.HandlerThread;
 
+import org.simple.eventbus.Subscription;
+
 /**
+ * 事件的异步处理,将事件的处理函数执行在子线程中
+ * 
  * @author mrsimple
  */
-public class AsyncExecutor extends HandlerThread {
+public class AsyncEventHandler extends HandlerThread implements EventHandler {
 
     /**
-     * 
+     * 异步执行器
      */
-    static AsyncExecutor sInstance = new AsyncExecutor(
-            AsyncExecutor.class.getSimpleName());
+    private static AsyncEventHandler sInstance = new AsyncEventHandler(
+            AsyncEventHandler.class.getSimpleName());
     /**
-     * 
+     * 启动异步线程
      */
     static {
         sInstance.start();
     }
 
     /**
-     * 
+     * 关联了AsyncExecutor消息队列的Handler
      */
     private static Handler mAsyncHandler = new Handler(sInstance.getLooper());
 
     /**
+     * 事件处理器
+     */
+    DefaultEventHandler mEventHandlerProxy = new DefaultEventHandler();
+
+    /**
      * @param name
      */
-    private AsyncExecutor(String name) {
+    private AsyncEventHandler(String name) {
         super(name);
+    }
+
+    /**
+     * 获取异步处理器的单例
+     * 
+     * @return
+     */
+    public static EventHandler getInstance() {
+        return sInstance;
     }
 
     /**
@@ -62,12 +80,12 @@ public class AsyncExecutor extends HandlerThread {
      * @param subscription
      * @param event
      */
-    public void invokeAsync(final Subscription subscription, final Object event) {
+    public void handleEvent(final Subscription subscription, final Object event) {
         mAsyncHandler.post(new Runnable() {
 
             @Override
             public void run() {
-                subscription.invoke(event);
+                mEventHandlerProxy.handleEvent(subscription, event);
             }
         });
     }

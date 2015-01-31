@@ -26,10 +26,64 @@ package org.simple.eventbus.test.mock;
 
 import org.simple.eventbus.Subcriber;
 
+/**
+ * @author mrsimple
+ */
 public class MockActivity {
+
+    @Subcriber
+    void onEventNoParam() {
+    }
+
+    @Subcriber
+    void onEventTwoParam(Person person, int id) {
+
+    }
+
     @Subcriber
     void onEvent(Person person) {
         System.out.println("invoke onEvent(Person person) in " + this.getClass().getName());
         System.out.println("person name =  " + person.name);
+    }
+
+    /**
+     * 参数相同,函数名不同
+     * 
+     * @param person
+     */
+    @Subcriber
+    void addPerson(Person person) {
+        System.out.println("invoke addPerson(Person person) in " + this.getClass().getName());
+        System.out.println("person name =  " + person.name);
+    }
+
+    /**
+     * test tag
+     * 
+     * @param person
+     */
+    @Subcriber(tag = "test")
+    void methodWithTag(Person person) {
+
+    }
+
+    /**
+     * another tag
+     * 
+     * @param person
+     */
+    @Subcriber(tag = "another")
+    void methodWithAnotherTag(Person person) {
+
+    }
+
+    /**
+     * 同名函数,但是参数不同
+     * 
+     * @param object
+     */
+    @Subcriber
+    void onEvent(Object object) {
+        System.out.println("invoke onEvent(Person person) in " + this.getClass().getName());
     }
 }

@@ -22,16 +22,16 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus.demo;
+package org.simple.eventbus.test.mock;
 
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import org.simple.eventbus.Subcriber;
 
-public class MainActivity extends FragmentActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+/**
+ * @author mrsimple
+ */
+public class SingleSubscriber {
+    @Subcriber
+    void onEvent(Object event) {
+        System.out.println("invoke onEvent(Object event) in " + this.getClass().getName());
     }
-
 }

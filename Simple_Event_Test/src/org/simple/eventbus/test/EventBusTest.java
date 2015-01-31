@@ -25,11 +25,17 @@
 package org.simple.eventbus.test;
 
 import android.test.AndroidTestCase;
+import android.util.Log;
 
 import org.simple.eventbus.EventBus;
+import org.simple.eventbus.EventType;
 import org.simple.eventbus.test.mock.MockActivity;
 import org.simple.eventbus.test.mock.Person;
+import org.simple.eventbus.test.mock.SingleSubscriber;
 
+/**
+ * @author mrsimple
+ */
 public class EventBusTest extends AndroidTestCase {
 
     EventBus bus = new EventBus();
@@ -45,18 +51,76 @@ public class EventBusTest extends AndroidTestCase {
     /**
      * 
      */
-    public void testSubscribe() {
+    public void testRepeatRegister() {
         MockActivity mockActivity = new MockActivity();
-        bus.register(mockActivity);
-        bus.register(mockActivity);
-        bus.register(mockActivity);
-        bus.register(mockActivity);
+        for (int i = 0; i < 10; i++) {
+            // 测试重复注册一个对象
+            bus.register(mockActivity);
+        }
 
+        // 类型为Person的有效注册函数为2个.
+        assertEquals(2, bus.getSubscriptions(new EventType(Person.class)).size());
+        // Object类型的函数为1一个
+        assertEquals(1, bus.getSubscriptions(new EventType(Object.class)).size());
+    }
+
+    /**
+     * 
+     */
+    public void testRepeatRegisterWithTag() {
+        MockActivity mockActivity = new MockActivity();
+        for (int i = 0; i < 10; i++) {
+            // 测试重复注册一个对象
+            bus.register(mockActivity);
+        }
+
+        // 类型为Person且tag为"test"的有效注册函数为1个.
+        assertEquals(1, bus.getSubscriptions(new EventType(Person.class, "test")).size());
+
+        // 类型为Person且tag为"another"的有效注册函数为1个.
+        assertEquals(1, bus.getSubscriptions(new EventType(Person.class, "another")).size());
+    }
+
+    /**
+     * 
+     */
+    public void testSubscribeAndPost() {
+        MockActivity mockActivity = new MockActivity();
+        // 正常注册与发布
+        bus.register(mockActivity);
         bus.post(new Person("mr.simple"));
+
+        // 移除对象
         bus.unregister(mockActivity);
-
+        // 移除对象之后post不会出现问题
         bus.post(new Person("mr.simple"));
+        // 移除对象测试
+        assertEquals(0, bus.getSubscriptions(new EventType(Person.class)).size());
+        assertEquals(0, bus.getSubscriptions(new EventType(Object.class)).size());
+    }
 
+    public void testRegisterNull() {
+        bus.register(null);
+    }
+
+    public void testUnRegisterNull() {
+        bus.unregister(null);
+    }
+
+    /**
+     * 
+     */
+    public void testPerformence() {
+        long start = System.nanoTime();
+        for (int i = 0; i < 1000; i++) {
+            SingleSubscriber subscriber = new SingleSubscriber();
+            bus.register(subscriber);
+        }
+        long end = System.nanoTime();
+        Log.d(getName(), "### register 1000 subscriber, time = " + (end - start) + " ns, "
+                + (end - start) / 1 * 1e6 + " ms");
+
+        assertEquals(1000, bus.getSubscriptions(new EventType(Object.class)).size());
     }
 
 }
