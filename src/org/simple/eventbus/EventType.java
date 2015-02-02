@@ -28,8 +28,6 @@ package org.simple.eventbus;
  * <p>
  * 该类是描述一个函数唯一性的对象，参数类型、tag两个条件保证了对象的唯一性.通过该类的对象来查找注册了相应类型和tag的所有订阅者{@see
  * Subscription}, 并且在接到消息时调用所有订阅者对应的函数.
- * <p>
- * 采用享元模式 TODO
  * 
  * @author mrsimple
  */
