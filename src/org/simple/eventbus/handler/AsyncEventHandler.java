@@ -34,44 +34,24 @@ import org.simple.eventbus.Subscription;
  * 
  * @author mrsimple
  */
-public class AsyncEventHandler extends HandlerThread implements EventHandler {
+public class AsyncEventHandler implements EventHandler {
 
     /**
-     * 异步执行器
+     * 
      */
-    private static AsyncEventHandler sInstance = new AsyncEventHandler(
-            AsyncEventHandler.class.getSimpleName());
-    /**
-     * 启动异步线程
-     */
-    static {
-        sInstance.start();
-    }
-
-    /**
-     * 关联了AsyncExecutor消息队列的Handler
-     */
-    private static Handler mAsyncHandler = new Handler(sInstance.getLooper());
+    DispatcherThread mDispatcherThread;
 
     /**
      * 事件处理器
      */
-    DefaultEventHandler mEventHandlerProxy = new DefaultEventHandler();
-
+    EventHandler mEventHandler = new DefaultEventHandler();
+    
     /**
      * @param name
      */
-    private AsyncEventHandler(String name) {
-        super(name);
-    }
-
-    /**
-     * 获取异步处理器的单例
-     * 
-     * @return
-     */
-    public static EventHandler getInstance() {
-        return sInstance;
+    public AsyncEventHandler() {
+        mDispatcherThread = new DispatcherThread(AsyncEventHandler.class.getSimpleName());
+        mDispatcherThread.start();
     }
 
     /**
@@ -81,13 +61,49 @@ public class AsyncEventHandler extends HandlerThread implements EventHandler {
      * @param event
      */
     public void handleEvent(final Subscription subscription, final Object event) {
-        mAsyncHandler.post(new Runnable() {
+        mDispatcherThread.post(new Runnable() {
 
             @Override
             public void run() {
-                mEventHandlerProxy.handleEvent(subscription, event);
+                mEventHandler.handleEvent(subscription, event);
             }
         });
+    }
+
+    /**
+     * @author mrsimple
+     */
+    class DispatcherThread extends HandlerThread {
+
+        /**
+         * 关联了AsyncExecutor消息队列的Handler
+         */
+        protected Handler mAsyncHandler;
+
+        /**
+         * @param name
+         */
+        public DispatcherThread(String name) {
+            super(name);
+        }
+
+        /**
+         * @param runnable
+         */
+        public void post(Runnable runnable) {
+            if (mAsyncHandler == null) {
+                throw new NullPointerException("mAsyncHandler == null, please call start() first.");
+            }
+
+            mAsyncHandler.post(runnable);
+        }
+
+        @Override
+        public synchronized void start() {
+            super.start();
+            mAsyncHandler = new Handler(this.getLooper());
+        }
+
     }
 
 }

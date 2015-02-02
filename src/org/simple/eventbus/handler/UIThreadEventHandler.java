@@ -22,24 +22,41 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus;
+package org.simple.eventbus.handler;
+
+import android.os.Handler;
+import android.os.Looper;
+
+import org.simple.eventbus.Subscription;
 
 /**
- * 事件发布的线程模式枚举
+ * 事件在UI线程处理
  * 
  * @author mrsimple
  */
-public enum ThreadMode {
+public class UIThreadEventHandler implements EventHandler {
+
     /**
-     * 将事件执行在UI线程
+     * 
      */
-    MAIN,
+    private Handler mUIHandler = new Handler(Looper.getMainLooper());
     /**
-     * 在发布线程执行
+     * 
      */
-    POST,
+    DefaultEventHandler mEventHandler = new DefaultEventHandler();
+
     /**
-     * 将事件执行在一个子线程中
+     * @param subscription
+     * @param event
      */
-    ASYNC
+    public void handleEvent(final Subscription subscription, final Object event) {
+        mUIHandler.post(new Runnable() {
+
+            @Override
+            public void run() {
+                mEventHandler.handleEvent(subscription, event);
+            }
+        });
+    }
+
 }

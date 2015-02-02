@@ -26,9 +26,6 @@ package org.simple.eventbus.handler;
 
 import org.simple.eventbus.Subscription;
 
-/**
- * @author mrsimple
- */
 public interface EventHandler {
-    public void handleEvent(Subscription subscription, Object event);
+    void handleEvent(Subscription subscription, Object event);
 }

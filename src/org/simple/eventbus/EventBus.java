@@ -28,6 +28,8 @@ import android.util.Log;
 
 import org.simple.eventbus.handler.AsyncEventHandler;
 import org.simple.eventbus.handler.DefaultEventHandler;
+import org.simple.eventbus.handler.EventHandler;
+import org.simple.eventbus.handler.UIThreadEventHandler;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -62,16 +64,26 @@ public final class EventBus {
     /**
      * 事件队列
      */
-    ThreadLocal<Queue<EventType>> localEvents = new ThreadLocal<Queue<EventType>>() {
+    ThreadLocal<Queue<EventType>> mLocalEvents = new ThreadLocal<Queue<EventType>>() {
         protected java.util.Queue<EventType> initialValue() {
             return new ConcurrentLinkedQueue<EventType>();
         };
     };
 
     /**
+     * 将接收方法执行在UI线程
+     */
+    UIThreadEventHandler mUIThreadEventHandler = new UIThreadEventHandler();
+
+    /**
+     * 哪个线程执行的post,接收方法就执行在哪个线程
+     */
+    EventHandler mPostThreadHandler = new DefaultEventHandler();
+
+    /**
      * 
      */
-    DefaultEventHandler mMainEventHandler = new DefaultEventHandler();
+    EventHandler mAsyncEventHandler = new AsyncEventHandler();
 
     /**
      * 默认的事件总线
@@ -216,7 +228,7 @@ public final class EventBus {
      * @param tag 事件的tag, 类似于BroadcastReceiver的action
      */
     public void post(Object event, String tag) {
-        localEvents.get().offer(new EventType(event.getClass(), tag));
+        mLocalEvents.get().offer(new EventType(event.getClass(), tag));
         dispatchEvents(event);
     }
 
@@ -224,18 +236,12 @@ public final class EventBus {
      * @param event
      */
     private void dispatchEvents(Object event) {
-        Queue<EventType> eventsQueue = localEvents.get();
+        Queue<EventType> eventsQueue = mLocalEvents.get();
         while (eventsQueue.size() > 0) {
             handleEvent(eventsQueue.poll(), event);
         }
     }
 
-    /**
-     * 处理事件
-     *
-     * @param holder
-     * @param event
-     */
     private void handleEvent(EventType eventType, Object event) {
         List<Subscription> subscriptions = mSubcriberMap.get(eventType);
         if (subscriptions == null) {
@@ -244,19 +250,28 @@ public final class EventBus {
 
         for (Subscription subscription : subscriptions) {
             final ThreadMode mode = subscription.threadMode;
-            // 异步执行目标函数
-            if (mode == ThreadMode.ASYNC) {
-                AsyncEventHandler.getInstance().handleEvent(subscription, event);
-            } else {
-                mMainEventHandler.handleEvent(subscription, event);
-            }
+            EventHandler eventHandler = getEventHandler(mode);
+            // 处理事件
+            eventHandler.handleEvent(subscription, event);
         }
     }
 
+    private EventHandler getEventHandler(ThreadMode mode) {
+        if (mode == ThreadMode.ASYNC) {
+            return mAsyncEventHandler;
+        }
+
+        if (mode == ThreadMode.POST) {
+            return mPostThreadHandler;
+        }
+
+        return mUIThreadEventHandler;
+    }
+
     /**
-     * 获取
+     * 获取某个事件的观察者列表
      * 
-     * @param event
+     * @param event 事件类型
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -265,10 +280,24 @@ public final class EventBus {
         return result != null ? result : Collections.EMPTY_LIST;
     }
 
+    /**
+     * 获取已经注册的事件类型列表
+     * 
+     * @return
+     */
     @SuppressWarnings("unchecked")
-    public Collection<EventType> getEvents() {
+    public Collection<EventType> getEventTypes() {
         Collection<EventType> result = mSubcriberMap.keySet();
         return result != null ? result : Collections.EMPTY_LIST;
+    }
+
+    /**
+     * 获取等待处理的事件队列
+     * 
+     * @return
+     */
+    public Queue<EventType> getEventQueue() {
+        return mLocalEvents.get();
     }
 
     /**

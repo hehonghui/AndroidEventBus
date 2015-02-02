@@ -26,6 +26,7 @@ package org.simple.eventbus.demo.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,9 +35,11 @@ import android.widget.TextView;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subcriber;
+import org.simple.eventbus.ThreadMode;
 import org.simple.eventbus.demo.R;
 import org.simple.eventbus.demo.bean.Person;
 
+import java.util.Date;
 import java.util.Random;
 
 /**
@@ -45,8 +48,9 @@ import java.util.Random;
 public class MenuFragment extends Fragment {
 
     public static final String CLICK_TAG = "click_user";
-    
+
     TextView mUserNameTv;
+    TextView mTimerTv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +58,7 @@ public class MenuFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.menu_fragment, container, false);
 
         mUserNameTv = (TextView) rootView.findViewById(R.id.click_tv);
+        mTimerTv = (TextView) rootView.findViewById(R.id.timer_tv);
 
         // 发布事件
         rootView.findViewById(R.id.my_post_button).setOnClickListener(new OnClickListener() {
@@ -87,12 +92,24 @@ public class MenuFragment extends Fragment {
                     }
                 });
 
+        for (int i = 0; i < 4; i++) {
+            threads[i] = new TimerThread(i);
+            threads[i].start();
+        }
+
         EventBus.getDefault().register(this);
         return rootView;
     }
-    
+
+    TimerThread[] threads = new TimerThread[4];
+
     @Override
     public void onDestroy() {
+
+        for (TimerThread timerThread : threads) {
+            timerThread.interrupt();
+        }
+
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
@@ -100,5 +117,63 @@ public class MenuFragment extends Fragment {
     @Subcriber(tag = CLICK_TAG)
     private void updateClickUserName(Person clickPerson) {
         mUserNameTv.setText(clickPerson.name);
+    }
+
+    /*
+     * 模拟从异步线程发来的更新信息
+     */
+    @Subcriber
+    private void updateTime(String time) {
+        Log.e(getTag(), "### update time, thread =  " + Thread.currentThread().getName());
+        mTimerTv.setText(time + " , " + new Date().toGMTString());
+
+        // post 给TimerThread线程
+        EventBus.getDefault().post("I am tom, ", "sayhello");
+    }
+
+    @Subcriber(mode = ThreadMode.POST)
+    private void invokeInPostThread(String event) {
+        Log.e(getTag(), "### invokeInPostThread invoked, thread =  "
+                + Thread.currentThread().getName());
+    }
+
+    /**
+     * @author mrsimple
+     */
+    class TimerThread extends Thread {
+
+        int mIndex;
+
+        public TimerThread(int index) {
+            mIndex = index;
+            setName("TimerThread - " + index);
+            EventBus.getDefault().register(this);
+        }
+
+        /**
+         * @param name
+         */
+        @Subcriber(tag = "sayhello")
+        private void hello(String name) {
+            Log.d(getTag(), "### hello, " + name + " -->  in " + getName());
+        }
+
+        @Override
+        public void run() {
+            Log.e(getTag(), "### queue : " + EventBus.getDefault().getEventQueue().hashCode()
+                    + ", bus = "
+                    + EventBus.getDefault());
+
+            while (!this.isInterrupted()) {
+                EventBus.getDefault().post(getName());
+                try {
+                    Thread.sleep(500 * mIndex + 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            EventBus.getDefault().unregister(this);
+        }
     }
 }
