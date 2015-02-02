@@ -39,7 +39,6 @@ import org.simple.eventbus.ThreadMode;
 import org.simple.eventbus.demo.R;
 import org.simple.eventbus.demo.bean.Person;
 
-import java.util.Date;
 import java.util.Random;
 
 /**
@@ -48,6 +47,8 @@ import java.util.Random;
 public class MenuFragment extends Fragment {
 
     public static final String CLICK_TAG = "click_user";
+
+    PostThread[] threads = new PostThread[4];
 
     TextView mUserNameTv;
     TextView mTimerTv;
@@ -93,25 +94,12 @@ public class MenuFragment extends Fragment {
                 });
 
         for (int i = 0; i < 4; i++) {
-            threads[i] = new TimerThread(i);
+            threads[i] = new PostThread(i);
             threads[i].start();
         }
 
         EventBus.getDefault().register(this);
         return rootView;
-    }
-
-    TimerThread[] threads = new TimerThread[4];
-
-    @Override
-    public void onDestroy() {
-
-        for (TimerThread timerThread : threads) {
-            timerThread.interrupt();
-        }
-
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 
     @Subcriber(tag = CLICK_TAG)
@@ -123,9 +111,11 @@ public class MenuFragment extends Fragment {
      * 模拟从异步线程发来的更新信息
      */
     @Subcriber
-    private void updateTime(String time) {
+    private void updateTime(String name) {
         Log.e(getTag(), "### update time, thread =  " + Thread.currentThread().getName());
-        mTimerTv.setText(time + " , " + new Date().toGMTString());
+
+        // 从哪个线程投递来的消息
+        mTimerTv.setText("from " + name);
 
         // post 给TimerThread线程
         EventBus.getDefault().post("I am tom, ", "sayhello");
@@ -133,18 +123,28 @@ public class MenuFragment extends Fragment {
 
     @Subcriber(mode = ThreadMode.POST)
     private void invokeInPostThread(String event) {
-        Log.e(getTag(), "### invokeInPostThread invoked, thread =  "
+        Log.e(getTag(), "### invokeInPostThread invoke in thread =  "
                 + Thread.currentThread().getName());
+    }
+
+    @Override
+    public void onDestroy() {
+        for (PostThread timerThread : threads) {
+            timerThread.interrupt();
+        }
+
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     /**
      * @author mrsimple
      */
-    class TimerThread extends Thread {
+    class PostThread extends Thread {
 
         int mIndex;
 
-        public TimerThread(int index) {
+        public PostThread(int index) {
             mIndex = index;
             setName("TimerThread - " + index);
             EventBus.getDefault().register(this);
@@ -161,8 +161,7 @@ public class MenuFragment extends Fragment {
         @Override
         public void run() {
             Log.e(getTag(), "### queue : " + EventBus.getDefault().getEventQueue().hashCode()
-                    + ", bus = "
-                    + EventBus.getDefault());
+                    + ", bus = " + EventBus.getDefault());
 
             while (!this.isInterrupted()) {
                 EventBus.getDefault().post(getName());
