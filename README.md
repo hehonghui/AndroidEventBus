@@ -1,4 +1,5 @@
 # ![AndroidEventBus Logo](http://img.blog.csdn.net/20150203120217873)  AndroidEventBus
+
   这是一个Android平台的事件总线框架, 它简化了Activity、Fragment、Service等组件之间的交互，很大程度上降低了它们之间的耦合，使得我们的代码更加简洁，耦合性更低，提升我们的代码质量。      
   
   在往下看之前,你可以考虑这么一个场景,两个Fragment之间的通信你会怎么实现？
@@ -57,7 +58,7 @@ public class YourActivity extends Activity {
     // 含有my_tag,当用户post事件时,只有指定了"my_tag"的事件才会触发该函数,
     // post函数在哪个线程执行,该函数就执行在哪个线程    
     @Subcriber(tag = "my_tag", mode=ThreadMode.POST)
-    private void updateTimeWithTag(String time) {
+    private void updateTimeWithMode(String time) {
         Log.e("", "### update time with my_tag, time = " + time);
     }
 
@@ -68,6 +69,7 @@ public class YourActivity extends Activity {
     }
 }
 ```       
+
   接收函数使用tag来标识可接收的事件类型，与BroadcastReceiver中指定action是一样的,这样可以精准的投递消息。mode可以指定目标函数执行在哪个线程,默认会执行在UI线程,方便用户更新UI。目标方法执行耗时操作时,可以设置mode为ASYNC,使之执行在子线程中。           
   
 4. 在其他组件,例如Activity, Fragment,Service中发布事件      
@@ -78,6 +80,7 @@ public class YourActivity extends Activity {
     EventBus.getDefault().post(new Date().toLocaleString(), "my_tag");
 ```       
    发布事件之后,注册了该事件类型的对象就会接收到响应的事件.
+
 
 
 ## License
