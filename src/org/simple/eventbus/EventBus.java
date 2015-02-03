@@ -36,8 +36,17 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * 启动一个后台线程来发布消息,在死循环中发布消息,默认将接收方法执行在UI线程,如果需要接收方法执行在异步线程,那么则直接使用再开启一个执行线程。
- * 使用享元模式复用Event对象，类似于Handler中的Message.
+ * <p>
+ * EventBus是AndroidEventBus框架的核心类,也是用户的入口类.它存储了用户注册的订阅者信息和方法,
+ * 事件类型和该事件对应的tag标识一个种类的事件{@see EventType},每一种事件对应有一个或者多个订阅者{@see Subscription}
+ * ,订阅者中的订阅函数通过{@see Subcriber}注解来标识tag和线程模型,这样使得用户体检较为友好,代码也更加整洁.
+ * <p>
+ * 用户需要在发布事件前通过@{@see #register(Object)}方法将订阅者注册到EventBus中,EventBus会解析该订阅者中使用了
+ * {@see Subcriber}标识的函数,并且将它们以{@see EventType}为key,以{@see Subscription}
+ * 列表为value存储在map中. 当用户post一个事件时通过事件到map中找到对应的订阅者,然后按照订阅函数的线程模型将函数执行在对应的线程中.
+ * <p>
+ * 最后在不在需要订阅事件时,应该调用{@see #unregister(Object)}函数注销该对象,避免内存泄露!
+ * 例如在Activity或者Fragment的onDestory函数中注销对Activity或者Fragment的订阅.
  * 
  * @author mrsimple
  */
@@ -156,7 +165,7 @@ public final class EventBus {
         }
 
         subscriptionLists.add(newSubscription);
-        // 订阅事件
+        // 将事件类型key和订阅者信息存储到map中
         mSubcriberMap.put(event, subscriptionLists);
     }
 
@@ -213,7 +222,6 @@ public final class EventBus {
      */
     public void post(Object event, String tag) {
         mLocalEvents.get().offer(new EventType(event.getClass(), tag));
-        // dispatchEvents(event);
         mDispatcher.dispatchEvents(event);
     }
 
@@ -250,7 +258,17 @@ public final class EventBus {
     }
 
     /**
-     * @return
+     * clear the events and subcribers map
+     */
+    public synchronized void clear() {
+        mLocalEvents.get().clear();
+        mSubcriberMap.clear();
+    }
+
+    /**
+     * get the descriptor of EventBus
+     * 
+     * @return the descriptor of EventBus
      */
     public String getDescriptor() {
         return mDesc;

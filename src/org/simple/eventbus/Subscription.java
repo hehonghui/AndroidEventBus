@@ -25,11 +25,11 @@ import java.lang.reflect.Method;
  */
 public class Subscription {
     /**
-     * 
+     * 订阅者对象
      */
     public Object subscriber;
     /**
-     * 
+     * 接受者的方法
      */
     public Method targetMethod;
     /**

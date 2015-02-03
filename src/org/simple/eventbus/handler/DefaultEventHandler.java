@@ -27,10 +27,16 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class DefaultEventHandler implements EventHandler {
     /**
+     * handle the event
+     * 
      * @param subscription
      * @param event
      */
     public void handleEvent(Subscription subscription, Object event) {
+        if (subscription == null
+                || subscription.subscriber == null) {
+            return;
+        }
         try {
             // 执行
             subscription.targetMethod.invoke(subscription.subscriber, event);

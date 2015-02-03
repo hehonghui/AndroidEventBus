@@ -1,25 +1,17 @@
 /*
- * The MIT License (MIT)
+ * Copyright (C) 2015 Mr.Simple <bboyfeiyu@gmail.com>
  *
- * Copyright (c) 2014-2015 Umeng, Inc
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.simple.eventbus.demo.fragment;
@@ -40,7 +32,7 @@ import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subcriber;
 import org.simple.eventbus.ThreadMode;
 import org.simple.eventbus.demo.R;
-import org.simple.eventbus.demo.bean.Person;
+import org.simple.eventbus.demo.bean.User;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -51,7 +43,7 @@ import java.util.List;
 public class ConstactFragment extends Fragment {
 
     BaseAdapter mAdapter;
-    List<Person> mConstacts = new LinkedList<Person>();
+    List<User> mConstacts = new LinkedList<User>();
     ListView mListView;
 
     @Override
@@ -66,7 +58,7 @@ public class ConstactFragment extends Fragment {
     }
 
     private void initListView() {
-        mAdapter = new ArrayAdapter<Person>(getActivity(),
+        mAdapter = new ArrayAdapter<User>(getActivity(),
                 android.R.layout.simple_list_item_1, mConstacts);
         mListView.setAdapter(mAdapter);
 
@@ -88,7 +80,7 @@ public class ConstactFragment extends Fragment {
 
     private void mockDatas() {
         for (int i = 0; i < 6; i++) {
-            mConstacts.add(new Person("User - " + i));
+            mConstacts.add(new User("User - " + i));
         }
     }
 
@@ -96,7 +88,7 @@ public class ConstactFragment extends Fragment {
      * @param person
      */
     @Subcriber
-    public void addPerson(Person person) {
+    public void addPerson(User person) {
         mConstacts.add(person);
         mAdapter.notifyDataSetChanged();
     }
@@ -107,7 +99,7 @@ public class ConstactFragment extends Fragment {
      * @param person
      */
     @Subcriber(tag = "remove")
-    private void addPersonPrivate(Person person) {
+    private void addPersonPrivate(User person) {
         mConstacts.remove(person);
         mAdapter.notifyDataSetChanged();
     }
@@ -118,7 +110,7 @@ public class ConstactFragment extends Fragment {
      * @param event
      */
     @Subcriber(tag = "async", mode = ThreadMode.ASYNC)
-    private void asyncMethod(final Person person) {
+    private void asyncMethod(final User person) {
         try {
             final String threadName = Thread.currentThread().getName();
             mListView.post(new Runnable() {

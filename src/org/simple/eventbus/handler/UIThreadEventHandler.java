@@ -22,14 +22,14 @@ import android.os.Looper;
 import org.simple.eventbus.Subscription;
 
 /**
- * 事件在UI线程处理
+ * 事件处理在UI线程,通过Handler将事件处理post到UI线程的消息队列
  * 
  * @author mrsimple
  */
 public class UIThreadEventHandler implements EventHandler {
 
     /**
-     * 
+     * ui handler
      */
     private Handler mUIHandler = new Handler(Looper.getMainLooper());
     /**

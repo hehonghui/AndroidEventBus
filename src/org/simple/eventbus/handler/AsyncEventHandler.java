@@ -29,7 +29,7 @@ import org.simple.eventbus.Subscription;
 public class AsyncEventHandler implements EventHandler {
 
     /**
-     * 
+     * 事件分发线程
      */
     DispatcherThread mDispatcherThread;
 
@@ -37,10 +37,7 @@ public class AsyncEventHandler implements EventHandler {
      * 事件处理器
      */
     EventHandler mEventHandler = new DefaultEventHandler();
-    
-    /**
-     * @param name
-     */
+
     public AsyncEventHandler() {
         mDispatcherThread = new DispatcherThread(AsyncEventHandler.class.getSimpleName());
         mDispatcherThread.start();

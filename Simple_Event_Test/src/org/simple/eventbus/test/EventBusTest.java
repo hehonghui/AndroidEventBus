@@ -1,25 +1,17 @@
 /*
- * The MIT License (MIT)
+ * Copyright (C) 2015 Mr.Simple <bboyfeiyu@gmail.com>
  *
- * Copyright (c) 2014-2015 Umeng, Inc
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.simple.eventbus.test;
@@ -30,8 +22,8 @@ import android.util.Log;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.EventType;
 import org.simple.eventbus.test.mock.MockSubcriber;
-import org.simple.eventbus.test.mock.Person;
 import org.simple.eventbus.test.mock.SingleSubscriber;
+import org.simple.eventbus.test.mock.User;
 
 /**
  * @author mrsimple
@@ -46,6 +38,7 @@ public class EventBusTest extends AndroidTestCase {
 
     protected void tearDown() throws Exception {
         super.tearDown();
+        EventBus.getDefault().clear();
     }
 
     /**
@@ -59,7 +52,7 @@ public class EventBusTest extends AndroidTestCase {
         }
 
         // 类型为Person的有效注册函数为2个.
-        assertEquals(2, bus.getSubscriptions(new EventType(Person.class)).size());
+        assertEquals(2, bus.getSubscriptions(new EventType(User.class)).size());
         // Object类型的函数为1一个
         assertEquals(1, bus.getSubscriptions(new EventType(Object.class)).size());
     }
@@ -75,10 +68,10 @@ public class EventBusTest extends AndroidTestCase {
         }
 
         // 类型为Person且tag为"test"的有效注册函数为1个.
-        assertEquals(1, bus.getSubscriptions(new EventType(Person.class, "test")).size());
+        assertEquals(1, bus.getSubscriptions(new EventType(User.class, "test")).size());
 
         // 类型为Person且tag为"another"的有效注册函数为1个.
-        assertEquals(1, bus.getSubscriptions(new EventType(Person.class, "another")).size());
+        assertEquals(1, bus.getSubscriptions(new EventType(User.class, "another")).size());
     }
 
     /**
@@ -88,14 +81,14 @@ public class EventBusTest extends AndroidTestCase {
         MockSubcriber mockActivity = new MockSubcriber();
         // 正常注册与发布
         bus.register(mockActivity);
-        bus.post(new Person("mr.simple"));
+        bus.post(new User("mr.simple"));
 
         // 移除对象
         bus.unregister(mockActivity);
         // 移除对象之后post不会出现问题
-        bus.post(new Person("mr.simple"));
+        bus.post(new User("mr.simple"));
         // 移除对象测试
-        assertEquals(0, bus.getSubscriptions(new EventType(Person.class)).size());
+        assertEquals(0, bus.getSubscriptions(new EventType(User.class)).size());
         assertEquals(0, bus.getSubscriptions(new EventType(Object.class)).size());
     }
 
