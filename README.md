@@ -12,8 +12,9 @@
  AndroidEventBus类似于观察者模式,通过register函数将需要订阅事件的对象注册到事件总线中,然后根据@Subcriber注解来查找对象中的订阅方法,并且将这些订阅方法和订阅对象存储在map中。当用户在某个地方发布一个事件时,事件总线根据事件的参数类型和tag找到对应的订阅者对象,最后执行订阅者对象中的方法。这些订阅方法会执行在用户指定的线程模型中,比如mode=ThreadMode.ASYNC则表示该订阅方法执行在子线程中,更多细节请看下面的说明。        	
  
 ## 与greenrobot的EventBus的不同
-   greenrobot的<a href="https://github.com/greenrobot/EventBus" target="_blank">EventBus</a>是一个非常流行的开源库,但是它在使用体验上并不友好,例如它的订阅函数必须以onEvent开头,并且如果需要指定该函数运行的线程则又要根据规则将函数名加上执行线程的模式名,这么说很难理解,比如我要将某个事件的接收函数执行在主线程,那么函数名必须为onEventMainThread。那如果我一个订阅者中有两个参数名相同,且都执行在主线程的接收函数呢? 这个时候似乎它就没法处理了。而且规定死了函数命名,那就不能很好的体现该函数的功能,也就是函数的自文档性。AndroidEventBus使用注解来标识接收函数,这样函数名不受限制,比如我可以把接收函数名写成updateUserInfo(Person info),这样就灵活得多了。    
-   另一个不同就是AndroidEventBus增加了一个额外的tag来标识每个接收函数可接收的事件的tag,这类似于Broadcast中的action，比如每个Broadcast对应一个或者多个action,当你发广播时你得指定这个广播的action,然后对应的广播接收器才能收到.greenrobot的EventBus只是根据函数参数类型来标识这个函数是否可以接收某个事件,这样导致只要是参数类型相同,任何的事件它都可以接收到,这样的投递原则就很局限了。比如我有两个事件,一个添加用户的事件, 一个删除用户的事件,他们的参数类型都为User,那么greenrobot的EventBus大概是这样的: 
+   1. greenrobot的<a href="https://github.com/greenrobot/EventBus" target="_blank">EventBus</a>是一个非常流行的开源库,但是它在使用体验上并不友好,例如它的订阅函数必须以onEvent开头,并且如果需要指定该函数运行的线程则又要根据规则将函数名加上执行线程的模式名,这么说很难理解,比如我要将某个事件的接收函数执行在主线程,那么函数名必须为onEventMainThread。那如果我一个订阅者中有两个参数名相同,且都执行在主线程的接收函数呢? 这个时候似乎它就没法处理了。而且规定死了函数命名,那就不能很好的体现该函数的功能,也就是函数的自文档性。AndroidEventBus使用注解来标识接收函数,这样函数名不受限制,比如我可以把接收函数名写成updateUserInfo(Person info),这样就灵活得多了。    
+   2. 另一个不同就是AndroidEventBus增加了一个额外的tag来标识每个接收函数可接收的事件的tag,这类似于Broadcast中的action，比如每个Broadcast对应一个或者多个action,当你发广播时你得指定这个广播的action,然后对应的广播接收器才能收到.greenrobot的EventBus只是根据函数参数类型来标识这个函数是否可以接收某个事件,这样导致只要是参数类型相同,任何的事件它都可以接收到,这样的投递原则就很局限了。比如我有两个事件,一个添加用户的事件, 一个删除用户的事件,他们的参数类型都为User,那么greenrobot的EventBus大概是这样的:    
+   
 ```java
 
 private void onEventMainThread(User aUser) {
