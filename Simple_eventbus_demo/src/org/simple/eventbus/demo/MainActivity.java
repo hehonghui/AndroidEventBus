@@ -26,12 +26,40 @@ package org.simple.eventbus.demo;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+
+import org.simple.eventbus.EventBus;
+import org.simple.eventbus.Subcriber;
+import org.simple.eventbus.ThreadMode;
 
 public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        EventBus.getDefault().unregister(this);
+        // TODO Auto-generated method stub
+        super.onDestroy();
+    }
+
+    @Subcriber
+    private void updateTime(String time) {
+        Log.e("", "### update time = " + time);
+    }
+
+    @Subcriber(tag = "my_tag")
+    private void updateTimeWithTag(String time) {
+        Log.e("", "### update time with my_tag, time = " + time);
+    }
+
+    @Subcriber(tag = "my_tag", mode = ThreadMode.ASYNC)
+    private void updateTimeAsync(String time) {
+        Log.e("", "### update time async , time = " + time);
     }
 
 }
