@@ -9,19 +9,19 @@
         android:id="@+id/my_post_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="添加用户" />
+        android:text="@string/add_user" />
 
     <Button
         android:id="@+id/my_remove_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="移除用户 ( tag == remove )" />
+        android:text="@string/remove_user" />
 
     <Button
         android:id="@+id/my_post_async_event_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="发布消息 ( mode == async )" />
+        android:text="@string/post_async" />
 
     <TextView
         android:id="@+id/click_tv"

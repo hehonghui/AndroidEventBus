@@ -37,7 +37,7 @@ public class BusTestSuite extends TestSuite {
         return new TestSuiteBuilder(BusTestSuite.class)
                 .includePackages(
                         "org.simple.eventbus.test.EventBusTest",
-                        "org.simple.eventbus.test.SubscriberHolderTest")
+                        "org.simple.eventbus.test.EventTypeTest")
                 .build();
     }
 }

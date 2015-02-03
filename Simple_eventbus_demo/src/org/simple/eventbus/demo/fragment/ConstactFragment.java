@@ -45,6 +45,9 @@ import org.simple.eventbus.demo.bean.Person;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author mrsimple
+ */
 public class ConstactFragment extends Fragment {
 
     BaseAdapter mAdapter;
@@ -54,6 +57,7 @@ public class ConstactFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mListView = (ListView) inflater.inflate(R.layout.list_fragment, container, false);
+
         mockDatas();
         initListView();
 
@@ -65,6 +69,7 @@ public class ConstactFragment extends Fragment {
         mAdapter = new ArrayAdapter<Person>(getActivity(),
                 android.R.layout.simple_list_item_1, mConstacts);
         mListView.setAdapter(mAdapter);
+
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -120,7 +125,8 @@ public class ConstactFragment extends Fragment {
 
                 @Override
                 public void run() {
-                    Toast.makeText(getActivity(), "执行在线程 - " + threadName + ", 用户信息  : " + person,
+                    Toast.makeText(getActivity(),
+                            R.string.execute_async + threadName + ", User Info  : " + person,
                             Toast.LENGTH_LONG)
                             .show();
                 }

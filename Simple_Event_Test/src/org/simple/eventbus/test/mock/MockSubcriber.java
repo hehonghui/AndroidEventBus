@@ -22,38 +22,68 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus.test;
+package org.simple.eventbus.test.mock;
 
-import junit.framework.TestCase;
-
-import org.simple.eventbus.EventType;
-import java.util.HashMap;
-import java.util.Map;
+import org.simple.eventbus.Subcriber;
 
 /**
  * @author mrsimple
  */
-public class SubscriberHolderTest extends TestCase {
+public class MockSubcriber {
 
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Subcriber
+    void onEventNoParam() {
     }
 
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @Subcriber
+    void onEventTwoParam(Person person, int id) {
+
+    }
+
+    @Subcriber
+    void onEvent(Person person) {
+        System.out.println("invoke onEvent(Person person) in " + this.getClass().getName());
+        System.out.println("person name =  " + person.name);
     }
 
     /**
-     * 检测SubscriberHolder作为map的key的唯一性
+     * 参数相同,函数名不同
+     * 
+     * @param person
      */
-    public void testKeysInMap() {
-        Map<EventType, String> map = new HashMap<EventType, String>();
+    @Subcriber
+    void addPerson(Person person) {
+        System.out.println("invoke addPerson(Person person) in " + this.getClass().getName());
+        System.out.println("person name =  " + person.name);
+    }
 
-        String tag = "default";
-        for (int i = 0; i < 10; i++) {
-            map.put(new EventType(String.class, tag), tag + i);
-        }
+    /**
+     * test tag
+     * 
+     * @param person
+     */
+    @Subcriber(tag = "test")
+    void methodWithTag(Person person) {
 
-        assertEquals(1, map.size());
+    }
+
+    /**
+     * another tag
+     * 
+     * @param person
+     */
+    @Subcriber(tag = "another")
+    void methodWithAnotherTag(Person person) {
+
+    }
+
+    /**
+     * 同名函数,但是参数不同
+     * 
+     * @param object
+     */
+    @Subcriber
+    void onEvent(Object object) {
+        System.out.println("invoke onEvent(Person person) in " + this.getClass().getName());
     }
 }

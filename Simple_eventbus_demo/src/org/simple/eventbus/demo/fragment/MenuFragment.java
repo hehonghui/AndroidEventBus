@@ -47,11 +47,18 @@ import java.util.Random;
 public class MenuFragment extends Fragment {
 
     public static final String CLICK_TAG = "click_user";
-
+    /**
+     * 
+     */
     PostThread[] threads = new PostThread[4];
-
+    /**
+     * 显示被点击的用户名的TextView
+     */
     TextView mUserNameTv;
-    TextView mTimerTv;
+    /**
+     * Thread name TextView
+     */
+    TextView mThreadTv;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -59,14 +66,14 @@ public class MenuFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.menu_fragment, container, false);
 
         mUserNameTv = (TextView) rootView.findViewById(R.id.click_tv);
-        mTimerTv = (TextView) rootView.findViewById(R.id.timer_tv);
+        mThreadTv = (TextView) rootView.findViewById(R.id.timer_tv);
 
         // 发布事件
         rootView.findViewById(R.id.my_post_button).setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new Person("Mr.Simple" + new Random().nextInt()));
+                EventBus.getDefault().post(new Person("Mr.Simple" + new Random().nextInt(100)));
             }
         });
 
@@ -93,13 +100,17 @@ public class MenuFragment extends Fragment {
                     }
                 });
 
+        startThread();
+
+        EventBus.getDefault().register(this);
+        return rootView;
+    }
+
+    private void startThread() {
         for (int i = 0; i < 4; i++) {
             threads[i] = new PostThread(i);
             threads[i].start();
         }
-
-        EventBus.getDefault().register(this);
-        return rootView;
     }
 
     @Subcriber(tag = CLICK_TAG)
@@ -115,7 +126,7 @@ public class MenuFragment extends Fragment {
         Log.e(getTag(), "### update time, thread =  " + Thread.currentThread().getName());
 
         // 从哪个线程投递来的消息
-        mTimerTv.setText("from " + name);
+        mThreadTv.setText("from " + name);
 
         // post 给TimerThread线程
         EventBus.getDefault().post("I am tom, ", "sayhello");
@@ -146,11 +157,14 @@ public class MenuFragment extends Fragment {
 
         public PostThread(int index) {
             mIndex = index;
-            setName("TimerThread - " + index);
+            setName("Thread - " + index);
+
             EventBus.getDefault().register(this);
         }
 
         /**
+         * receiver msg from other thread
+         * 
          * @param name
          */
         @Subcriber(tag = "sayhello")

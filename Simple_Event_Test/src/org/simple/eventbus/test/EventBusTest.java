@@ -29,7 +29,7 @@ import android.util.Log;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.EventType;
-import org.simple.eventbus.test.mock.MockActivity;
+import org.simple.eventbus.test.mock.MockSubcriber;
 import org.simple.eventbus.test.mock.Person;
 import org.simple.eventbus.test.mock.SingleSubscriber;
 
@@ -38,7 +38,7 @@ import org.simple.eventbus.test.mock.SingleSubscriber;
  */
 public class EventBusTest extends AndroidTestCase {
 
-    EventBus bus = new EventBus();
+    EventBus bus = EventBus.getDefault();
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -52,7 +52,7 @@ public class EventBusTest extends AndroidTestCase {
      * 
      */
     public void testRepeatRegister() {
-        MockActivity mockActivity = new MockActivity();
+        MockSubcriber mockActivity = new MockSubcriber();
         for (int i = 0; i < 10; i++) {
             // 测试重复注册一个对象
             bus.register(mockActivity);
@@ -68,7 +68,7 @@ public class EventBusTest extends AndroidTestCase {
      * 
      */
     public void testRepeatRegisterWithTag() {
-        MockActivity mockActivity = new MockActivity();
+        MockSubcriber mockActivity = new MockSubcriber();
         for (int i = 0; i < 10; i++) {
             // 测试重复注册一个对象
             bus.register(mockActivity);
@@ -85,7 +85,7 @@ public class EventBusTest extends AndroidTestCase {
      * 
      */
     public void testSubscribeAndPost() {
-        MockActivity mockActivity = new MockActivity();
+        MockSubcriber mockActivity = new MockSubcriber();
         // 正常注册与发布
         bus.register(mockActivity);
         bus.post(new Person("mr.simple"));

@@ -1,25 +1,17 @@
 /*
- * The MIT License (MIT)
+ * Copyright (C) 2015 Mr.Simple <bboyfeiyu@gmail.com>
  *
- * Copyright (c) 2014-2015 Umeng, Inc
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.simple.eventbus;
@@ -52,17 +44,22 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public final class EventBus {
 
     /**
-     * 
+     * default descriptor
      */
     private static final String DESCRIPTOR = EventBus.class.getSimpleName();
 
     /**
-     * key为事件类型,value为所有订阅者
+     * 事件总线描述符描述符
+     */
+    private String mDesc = DESCRIPTOR;
+
+    /**
+     * EventType-Subcriptions map
      */
     private final Map<EventType, CopyOnWriteArrayList<Subscription>> mSubcriberMap = new HashMap<EventType, CopyOnWriteArrayList<Subscription>>();
 
     /**
-     * 事件队列
+     * the thread local event queue, every single thread has it's own queue.
      */
     ThreadLocal<Queue<EventType>> mLocalEvents = new ThreadLocal<Queue<EventType>>() {
         protected java.util.Queue<EventType> initialValue() {
@@ -71,60 +68,51 @@ public final class EventBus {
     };
 
     /**
-     * 将接收方法执行在UI线程
+     * the event dispatcher
      */
-    UIThreadEventHandler mUIThreadEventHandler = new UIThreadEventHandler();
+    EventDispatcher mDispatcher = new EventDispatcher();
 
     /**
-     * 哪个线程执行的post,接收方法就执行在哪个线程
+     * The Default EventBus instance
      */
-    EventHandler mPostThreadHandler = new DefaultEventHandler();
+    private static EventBus sDefaultBus;
 
     /**
-     * 
+     * private Constructor
      */
-    EventHandler mAsyncEventHandler = new AsyncEventHandler();
-
-    /**
-     * 默认的事件总线
-     */
-    private static EventBus sEventBusDefault;
-
-    /**
-     * 事件总线描述符描述符
-     */
-    private String mDesc = DESCRIPTOR;
-
-    /**
-     * @return
-     */
-    public static EventBus getDefault() {
-        if (sEventBusDefault == null) {
-            synchronized (EventBus.class) {
-                if (sEventBusDefault == null) {
-                    sEventBusDefault = new EventBus();
-                }
-            }
-        }
-        return sEventBusDefault;
-    }
-
-    /**
-     * 
-     */
-    public EventBus() {
+    private EventBus() {
         this(DESCRIPTOR);
     }
 
     /**
-     * @param desc
+     * constructor with desc
+     * 
+     * @param desc the descriptor of eventbus
      */
     public EventBus(String desc) {
         mDesc = desc;
     }
 
     /**
-     * @param subscriber
+     * @return
+     */
+    public static EventBus getDefault() {
+        if (sDefaultBus == null) {
+            synchronized (EventBus.class) {
+                if (sDefaultBus == null) {
+                    sDefaultBus = new EventBus();
+                }
+            }
+        }
+        return sDefaultBus;
+    }
+
+    /**
+     * register a subscriber into the mSubcriberMap, the key is subscriber's
+     * method's name and tag which annotated with {@see Subcriber}, the value is
+     * a list of Subscription.
+     * 
+     * @param subscriber the target subscriber
      */
     public void register(Object subscriber) {
         if (subscriber == null) {
@@ -138,7 +126,7 @@ public final class EventBus {
             if (annotation != null) {
                 // 获取方法参数
                 Class<?>[] paramsTypeClass = method.getParameterTypes();
-                // 只能有一个参数
+                // just only one param
                 if (paramsTypeClass != null && paramsTypeClass.length == 1) {
                     EventType event = new EventType(paramsTypeClass[0], annotation.tag());
                     TargetMethod subscribeMethod = new TargetMethod(method,
@@ -168,9 +156,6 @@ public final class EventBus {
         }
 
         subscriptionLists.add(newSubscription);
-
-        Log.d(getDescriptor(), "### 订阅事件 : " + subscriber.getClass().getName() + ", tag = "
-                + event.tag + ", event type = " + event.paramClass.getName());
         // 订阅事件
         mSubcriberMap.put(event, subscriptionLists);
     }
@@ -188,7 +173,6 @@ public final class EventBus {
         while (iterator.hasNext()) {
             CopyOnWriteArrayList<Subscription> subscriptions = iterator.next();
             if (subscriptions != null) {
-                //
                 List<Subscription> foundSubscriptions = new LinkedList<Subscription>();
                 Iterator<Subscription> subIterator = subscriptions.iterator();
                 while (subIterator.hasNext()) {
@@ -229,43 +213,8 @@ public final class EventBus {
      */
     public void post(Object event, String tag) {
         mLocalEvents.get().offer(new EventType(event.getClass(), tag));
-        dispatchEvents(event);
-    }
-
-    /**
-     * @param event
-     */
-    private void dispatchEvents(Object event) {
-        Queue<EventType> eventsQueue = mLocalEvents.get();
-        while (eventsQueue.size() > 0) {
-            handleEvent(eventsQueue.poll(), event);
-        }
-    }
-
-    private void handleEvent(EventType eventType, Object event) {
-        List<Subscription> subscriptions = mSubcriberMap.get(eventType);
-        if (subscriptions == null) {
-            return;
-        }
-
-        for (Subscription subscription : subscriptions) {
-            final ThreadMode mode = subscription.threadMode;
-            EventHandler eventHandler = getEventHandler(mode);
-            // 处理事件
-            eventHandler.handleEvent(subscription, event);
-        }
-    }
-
-    private EventHandler getEventHandler(ThreadMode mode) {
-        if (mode == ThreadMode.ASYNC) {
-            return mAsyncEventHandler;
-        }
-
-        if (mode == ThreadMode.POST) {
-            return mPostThreadHandler;
-        }
-
-        return mUIThreadEventHandler;
+        // dispatchEvents(event);
+        mDispatcher.dispatchEvents(event);
     }
 
     /**
@@ -306,5 +255,64 @@ public final class EventBus {
     public String getDescriptor() {
         return mDesc;
     }
+
+    /**
+     * 事件分发器
+     * 
+     * @author mrsimple
+     */
+    private class EventDispatcher {
+
+        /**
+         * 将接收方法执行在UI线程
+         */
+        UIThreadEventHandler mUIThreadEventHandler = new UIThreadEventHandler();
+
+        /**
+         * 哪个线程执行的post,接收方法就执行在哪个线程
+         */
+        EventHandler mPostThreadHandler = new DefaultEventHandler();
+
+        /**
+         * 异步线程中执行订阅方法
+         */
+        EventHandler mAsyncEventHandler = new AsyncEventHandler();
+
+        /**
+         * @param event
+         */
+        void dispatchEvents(Object event) {
+            Queue<EventType> eventsQueue = mLocalEvents.get();
+            while (eventsQueue.size() > 0) {
+                handleEvent(eventsQueue.poll(), event);
+            }
+        }
+
+        private void handleEvent(EventType eventType, Object event) {
+            List<Subscription> subscriptions = mSubcriberMap.get(eventType);
+            if (subscriptions == null) {
+                return;
+            }
+
+            for (Subscription subscription : subscriptions) {
+                final ThreadMode mode = subscription.threadMode;
+                EventHandler eventHandler = getEventHandler(mode);
+                // 处理事件
+                eventHandler.handleEvent(subscription, event);
+            }
+        }
+
+        private EventHandler getEventHandler(ThreadMode mode) {
+            if (mode == ThreadMode.ASYNC) {
+                return mAsyncEventHandler;
+            }
+
+            if (mode == ThreadMode.POST) {
+                return mPostThreadHandler;
+            }
+
+            return mUIThreadEventHandler;
+        }
+    } // end of EventDispatcher
 
 }
