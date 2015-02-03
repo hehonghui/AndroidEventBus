@@ -40,8 +40,10 @@ public class Subscription {
      * 
      */
     public Method targetMethod;
-    
-    public ThreadMode threadMode ;
+    /**
+     * 执行事件的线程模型
+     */
+    public ThreadMode threadMode;
 
     /**
      * @param subscriber
@@ -50,7 +52,7 @@ public class Subscription {
     public Subscription(Object subscriber, TargetMethod targetMethod) {
         this.subscriber = subscriber;
         this.targetMethod = targetMethod.method;
-        this.threadMode = targetMethod.threadMode ;
+        this.threadMode = targetMethod.threadMode;
     }
 
     @Override
