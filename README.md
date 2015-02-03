@@ -30,7 +30,8 @@ private void onEventMainThread(User aUser) {
 ## 使用AndroidEventBus 
  你可以按照下面几个步骤来使用AndroidEventBus.     
          
-1. 注册事件接收对象
+*    1. 注册事件接收对象      
+
 ```java
    
 public class YourActivity extends Activity {
@@ -53,7 +54,8 @@ public class YourActivity extends Activity {
    
 ```      
 
-3. 通过Subscriber注解来标识事件接收对象中的接收方法        
+*    2. 通过Subscriber注解来标识事件接收对象中的接收方法        
+
 ```java
 public class YourActivity extends Activity {
     // code ......
@@ -87,7 +89,8 @@ public class YourActivity extends Activity {
 
   接收函数使用tag来标识可接收的事件类型，与BroadcastReceiver中指定action是一样的,这样可以精准的投递消息。mode可以指定目标函数执行在哪个线程,默认会执行在UI线程,方便用户更新UI。目标方法执行耗时操作时,可以设置mode为ASYNC,使之执行在子线程中。           
   
-4. 在其他组件,例如Activity, Fragment,Service中发布事件      
+*    3. 在其他组件,例如Activity, Fragment,Service中发布事件       
+
 ```java
     EventBus.getDefault().post("what's the time now ?");
     
