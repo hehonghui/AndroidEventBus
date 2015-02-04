@@ -58,44 +58,59 @@ public class YourActivity extends Activity {
 
 ```java
 public class YourActivity extends Activity {
+ 
     // code ......
     
     // 接收方法,默认的tag,执行在UI线程
     @Subcriber
-    private void updateTime(String time) {
-        Log.e("", "### update time = " + time);
+    private void updateUser(User user) {
+        Log.e("", "### update user name = " + user.name);
     }
 
 	// 含有my_tag,当用户post事件时,只有指定了"my_tag"的事件才会触发该函数,执行在UI线程
     @Subcriber(tag = "my_tag")
-    private void updateTimeWithTag(String time) {
-        Log.e("", "### update time with my_tag, time = " + time);
+    private void updateUserWithTag(User user) {
+        Log.e("", "### update user with my_tag, name = " + user.name);
     }
     
     // 含有my_tag,当用户post事件时,只有指定了"my_tag"的事件才会触发该函数,
     // post函数在哪个线程执行,该函数就执行在哪个线程    
     @Subcriber(tag = "my_tag", mode=ThreadMode.POST)
-    private void updateTimeWithMode(String time) {
-        Log.e("", "### update time with my_tag, time = " + time);
+    private void updateUserWithMode(User user) {
+        Log.e("", "### update user with my_tag, name = " + user.name);
     }
 
 	// 含有my_tag,当用户post事件时,只有指定了"my_tag"的事件才会触发该函数,执行在一个独立的线程
     @Subcriber(tag = "my_tag", mode = ThreadMode.ASYNC)
-    private void updateTimeAsync(String time) {
-        Log.e("", "### update time async , time = " + time + ", thread name = " + Thread.currentThread().getName());
+    private void updateUserAsync(User user) {
+        Log.e("", "### update user async , name = " + user.name + ", thread name = " + Thread.currentThread().getName());
     }
 }
-```       
 
-  接收函数使用tag来标识可接收的事件类型，与BroadcastReceiver中指定action是一样的,这样可以精准的投递消息。mode可以指定目标函数执行在哪个线程,默认会执行在UI线程,方便用户更新UI。目标方法执行耗时操作时,可以设置mode为ASYNC,使之执行在子线程中。           
+```         
+   User类大致如下 : 
+``` 
+    public class User  {
+        String name ;
+        public User(String aName) {
+            name = aName ;
+        }
+    }
+```        
+
+
+  接收函数使用tag来标识可接收的事件类型，与BroadcastReceiver中指定action是一样的,这样可以精准的投递消息。mode可以指定目标函数执行在哪个线程,默认会执行在UI线程,方便用户更新UI。目标方法执行耗时操作时,可以设置mode为ASYNC,使之执行在子线程中。      
+         
   
 *    3. 在其他组件,例如Activity, Fragment,Service中发布事件       
 
 ```java
-    EventBus.getDefault().post("what's the time now ?");
+    
+    EventBus.getDefault().post(new User("android"));
     
     // post a event with tag, the tag is like broadcast's action
-    EventBus.getDefault().post(new Date().toLocaleString(), "my_tag");
+    EventBus.getDefault().post(new User("mr.simple"), "my_tag");
+
 ```       
    发布事件之后,注册了该事件类型的对象就会接收到响应的事件.
 
