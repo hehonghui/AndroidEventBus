@@ -17,12 +17,11 @@
 package org.simple.eventbus.demo.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -40,7 +39,7 @@ import java.util.List;
 /**
  * @author mrsimple
  */
-public class ConstactFragment extends Fragment {
+public class ConstactFragment extends BaseFragment {
 
     BaseAdapter mAdapter;
     List<User> mConstacts = new LinkedList<User>();

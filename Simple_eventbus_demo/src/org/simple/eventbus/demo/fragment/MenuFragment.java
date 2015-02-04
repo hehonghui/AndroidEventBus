@@ -17,7 +17,6 @@
 package org.simple.eventbus.demo.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +35,7 @@ import java.util.Random;
 /**
  * @author mrsimple
  */
-public class MenuFragment extends Fragment {
+public class MenuFragment extends BaseFragment {
 
     public static final String CLICK_TAG = "click_user";
     /**

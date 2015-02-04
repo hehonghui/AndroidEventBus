@@ -127,7 +127,38 @@ public final class EventBus {
         if (subscriber == null) {
             return;
         }
-        final Method[] allMethods = subscriber.getClass().getDeclaredMethods();
+        // final Method[] allMethods =
+        // subscriber.getClass().getDeclaredMethods();
+        // for (int i = 0; i < allMethods.length; i++) {
+        // Method method = allMethods[i];
+        // // 根据注解来解析函数
+        // Subcriber annotation = method.getAnnotation(Subcriber.class);
+        // if (annotation != null) {
+        // // 获取方法参数
+        // Class<?>[] paramsTypeClass = method.getParameterTypes();
+        // // just only one param
+        // if (paramsTypeClass != null && paramsTypeClass.length == 1) {
+        // EventType event = new EventType(paramsTypeClass[0],
+        // annotation.tag());
+        // TargetMethod subscribeMethod = new TargetMethod(method,
+        // paramsTypeClass[0], annotation.mode());
+        // // 订阅事件
+        // subscibe(event, subscribeMethod, subscriber);
+        // }
+        // }
+        // } // end for
+
+        Class<?> clazz = subscriber.getClass();
+        while (!isObjectClass(clazz)) {
+            // 查找使用注解标注了的目标函数
+            findSubcribeMethods(clazz, subscriber);
+            // 查找完subscriber中复合要求的方法再查找父类中的方法,直至最顶层的object类
+            clazz = clazz.getSuperclass();
+        }
+    }
+
+    private void findSubcribeMethods(Class<?> clazz, Object subscriber) {
+        final Method[] allMethods = clazz.getDeclaredMethods();
         for (int i = 0; i < allMethods.length; i++) {
             Method method = allMethods[i];
             // 根据注解来解析函数
@@ -145,6 +176,10 @@ public final class EventBus {
                 }
             }
         } // end for
+    }
+
+    private boolean isObjectClass(Class<?> clazz) {
+        return clazz.getName().equals(Object.class.getName());
     }
 
     /**
