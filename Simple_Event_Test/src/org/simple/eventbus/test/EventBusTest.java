@@ -21,9 +21,16 @@ import android.util.Log;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.EventType;
+import org.simple.eventbus.Subscription;
 import org.simple.eventbus.test.mock.MockSubcriber;
 import org.simple.eventbus.test.mock.SingleSubscriber;
 import org.simple.eventbus.test.mock.User;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author mrsimple
@@ -32,6 +39,8 @@ public class EventBusTest extends AndroidTestCase {
 
     EventBus bus = EventBus.getDefault();
 
+    Map<EventType, CopyOnWriteArrayList<Subscription>> mSubcriberMap = bus.getSubscriberMap();
+
     protected void setUp() throws Exception {
         super.setUp();
     }
@@ -39,6 +48,29 @@ public class EventBusTest extends AndroidTestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         EventBus.getDefault().clear();
+    }
+
+    /**
+     * 获取某个事件的观察者列表
+     * 
+     * @param event 事件类型
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<Subscription> getSubscriptions(EventType event) {
+        List<Subscription> result = mSubcriberMap.get(event);
+        return result != null ? result : Collections.EMPTY_LIST;
+    }
+
+    /**
+     * 获取已经注册的事件类型列表
+     * 
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<EventType> getEventTypes() {
+        Collection<EventType> result = mSubcriberMap.keySet();
+        return result != null ? result : Collections.EMPTY_LIST;
     }
 
     /**
@@ -52,9 +84,9 @@ public class EventBusTest extends AndroidTestCase {
         }
 
         // 类型为Person的有效注册函数为2个.
-        assertEquals(2, bus.getSubscriptions(new EventType(User.class)).size());
+        assertEquals(2, getSubscriptions(new EventType(User.class)).size());
         // Object类型的函数为1一个
-        assertEquals(1, bus.getSubscriptions(new EventType(Object.class)).size());
+        assertEquals(1, getSubscriptions(new EventType(Object.class)).size());
     }
 
     /**
@@ -68,10 +100,10 @@ public class EventBusTest extends AndroidTestCase {
         }
 
         // 类型为Person且tag为"test"的有效注册函数为1个.
-        assertEquals(1, bus.getSubscriptions(new EventType(User.class, "test")).size());
+        assertEquals(1, getSubscriptions(new EventType(User.class, "test")).size());
 
         // 类型为Person且tag为"another"的有效注册函数为1个.
-        assertEquals(1, bus.getSubscriptions(new EventType(User.class, "another")).size());
+        assertEquals(1, getSubscriptions(new EventType(User.class, "another")).size());
     }
 
     /**
@@ -88,8 +120,8 @@ public class EventBusTest extends AndroidTestCase {
         // 移除对象之后post不会出现问题
         bus.post(new User("mr.simple"));
         // 移除对象测试
-        assertEquals(0, bus.getSubscriptions(new EventType(User.class)).size());
-        assertEquals(0, bus.getSubscriptions(new EventType(Object.class)).size());
+        assertEquals(0, getSubscriptions(new EventType(User.class)).size());
+        assertEquals(0, getSubscriptions(new EventType(Object.class)).size());
     }
 
     public void testRegisterNull() {
@@ -113,7 +145,7 @@ public class EventBusTest extends AndroidTestCase {
         Log.d(getName(), "### register 1000 subscriber, time = " + (end - start) + " ns, "
                 + (end - start) / 1 * 1e6 + " ms");
 
-        assertEquals(1000, bus.getSubscriptions(new EventType(Object.class)).size());
+        assertEquals(1000, getSubscriptions(new EventType(Object.class)).size());
     }
 
 }

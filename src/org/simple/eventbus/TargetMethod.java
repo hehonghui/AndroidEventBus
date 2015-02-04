@@ -42,10 +42,10 @@ import java.lang.reflect.Method;
      * @param eventType
      * @param mode
      */
-    public TargetMethod(Method md, Class<?> eventType, ThreadMode mode) {
+    public TargetMethod(Method md, Class<?> clazz, ThreadMode mode) {
         this.method = md;
         this.method.setAccessible(true);
-        this.eventType = eventType;
+        this.eventType = clazz;
         this.threadMode = mode;
     }
 

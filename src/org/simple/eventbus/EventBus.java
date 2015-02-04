@@ -23,12 +23,7 @@ import org.simple.eventbus.handler.DefaultEventHandler;
 import org.simple.eventbus.handler.EventHandler;
 import org.simple.eventbus.handler.UIThreadEventHandler;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -82,6 +77,12 @@ public final class EventBus {
     EventDispatcher mDispatcher = new EventDispatcher();
 
     /**
+     * the subscriber method hunter, find all of the subscriber's methods
+     * annotated with @Subcriber
+     */
+    SubsciberMethodHunter mMethodHunter = new SubsciberMethodHunter(mSubcriberMap);
+
+    /**
      * The Default EventBus instance
      */
     private static EventBus sDefaultBus;
@@ -127,81 +128,8 @@ public final class EventBus {
         if (subscriber == null) {
             return;
         }
-        // final Method[] allMethods =
-        // subscriber.getClass().getDeclaredMethods();
-        // for (int i = 0; i < allMethods.length; i++) {
-        // Method method = allMethods[i];
-        // // 根据注解来解析函数
-        // Subcriber annotation = method.getAnnotation(Subcriber.class);
-        // if (annotation != null) {
-        // // 获取方法参数
-        // Class<?>[] paramsTypeClass = method.getParameterTypes();
-        // // just only one param
-        // if (paramsTypeClass != null && paramsTypeClass.length == 1) {
-        // EventType event = new EventType(paramsTypeClass[0],
-        // annotation.tag());
-        // TargetMethod subscribeMethod = new TargetMethod(method,
-        // paramsTypeClass[0], annotation.mode());
-        // // 订阅事件
-        // subscibe(event, subscribeMethod, subscriber);
-        // }
-        // }
-        // } // end for
 
-        Class<?> clazz = subscriber.getClass();
-        while (!isObjectClass(clazz)) {
-            // 查找使用注解标注了的目标函数
-            findSubcribeMethods(clazz, subscriber);
-            // 查找完subscriber中复合要求的方法再查找父类中的方法,直至最顶层的object类
-            clazz = clazz.getSuperclass();
-        }
-    }
-
-    private void findSubcribeMethods(Class<?> clazz, Object subscriber) {
-        final Method[] allMethods = clazz.getDeclaredMethods();
-        for (int i = 0; i < allMethods.length; i++) {
-            Method method = allMethods[i];
-            // 根据注解来解析函数
-            Subcriber annotation = method.getAnnotation(Subcriber.class);
-            if (annotation != null) {
-                // 获取方法参数
-                Class<?>[] paramsTypeClass = method.getParameterTypes();
-                // just only one param
-                if (paramsTypeClass != null && paramsTypeClass.length == 1) {
-                    EventType event = new EventType(paramsTypeClass[0], annotation.tag());
-                    TargetMethod subscribeMethod = new TargetMethod(method,
-                            paramsTypeClass[0], annotation.mode());
-                    // 订阅事件
-                    subscibe(event, subscribeMethod, subscriber);
-                }
-            }
-        } // end for
-    }
-
-    private boolean isObjectClass(Class<?> clazz) {
-        return clazz.getName().equals(Object.class.getName());
-    }
-
-    /**
-     * @param event
-     * @param method
-     * @param subscriber
-     */
-    private void subscibe(EventType event, TargetMethod method, Object subscriber) {
-        CopyOnWriteArrayList<Subscription> subscriptionLists = mSubcriberMap
-                .get(event);
-        if (subscriptionLists == null) {
-            subscriptionLists = new CopyOnWriteArrayList<Subscription>();
-        }
-
-        Subscription newSubscription = new Subscription(subscriber, method);
-        if (subscriptionLists.contains(newSubscription)) {
-            return;
-        }
-
-        subscriptionLists.add(newSubscription);
-        // 将事件类型key和订阅者信息存储到map中
-        mSubcriberMap.put(event, subscriptionLists);
+        mMethodHunter.findSubcribeMethods(subscriber);
     }
 
     /**
@@ -211,37 +139,13 @@ public final class EventBus {
         if (subscriber == null) {
             return;
         }
+        mMethodHunter.removeMethodsFromMap(subscriber);
 
-        Iterator<CopyOnWriteArrayList<Subscription>> iterator = mSubcriberMap
-                .values().iterator();
-        while (iterator.hasNext()) {
-            CopyOnWriteArrayList<Subscription> subscriptions = iterator.next();
-            if (subscriptions != null) {
-                List<Subscription> foundSubscriptions = new LinkedList<Subscription>();
-                Iterator<Subscription> subIterator = subscriptions.iterator();
-                while (subIterator.hasNext()) {
-                    Subscription subscription = subIterator.next();
-                    if (subscription.subscriber.equals(subscriber)) {
-                        Log.d(getDescriptor(), "### 移除订阅 " + subscriber.getClass().getName());
-                        foundSubscriptions.add(subscription);
-                    }
-                }
-
-                // 移除该subscriber的相关的Subscription
-                subscriptions.removeAll(foundSubscriptions);
-            }
-
-            // 如果针对某个Event的订阅者数量为空了,那么需要从map中清除
-            if (subscriptions == null || subscriptions.size() == 0) {
-                iterator.remove();
-            }
-        }
-
-        Log.d(getDescriptor(), "### 订阅size = " + mSubcriberMap.size());
+        Log.d(getDescriptor(), "### subscriber map size = " + mSubcriberMap.size());
     }
 
     /**
-     * 发布事件,那么则需要找到对应事件类型的所有订阅者
+     * post a event
      * 
      * @param event
      */
@@ -250,7 +154,7 @@ public final class EventBus {
     }
 
     /**
-     * 发布事件
+     * post event with tag
      * 
      * @param event 要发布的事件
      * @param tag 事件的tag, 类似于BroadcastReceiver的action
@@ -261,26 +165,12 @@ public final class EventBus {
     }
 
     /**
-     * 获取某个事件的观察者列表
-     * 
-     * @param event 事件类型
-     * @return
-     */
-    @SuppressWarnings("unchecked")
-    public Collection<Subscription> getSubscriptions(EventType event) {
-        List<Subscription> result = mSubcriberMap.get(event);
-        return result != null ? result : Collections.EMPTY_LIST;
-    }
-
-    /**
-     * 获取已经注册的事件类型列表
+     * 返回订阅map
      * 
      * @return
      */
-    @SuppressWarnings("unchecked")
-    public Collection<EventType> getEventTypes() {
-        Collection<EventType> result = mSubcriberMap.keySet();
-        return result != null ? result : Collections.EMPTY_LIST;
+    public Map<EventType, CopyOnWriteArrayList<Subscription>> getSubscriberMap() {
+        return mSubcriberMap;
     }
 
     /**

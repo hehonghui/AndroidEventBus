@@ -37,11 +37,11 @@ public class BaseFragment extends Fragment {
 
     @Subcriber
     private void protectedMethodInSuper(User user) {
-        Log.e(getTag(), "### supper protectedMethodInSuper invoked ( default tag )");
+        Log.e(getTag(), "### supper protected Method In Super invoked ( default tag )");
     }
 
     @Subcriber
     private void privateMethodInSuper(User user) {
-        Log.e(getTag(), "### supper privateMethodInSuper invoked ( default tag ) ");
+        Log.e(getTag(), "### supper private Method In Super invoked ( default tag ) ");
     }
 }
