@@ -36,7 +36,7 @@ public final class EventType {
     /**
      * 函数的tag
      */
-    String tag = DEFAULT_TAG;
+    public String tag = DEFAULT_TAG;
 
     /**
      * @param aClass

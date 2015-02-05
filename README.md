@@ -15,7 +15,7 @@
    1. greenrobot的<a href="https://github.com/greenrobot/EventBus" target="_blank">EventBus</a>是一个非常流行的开源库,但是它在使用体验上并不友好,例如它的订阅函数必须以onEvent开头,并且如果需要指定该函数运行的线程则又要根据规则将函数名加上执行线程的模式名,这么说很难理解,比如我要将某个事件的接收函数执行在主线程,那么函数名必须为onEventMainThread。那如果我一个订阅者中有两个参数名相同,且都执行在主线程的接收函数呢? 这个时候似乎它就没法处理了。而且规定死了函数命名,那就不能很好的体现该函数的功能,也就是函数的自文档性。AndroidEventBus使用注解来标识接收函数,这样函数名不受限制,比如我可以把接收函数名写成updateUserInfo(Person info),这样就灵活得多了。    
    2. 另一个不同就是AndroidEventBus增加了一个额外的tag来标识每个接收函数可接收的事件的tag,这类似于Broadcast中的action，比如每个Broadcast对应一个或者多个action,当你发广播时你得指定这个广播的action,然后对应的广播接收器才能收到.greenrobot的EventBus只是根据函数参数类型来标识这个函数是否可以接收某个事件,这样导致只要是参数类型相同,任何的事件它都可以接收到,这样的投递原则就很局限了。比如我有两个事件,一个添加用户的事件, 一个删除用户的事件,他们的参数类型都为User,那么greenrobot的EventBus大概是这样的:    
    
-```java
+```
 
 private void onEventMainThread(User aUser) {
 	// code 
@@ -32,7 +32,7 @@ private void onEventMainThread(User aUser) {
          
 *    1. 注册事件接收对象      
 
-```java
+```
    
 public class YourActivity extends Activity {
 
@@ -56,7 +56,8 @@ public class YourActivity extends Activity {
 
 *    2. 通过Subscriber注解来标识事件接收对象中的接收方法        
 
-```java
+```
+
 public class YourActivity extends Activity {
  
     // code ......
@@ -87,7 +88,8 @@ public class YourActivity extends Activity {
     }
 }
 
-```         
+```           
+
    User类大致如下 : 
 ``` 
     public class User  {
@@ -104,17 +106,21 @@ public class YourActivity extends Activity {
   
 *    3. 在其他组件,例如Activity, Fragment,Service中发布事件       
 
-```java
+```
     
     EventBus.getDefault().post(new User("android"));
     
     // post a event with tag, the tag is like broadcast's action
     EventBus.getDefault().post(new User("mr.simple"), "my_tag");
 
-```       
-   发布事件之后,注册了该事件类型的对象就会接收到响应的事件.
+```         
+
+  发布事件之后,注册了该事件类型的对象就会接收到响应的事件.         
 
 
+## 感谢
+   在此非常感谢网友“淡蓝色的星期三”提出的bug以及反馈,也希望更多的朋友能够加入到Android EventBus的开发中来。           
+   
 
 ## License
 ```
