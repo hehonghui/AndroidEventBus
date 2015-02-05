@@ -24,9 +24,11 @@ import org.simple.eventbus.handler.EventHandler;
 import org.simple.eventbus.handler.UIThreadEventHandler;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -227,16 +229,31 @@ public final class EventBus {
         EventHandler mAsyncEventHandler = new AsyncEventHandler();
 
         /**
+         * 缓存一个事件类型对应的可EventType列表
+         */
+        private Map<Class<?>, List<EventType>> mCacheEventTypes = new ConcurrentHashMap<Class<?>, List<EventType>>();
+
+        /**
          * @param event
          */
-        void dispatchEvents(Object event) {
+        void dispatchEvents(Object aEvent) {
             Queue<EventType> eventsQueue = mLocalEvents.get();
             while (eventsQueue.size() > 0) {
-                handleEvent(eventsQueue.poll(), event);
+                deliveryEvent(eventsQueue.poll(), aEvent);
             }
         }
 
-        private void handleEvent(EventType eventType, Object event) {
+        private void deliveryEvent(EventType type, Object aEvent) {
+            Class<?> eventClass = aEvent.getClass();
+            List<EventType> types = mCacheEventTypes.containsKey(eventClass)
+                    ? mCacheEventTypes.get(eventClass)
+                    : findAllEventType(eventClass, type.tag);
+            for (EventType eventType : types) {
+                handleEvent(eventType, aEvent);
+            }
+        }
+
+        private void handleEvent(EventType eventType, Object aEvent) {
             List<Subscription> subscriptions = mSubcriberMap.get(eventType);
             if (subscriptions == null) {
                 return;
@@ -246,7 +263,45 @@ public final class EventBus {
                 final ThreadMode mode = subscription.threadMode;
                 EventHandler eventHandler = getEventHandler(mode);
                 // 处理事件
-                eventHandler.handleEvent(subscription, event);
+                eventHandler.handleEvent(subscription, aEvent);
+            }
+        }
+
+        /**
+         * 根据post的参数类型来要查找该类型的所有父类、接口类型,并且构造为EventType,然后到订阅表中查找对应的接收者.
+         * 例如用户在订阅函数时参数类型设置为List
+         * <String>,但在post事件时传递的参数却是ArrayList<String>类型,此时该事件需要匹配到订阅类型为List
+         * <String>,因此需要做出处理.
+         * 
+         * @param aEvent 用户发布的事件
+         * @param tag 发布的事件的tag
+         * @return
+         */
+        private List<EventType> findAllEventType(Class<?> eventClass, String tag) {
+            List<EventType> result = new LinkedList<EventType>();
+            while (eventClass != null) {
+                result.add(new EventType(eventClass, tag));
+                addInterfaces(result, eventClass.getInterfaces(), tag);
+                eventClass = eventClass.getSuperclass();
+            }
+
+            // 缓存到map中
+            mCacheEventTypes.put(eventClass, result);
+            return result;
+        }
+
+        /**
+         * 获取该事件的所有接口类型
+         * 
+         * @param eventTypes 存储列表
+         * @param interfaces 事件实现的所有接口
+         */
+        private void addInterfaces(List<EventType> eventTypes, Class<?>[] interfaces, String tag) {
+            for (Class<?> interfaceClass : interfaces) {
+                if (!eventTypes.contains(interfaceClass)) {
+                    eventTypes.add(new EventType(interfaceClass, tag));
+                    addInterfaces(eventTypes, interfaceClass.getInterfaces(), tag);
+                }
             }
         }
 

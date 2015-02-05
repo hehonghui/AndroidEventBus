@@ -122,7 +122,7 @@ public class MenuFragment extends BaseFragment {
     @Subcriber(tag = "list")
     private void subcribeList(List<User> users) {
         Toast.makeText(getActivity(), "list", Toast.LENGTH_SHORT).show();
-        for (int i = 0; i < threads.length; i++) {
+        for (int i = 0; i < users.size(); i++) {
             Log.e(getTag(), "### user name = " + users.get(i));
         }
     }

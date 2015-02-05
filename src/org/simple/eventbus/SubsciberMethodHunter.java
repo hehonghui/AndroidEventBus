@@ -65,7 +65,7 @@ public class SubsciberMethodHunter {
         List<Subscription> resultMethods = new CopyOnWriteArrayList<Subscription>();
         Class<?> clazz = subscriber.getClass();
         // 查找类中复合要求的方法,直到Object类
-        while (!isObjectClass(clazz)) {
+        while (clazz != null && !isSystemCalss(clazz.getName())) {
             final Method[] allMethods = clazz.getDeclaredMethods();
             for (int i = 0; i < allMethods.length; i++) {
                 Method method = allMethods[i];
@@ -146,8 +146,12 @@ public class SubsciberMethodHunter {
         mSubcriberMap.put(event, subscriptionLists);
     }
 
-    private boolean isObjectClass(Class<?> clazz) {
-        return clazz.getName().equals(Object.class.getName());
+    // private boolean isObjectClass(Class<?> clazz) {
+    // return clazz.getName().equals(Object.class.getName());
+    // }
+
+    private boolean isSystemCalss(String name) {
+        return name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("android.");
     }
 
 }
