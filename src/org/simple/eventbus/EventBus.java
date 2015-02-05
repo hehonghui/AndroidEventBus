@@ -129,7 +129,9 @@ public final class EventBus {
             return;
         }
 
-        mMethodHunter.findSubcribeMethods(subscriber);
+        synchronized (this) {
+            mMethodHunter.findSubcribeMethods(subscriber);
+        }
     }
 
     /**
@@ -139,7 +141,10 @@ public final class EventBus {
         if (subscriber == null) {
             return;
         }
-        mMethodHunter.removeMethodsFromMap(subscriber);
+
+        synchronized (this) {
+            mMethodHunter.removeMethodsFromMap(subscriber);
+        }
 
         Log.d(getDescriptor(), "### subscriber map size = " + mSubcriberMap.size());
     }

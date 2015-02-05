@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subcriber;
@@ -30,6 +31,8 @@ import org.simple.eventbus.ThreadMode;
 import org.simple.eventbus.demo.R;
 import org.simple.eventbus.demo.bean.User;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -77,6 +80,13 @@ public class MenuFragment extends BaseFragment {
                         // 移除用户
                         EventBus.getDefault().post(new User("User - 1"),
                                 "remove");
+
+                        List<User> users = new ArrayList<User>();
+                        for (int i = 0; i < 5; i++) {
+                            users.add(new User("user - " + i));
+                        }
+
+                        EventBus.getDefault().post(users, "list");
                     }
                 });
 
@@ -107,6 +117,14 @@ public class MenuFragment extends BaseFragment {
     @Subcriber(tag = CLICK_TAG)
     private void updateClickUserName(User clickPerson) {
         mUserNameTv.setText(clickPerson.name);
+    }
+
+    @Subcriber(tag = "list")
+    private void subcribeList(List<User> users) {
+        Toast.makeText(getActivity(), "list", Toast.LENGTH_SHORT).show();
+        for (int i = 0; i < threads.length; i++) {
+            Log.e(getTag(), "### user name = " + users.get(i));
+        }
     }
 
     /*
