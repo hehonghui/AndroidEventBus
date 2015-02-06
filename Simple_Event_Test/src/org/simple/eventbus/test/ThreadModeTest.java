@@ -53,11 +53,6 @@ public class ThreadModeTest extends AndroidTestCase {
         EventBus.getDefault().clear();
     }
 
-    @Subcriber
-    public void willNotInvoke(User user) {
-        assertEquals(1, 2);
-    }
-
     public void testExecuteMainThread() {
         EventBus.getDefault().post(new User("main-thread"), MAIN_TAG);
 
