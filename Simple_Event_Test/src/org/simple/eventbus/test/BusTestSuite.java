@@ -30,7 +30,8 @@ public class BusTestSuite extends TestSuite {
                 .includePackages(
                         "org.simple.eventbus.test.EventBusTest",
                         "org.simple.eventbus.test.EventTypeTest",
-                        "org.simple.eventbus.test.ThreadModeTest")
+                        "org.simple.eventbus.test.ThreadModeTest",
+                        "org.simple.eventbus.testDefaultMatchPolicyTest")
                 .build();
     }
 }

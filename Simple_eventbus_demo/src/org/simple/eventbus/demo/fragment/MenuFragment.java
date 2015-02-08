@@ -46,12 +46,8 @@ import java.util.Random;
  * 注意 : 如果发布的事件的参数类型是订阅的事件参数的子类,订阅函数默认也会被执行。例如你在订阅函数中订阅的是List<String>类型的事件,
  * 但是在发布时发布的是ArrayList<String>的事件,
  * 因此List<String>是一个泛型抽象,而ArrayList<String>才是具体的实现
- * ,因此这种情况下订阅函数也会被执行。如果你需要订阅函数能够接收到的事件类型必须严格匹配 ,你可以构造一个EventBusConfig对象,
- * 然后设置MatchPolicy然后在使用事件总线之前使用该EventBusConfig来初始化事件总线. <code>
- *      EventBusConfig config = new EventBusConfig();
-        config.setMatchPolicy(new StrictMatchPolicy());
-        EventBus.getDefault().initWithConfig(config);
- * </code>
+ * ,因此这种情况下订阅函数也会被执行。如果你需要订阅函数能够接收到的事件类型必须严格匹配 , 然后通过事件总线{@see
+ * EventBus#setMatchPolicy(org.simple.eventbus.matchpolicy.MatchPolicy)}设置匹配策略.
  * 
  * @author mrsimple
  */

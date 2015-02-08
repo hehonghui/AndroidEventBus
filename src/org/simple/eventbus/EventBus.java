@@ -16,8 +16,11 @@
 
 package org.simple.eventbus;
 
-import org.simple.eventbus.config.EventBusConfig;
+import org.simple.eventbus.handler.AsyncEventHandler;
+import org.simple.eventbus.handler.DefaultEventHandler;
 import org.simple.eventbus.handler.EventHandler;
+import org.simple.eventbus.handler.UIThreadEventHandler;
+import org.simple.eventbus.matchpolicy.DefaultMatchPolicy;
 import org.simple.eventbus.matchpolicy.MatchPolicy;
 
 import java.util.List;
@@ -93,10 +96,6 @@ public final class EventBus {
      * The Default EventBus instance
      */
     private static EventBus sDefaultBus;
-    /**
-     * the event bus config
-     */
-    private EventBusConfig mBusConfig = new EventBusConfig();
 
     /**
      * private Constructor
@@ -112,7 +111,6 @@ public final class EventBus {
      */
     public EventBus(String desc) {
         mDesc = desc;
-        initWithConfig(mBusConfig);
     }
 
     /**
@@ -127,18 +125,6 @@ public final class EventBus {
             }
         }
         return sDefaultBus;
-    }
-
-    /**
-     * init event bus with EventBusConfig
-     * 
-     * @param config
-     */
-    public void initWithConfig(EventBusConfig config) {
-        mDispatcher.mMatchPolicy = config.getMatchPolicy();
-        mDispatcher.mUIThreadEventHandler = config.getUIThreadEventHandler();
-        mDispatcher.mPostThreadHandler = config.getPostThreadHandler();
-        mDispatcher.mAsyncEventHandler = config.getAsyncEventHandler();
     }
 
     /**
@@ -192,6 +178,42 @@ public final class EventBus {
     }
 
     /**
+     * 设置订阅函数匹配策略
+     * 
+     * @param policy 匹配策略
+     */
+    public void setMatchPolicy(MatchPolicy policy) {
+        mDispatcher.mMatchPolicy = policy;
+    }
+
+    /**
+     * 设置执行在UI线程的事件处理器
+     * 
+     * @param handler
+     */
+    public void setUIThreadEventHandler(EventHandler handler) {
+        mDispatcher.mUIThreadEventHandler = handler;
+    }
+
+    /**
+     * 设置执行在post线程的事件处理器
+     * 
+     * @param handler
+     */
+    public void setPostThreadHandler(EventHandler handler) {
+        mDispatcher.mPostThreadHandler = handler;
+    }
+
+    /**
+     * 设置执行在异步线程的事件处理器
+     * 
+     * @param handler
+     */
+    public void setAsyncEventHandler(EventHandler handler) {
+        mDispatcher.mAsyncEventHandler = handler;
+    }
+
+    /**
      * 返回订阅map
      * 
      * @return
@@ -236,17 +258,17 @@ public final class EventBus {
         /**
          * 将接收方法执行在UI线程
          */
-        EventHandler mUIThreadEventHandler;
+        EventHandler mUIThreadEventHandler = new UIThreadEventHandler();
 
         /**
          * 哪个线程执行的post,接收方法就执行在哪个线程
          */
-        EventHandler mPostThreadHandler;
+        EventHandler mPostThreadHandler = new DefaultEventHandler();
 
         /**
          * 异步线程中执行订阅方法
          */
-        EventHandler mAsyncEventHandler;
+        EventHandler mAsyncEventHandler = new AsyncEventHandler();
 
         /**
          * 缓存一个事件类型对应的可EventType列表
@@ -255,7 +277,7 @@ public final class EventBus {
         /**
          * 事件匹配策略,根据策略来查找对应的EventType集合
          */
-        MatchPolicy mMatchPolicy;
+        MatchPolicy mMatchPolicy = new DefaultMatchPolicy();
 
         /**
          * @param event
