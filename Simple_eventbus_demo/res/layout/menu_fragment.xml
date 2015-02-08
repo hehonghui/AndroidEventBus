@@ -23,11 +23,30 @@
         android:layout_height="wrap_content"
         android:text="@string/post_async" />
 
+    <Button
+        android:id="@+id/my_post_to_supper_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/post_supper" />
+
+    <Button
+        android:id="@+id/my_post_list_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/post_list" />
+
+    <Button
+        android:id="@+id/my_post_to_thread_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/post_to_thread" />
+
     <TextView
         android:id="@+id/click_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:text="@string/user_click_hint" />
 
     <TextView
         android:id="@+id/timer_tv"

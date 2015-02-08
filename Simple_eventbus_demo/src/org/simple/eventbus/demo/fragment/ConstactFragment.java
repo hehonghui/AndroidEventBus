@@ -17,6 +17,7 @@
 package org.simple.eventbus.demo.fragment;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ import java.util.List;
 /**
  * @author mrsimple
  */
-public class ConstactFragment extends BaseFragment {
+public class ConstactFragment extends Fragment {
 
     BaseAdapter mAdapter;
     List<User> mConstacts = new LinkedList<User>();
@@ -97,8 +98,8 @@ public class ConstactFragment extends BaseFragment {
      * 
      * @param person
      */
-    @Subcriber(tag = "remove")
-    private void addPersonPrivate(User person) {
+    @Subcriber(tag = MenuFragment.REMOVE_TAG)
+    private void removePersonPrivate(User person) {
         mConstacts.remove(person);
         mAdapter.notifyDataSetChanged();
     }
@@ -108,7 +109,7 @@ public class ConstactFragment extends BaseFragment {
      * 
      * @param event
      */
-    @Subcriber(tag = "async", mode = ThreadMode.ASYNC)
+    @Subcriber(tag = MenuFragment.ASYNC_TAG, mode = ThreadMode.ASYNC)
     private void asyncMethod(final User person) {
         try {
             final String threadName = Thread.currentThread().getName();

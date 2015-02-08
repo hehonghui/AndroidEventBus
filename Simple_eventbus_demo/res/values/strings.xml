@@ -4,6 +4,10 @@
     <string name="remove_user">remove</string>
     <string name="add_user">add</string>
     <string name="post_async">async</string>
+    <string name="post_supper">post to supper</string>
+    <string name="post_list">post list data</string>
+    <string name="user_click_hint">no one click</string>
+    <string name="post_to_thread">post to thread</string>
     <string name="execute_async">this execute async, thread = </string>
 
 </resources>

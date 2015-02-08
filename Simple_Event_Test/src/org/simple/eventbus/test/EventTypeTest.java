@@ -82,4 +82,9 @@ public class EventTypeTest extends TestCase {
 
         assertEquals(6, map.size());
     }
+
+    public void testEquals() {
+        assertEquals(new EventType(String.class, "tag"), new EventType(String.class, "tag"));
+        assertFalse( new EventType(String.class, "tag").equals(new EventType(String.class, "s_tag")));
+    }
 }

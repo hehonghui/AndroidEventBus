@@ -51,6 +51,11 @@ public final class EventType {
     }
 
     @Override
+    public String toString() {
+        return "EventType [paramClass=" + paramClass.getName() + ", tag=" + tag + "]";
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

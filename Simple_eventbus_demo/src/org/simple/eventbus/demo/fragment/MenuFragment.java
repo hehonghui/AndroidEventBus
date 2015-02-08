@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subcriber;
@@ -36,11 +35,33 @@ import java.util.List;
 import java.util.Random;
 
 /**
+ * <p>
+ * 该类是演示AndroidEventBus使用的菜单Fragment,演示不了不同参数类型、不同线程模型的事件发布、接收示例.
+ * 一个事件类型的决定因素只有事件的参数类型( Class ) 和 注册时的tag ( 字符串 ) ,线程模型( mode
+ * )不会影响事件类型的定位,只会影响订阅函数执行在哪个线程中.
+ * <p>
+ * 不同组件 (Activity、Fragment、Service等)、不同线程之间都可以通过事件总线来发布事件,它是线程安全的。
+ * 只要发布的事件的参数类型和tag都匹配即可接收到事件.
+ * <p>
+ * 注意 : 如果发布的事件的参数类型是订阅的事件参数的子类,订阅函数默认也会被执行。例如你在订阅函数中订阅的是List<String>类型的事件,
+ * 但是在发布时发布的是ArrayList<String>的事件,
+ * 因此List<String>是一个泛型抽象,而ArrayList<String>才是具体的实现
+ * ,因此这种情况下订阅函数也会被执行。如果你需要订阅函数能够接收到的事件类型必须严格匹配 ,你可以构造一个EventBusConfig对象,
+ * 然后设置MatchPolicy然后在使用事件总线之前使用该EventBusConfig来初始化事件总线. <code>
+ *      EventBusConfig config = new EventBusConfig();
+        config.setMatchPolicy(new StrictMatchPolicy());
+        EventBus.getDefault().initWithConfig(config);
+ * </code>
+ * 
  * @author mrsimple
  */
 public class MenuFragment extends BaseFragment {
 
-    public static final String CLICK_TAG = "click_user";
+    static final String CLICK_TAG = "click_user";
+    static final String THREAD_TAG = "sub_thread";
+    public static final String ASYNC_TAG = "async";
+    public static final String REMOVE_TAG = "remove";
+
     /**
      * 
      */
@@ -78,15 +99,7 @@ public class MenuFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         // 移除用户
-                        EventBus.getDefault().post(new User("User - 1"),
-                                "remove");
-
-                        List<User> users = new ArrayList<User>();
-                        for (int i = 0; i < 5; i++) {
-                            users.add(new User("user - " + i));
-                        }
-
-                        EventBus.getDefault().post(users, "list");
+                        EventBus.getDefault().post(new User("User - 1"), REMOVE_TAG);
                     }
                 });
 
@@ -97,67 +110,123 @@ public class MenuFragment extends BaseFragment {
                     @Override
                     public void onClick(View v) {
                         // 将目标函数执行在异步线程中
-                        EventBus.getDefault().post(new User("mr.simple-3"), "async");
+                        EventBus.getDefault().post(new User("async-user"), ASYNC_TAG);
                     }
                 });
 
-        startThread();
+        // 发布事件,传递的是List数据
+        rootView.findViewById(R.id.my_post_list_btn).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                postListData();
+            }
+        });
+
+        // 发布事件,调用的是父类中的函数
+        rootView.findViewById(R.id.my_post_to_supper_btn).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                postEventToSuper();
+            }
+        });
+
+        // 发布事件,将事件投递到子线程中
+        rootView.findViewById(R.id.my_post_to_thread_btn).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // post 给PostThread线程
+                EventBus.getDefault().post("I am MainThread", THREAD_TAG);
+            }
+        });
+
+        startThreads();
 
         EventBus.getDefault().register(this);
         return rootView;
     }
 
-    private void startThread() {
+    /**
+     * start post threads
+     */
+    private void startThreads() {
         for (int i = 0; i < 4; i++) {
             threads[i] = new PostThread(i);
             threads[i].start();
         }
     }
 
-    @Subcriber(tag = CLICK_TAG)
-    private void updateClickUserName(User clickPerson) {
-        mUserNameTv.setText(clickPerson.name);
+    /**
+     * 发布参数是List<T>类型的事件, 接收函数为@{@see #subcribeList(List)}
+     */
+    private void postListData() {
+        List<User> userLisr = new ArrayList<User>();
+        for (int i = 0; i < 5; i++) {
+            userLisr.add(new User("user - " + i));
+        }
+
+        EventBus.getDefault().post(userLisr);
     }
 
-    @Subcriber(tag = "list")
+    @Subcriber
     private void subcribeList(List<User> users) {
-        Toast.makeText(getActivity(), "list", Toast.LENGTH_SHORT).show();
         for (int i = 0; i < users.size(); i++) {
             Log.e(getTag(), "### user name = " + users.get(i));
         }
     }
 
-    /*
-     * 模拟从异步线程发来的更新信息
+    /**
+     * 订阅点击事件,该事件是从{@see ConstactFragment}中的ListView点击某个项时发布的
+     * 
+     * @param clickPerson
      */
-    @Subcriber
-    private void updateTime(String name) {
-        Log.e(getTag(), "### update time, thread =  " + Thread.currentThread().getName());
-
-        // 从哪个线程投递来的消息
-        mThreadTv.setText("from " + name);
-
-        // post 给TimerThread线程
-        EventBus.getDefault().post("I am tom, ", "sayhello");
+    @Subcriber(tag = CLICK_TAG)
+    private void updateClickUserName(User clickPerson) {
+        mUserNameTv.setText(clickPerson.name);
     }
 
+    /**
+     * 模拟从异步线程发来的更新信息, {@link PostThread#run()}
+     */
+    @Subcriber
+    private void receiveFrom(String name) {
+        // 从哪个线程投递来的消息
+        mThreadTv.setText("from " + name);
+    }
+
+    /**
+     * 接受参数类型为String的事件,执行在发布事件的线程. {@link PostThread#run()}
+     * 
+     * @param event
+     */
     @Subcriber(mode = ThreadMode.POST)
     private void invokeInPostThread(String event) {
         Log.e(getTag(), "### invokeInPostThread invoke in thread =  "
                 + Thread.currentThread().getName());
     }
 
+    /**
+     * 发布一个消息,接收函数在BaseFragment中
+     */
+    private void postEventToSuper() {
+        EventBus.getDefault().post(new User("super"), SUPER_TAG);
+    }
+
     @Override
     public void onDestroy() {
-        for (PostThread timerThread : threads) {
-            timerThread.interrupt();
-        }
+        // for (PostThread timerThread : threads) {
+        // timerThread.interrupt();
+        // }
 
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
     /**
+     * 投递线程,不断地给主线程投递消息,同时也接受主线程投递过来的消息
+     * 
      * @author mrsimple
      */
     class PostThread extends Thread {
@@ -167,7 +236,7 @@ public class MenuFragment extends BaseFragment {
         public PostThread(int index) {
             mIndex = index;
             setName("Thread - " + index);
-
+            // 线程本身也注册到事件总线中,接收从主线程发布的事件
             EventBus.getDefault().register(this);
         }
 
@@ -176,20 +245,19 @@ public class MenuFragment extends BaseFragment {
          * 
          * @param name
          */
-        @Subcriber(tag = "sayhello")
-        private void hello(String name) {
+        @Subcriber(tag = THREAD_TAG)
+        private void sayHello(String name) {
             Log.d(getTag(), "### hello, " + name + " -->  in " + getName());
         }
 
         @Override
         public void run() {
-            Log.e(getTag(), "### queue : " + EventBus.getDefault().getEventQueue().hashCode()
-                    + ", bus = " + EventBus.getDefault());
-
             while (!this.isInterrupted()) {
+                // 从子线程发布消息
                 EventBus.getDefault().post(getName());
+
                 try {
-                    Thread.sleep(500 * mIndex + 1000);
+                    Thread.sleep(1000 * mIndex + 3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

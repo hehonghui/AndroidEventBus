@@ -16,13 +16,10 @@
 
 package org.simple.eventbus;
 
-import android.util.Log;
-
 import org.simple.eventbus.config.EventBusConfig;
 import org.simple.eventbus.handler.EventHandler;
 import org.simple.eventbus.matchpolicy.MatchPolicy;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -42,6 +39,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * <p>
  * 最后在不在需要订阅事件时,应该调用{@see #unregister(Object)}函数注销该对象,避免内存泄露!
  * 例如在Activity或者Fragment的onDestory函数中注销对Activity或者Fragment的订阅.
+ * <p>
+ * 注意 : 如果发布的事件的参数类型是订阅的事件参数的子类,订阅函数默认也会被执行。例如你在订阅函数中订阅的是List<String>类型的事件,
+ * 但是在发布时发布的是ArrayList<String>的事件,
+ * 因此List<String>是一个泛型抽象,而ArrayList<String>才是具体的实现
+ * ,因此这种情况下订阅函数也会被执行。如果你需要订阅函数能够接收到的事件类型必须严格匹配 ,你可以构造一个EventBusConfig对象,
+ * 然后设置MatchPolicy然后在使用事件总线之前使用该EventBusConfig来初始化事件总线. <code>
+ *      EventBusConfig config = new EventBusConfig();
+        config.setMatchPolicy(new StrictMatchPolicy());
+        EventBus.getDefault().initWithConfig(config);
+ * </code>
  * 
  * @author mrsimple
  */
@@ -60,7 +67,7 @@ public final class EventBus {
     /**
      * EventType-Subcriptions map
      */
-    private final Map<EventType, CopyOnWriteArrayList<Subscription>> mSubcriberMap = new HashMap<EventType, CopyOnWriteArrayList<Subscription>>();
+    private final Map<EventType, CopyOnWriteArrayList<Subscription>> mSubcriberMap = new ConcurrentHashMap<EventType, CopyOnWriteArrayList<Subscription>>();
 
     /**
      * the thread local event queue, every single thread has it's own queue.
@@ -162,8 +169,6 @@ public final class EventBus {
         synchronized (this) {
             mMethodHunter.removeMethodsFromMap(subscriber);
         }
-
-        Log.d(getDescriptor(), "### subscriber map size = " + mSubcriberMap.size());
     }
 
     /**
@@ -246,7 +251,7 @@ public final class EventBus {
         /**
          * 缓存一个事件类型对应的可EventType列表
          */
-        private Map<Class<?>, List<EventType>> mCacheEventTypes = new ConcurrentHashMap<Class<?>, List<EventType>>();
+        private Map<EventType, List<EventType>> mCacheEventTypes = new ConcurrentHashMap<EventType, List<EventType>>();
         /**
          * 事件匹配策略,根据策略来查找对应的EventType集合
          */
@@ -273,10 +278,10 @@ public final class EventBus {
             List<EventType> eventTypes = null;
             // 如果有缓存则直接从缓存中取
             if (mCacheEventTypes.containsKey(eventClass)) {
-                eventTypes = mCacheEventTypes.get(eventClass);
+                eventTypes = mCacheEventTypes.get(type);
             } else {
                 eventTypes = mMatchPolicy.findMatchEventTypes(type, aEvent);
-                mCacheEventTypes.put(eventClass, eventTypes);
+                mCacheEventTypes.put(type, eventTypes);
             }
 
             for (EventType eventType : eventTypes) {

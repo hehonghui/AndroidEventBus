@@ -35,12 +35,9 @@ import org.simple.eventbus.demo.bean.User;
  */
 public class BaseFragment extends Fragment {
 
-    @Subcriber
-    private void protectedMethodInSuper(User user) {
-        Log.e(getTag(), "### supper protected Method In Super invoked ( default tag )");
-    }
+    static final String SUPER_TAG = "super_tag";
 
-    @Subcriber
+    @Subcriber(tag = SUPER_TAG)
     private void privateMethodInSuper(User user) {
         Log.e(getTag(), "### supper private Method In Super invoked ( default tag ) ");
     }

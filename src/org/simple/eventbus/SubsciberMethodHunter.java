@@ -87,8 +87,6 @@ public class SubsciberMethodHunter {
             // 获取父类,以继续查找父类中复合要求的方法
             clazz = clazz.getSuperclass();
         }
-
-        Log.e("", "### found all ");
         return resultMethods;
     }
 

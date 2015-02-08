@@ -37,7 +37,7 @@ public class DefaultMatchPolicy implements MatchPolicy {
         List<EventType> result = new LinkedList<EventType>();
         while (eventClass != null) {
             result.add(new EventType(eventClass, type.tag));
-            addInterfaces(result, eventClass.getInterfaces(), type.tag);
+            addInterfaces(result, eventClass, type.tag);
             eventClass = eventClass.getSuperclass();
         }
 
@@ -50,11 +50,15 @@ public class DefaultMatchPolicy implements MatchPolicy {
      * @param eventTypes 存储列表
      * @param interfaces 事件实现的所有接口
      */
-    private void addInterfaces(List<EventType> eventTypes, Class<?>[] interfaces, String tag) {
-        for (Class<?> interfaceClass : interfaces) {
+    private void addInterfaces(List<EventType> eventTypes, Class<?> eventClass, String tag) {
+        if (eventClass == null) {
+            return;
+        }
+        Class<?>[] interfacesClasses = eventClass.getInterfaces();
+        for (Class<?> interfaceClass : interfacesClasses) {
             if (!eventTypes.contains(interfaceClass)) {
                 eventTypes.add(new EventType(interfaceClass, tag));
-                addInterfaces(eventTypes, interfaceClass.getInterfaces(), tag);
+                addInterfaces(eventTypes, interfaceClass, tag);
             }
         }
     }
