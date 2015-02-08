@@ -119,6 +119,34 @@ public class YourActivity extends Activity {
   发布事件之后,注册了该事件类型的对象就会接收到响应的事件.         
 
 
+## 集成
+### jar文件集成
+将jar文件添加到工程中的引用中即可,[AndroidEventBus.jar下载](http://download.csdn.net/detail/bboyfeiyu/8426611)   
+
+### Android Studio集成
+*    在Project的build.gradle中添加仓库地址     
+
+```
+allprojects {
+    repositories {
+        jcenter()
+        maven { url 'https://github.com/bboyfeiyu/AndroidEventBus_maven/raw/master/releases' }
+    }
+}
+```
+
+*   在Module的build.gradle添加依赖
+
+```
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    // 添加依赖
+    compile 'org.simple:androideventbus:1.0.1'
+}
+```
+
+
 ## 感谢
    在此非常感谢网友“淡蓝色的星期三”提出的bug以及反馈,也希望更多的朋友能够加入到Android EventBus的开发中来。           
    
