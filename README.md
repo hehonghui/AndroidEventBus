@@ -121,7 +121,7 @@ public class YourActivity extends Activity {
 
 ## 集成
 ### jar文件集成
-将jar文件添加到工程中的引用中即可,[AndroidEventBus.jar下载](http://download.csdn.net/detail/bboyfeiyu/8434667)   
+将jar文件添加到工程中的引用中即可,[AndroidEventBus.jar下载](lib/androideventbus-1.0.2.jar?raw=true "点击下载到本地")      
 
 ### Android Studio集成
 *    在Project的build.gradle中添加仓库地址     
