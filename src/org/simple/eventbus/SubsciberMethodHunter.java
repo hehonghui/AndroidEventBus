@@ -57,14 +57,12 @@ public class SubsciberMethodHunter {
      * @param subscriber
      * @return
      */
-    public List<Subscription> findSubcribeMethods(Object subscriber) {
+    public void findSubcribeMethods(Object subscriber) {
         if (mSubcriberMap == null) {
             throw new NullPointerException("the mSubcriberMap is null. ");
         }
-
-        List<Subscription> resultMethods = new CopyOnWriteArrayList<Subscription>();
         Class<?> clazz = subscriber.getClass();
-        // 查找类中复合要求的方法,直到Object类
+        // 查找类中符合要求的注册方法,直到Object类
         while (clazz != null && !isSystemCalss(clazz.getName())) {
             final Method[] allMethods = clazz.getDeclaredMethods();
             for (int i = 0; i < allMethods.length; i++) {
@@ -76,8 +74,9 @@ public class SubsciberMethodHunter {
                     Class<?>[] paramsTypeClass = method.getParameterTypes();
                     // just only one param
                     if (paramsTypeClass != null && paramsTypeClass.length == 1) {
-                        EventType eventType = new EventType(paramsTypeClass[0], annotation.tag());
-                        TargetMethod subscribeMethod = new TargetMethod(method, paramsTypeClass[0],
+                        Class<?> paramType = convertType(paramsTypeClass[0]);
+                        EventType eventType = new EventType(paramType, annotation.tag());
+                        TargetMethod subscribeMethod = new TargetMethod(method, paramType,
                                 annotation.mode());
                         subscibe(eventType, subscribeMethod, subscriber);
                     }
@@ -87,7 +86,28 @@ public class SubsciberMethodHunter {
             // 获取父类,以继续查找父类中复合要求的方法
             clazz = clazz.getSuperclass();
         }
-        return resultMethods;
+    }
+
+    /**
+     * @param event
+     * @param method
+     * @param subscriber
+     */
+    private void subscibe(EventType event, TargetMethod method, Object subscriber) {
+        CopyOnWriteArrayList<Subscription> subscriptionLists = mSubcriberMap
+                .get(event);
+        if (subscriptionLists == null) {
+            subscriptionLists = new CopyOnWriteArrayList<Subscription>();
+        }
+
+        Subscription newSubscription = new Subscription(subscriber, method);
+        if (subscriptionLists.contains(newSubscription)) {
+            return;
+        }
+
+        subscriptionLists.add(newSubscription);
+        // 将事件类型key和订阅者信息存储到map中
+        mSubcriberMap.put(event, subscriptionLists);
     }
 
     /**
@@ -123,30 +143,26 @@ public class SubsciberMethodHunter {
     }
 
     /**
-     * @param event
-     * @param method
-     * @param subscriber
+     * if the subscriber method's type is primitive, convert it to corresponding
+     * Object type. for example, int to Integer.
+     * 
+     * @param eventType origin Event Type
+     * @return
      */
-    private void subscibe(EventType event, TargetMethod method, Object subscriber) {
-        CopyOnWriteArrayList<Subscription> subscriptionLists = mSubcriberMap
-                .get(event);
-        if (subscriptionLists == null) {
-            subscriptionLists = new CopyOnWriteArrayList<Subscription>();
+    private Class<?> convertType(Class<?> eventType) {
+        Class<?> returnClass = eventType;
+        if (eventType.equals(boolean.class)) {
+            returnClass = Boolean.class;
+        } else if (eventType.equals(int.class)) {
+            returnClass = Integer.class;
+        } else if (eventType.equals(float.class)) {
+            returnClass = Float.class;
+        } else if (eventType.equals(double.class)) {
+            returnClass = Double.class;
         }
 
-        Subscription newSubscription = new Subscription(subscriber, method);
-        if (subscriptionLists.contains(newSubscription)) {
-            return;
-        }
-
-        subscriptionLists.add(newSubscription);
-        // 将事件类型key和订阅者信息存储到map中
-        mSubcriberMap.put(event, subscriptionLists);
+        return returnClass;
     }
-
-    // private boolean isObjectClass(Class<?> clazz) {
-    // return clazz.getName().equals(Object.class.getName());
-    // }
 
     private boolean isSystemCalss(String name) {
         return name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("android.");

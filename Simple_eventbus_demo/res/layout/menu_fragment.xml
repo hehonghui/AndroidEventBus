@@ -41,6 +41,12 @@
         android:layout_height="wrap_content"
         android:text="@string/post_to_thread" />
 
+    <Button
+        android:id="@+id/post_primitive_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/post_primitive" />
+
     <TextView
         android:id="@+id/click_tv"
         android:layout_width="match_parent"

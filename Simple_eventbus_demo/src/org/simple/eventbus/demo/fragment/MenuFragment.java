@@ -138,6 +138,20 @@ public class MenuFragment extends BaseFragment {
             }
         });
 
+        // 发布事件,事件类型为原始类型,比如int, boolean, float等
+        rootView.findViewById(R.id.post_primitive_btn).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                EventBus.getDefault().post(12345);
+                // 整型数组
+                EventBus.getDefault().post(new int[] {
+                        12, 24
+                });
+                EventBus.getDefault().post(true);
+            }
+        });
+
         startThreads();
 
         EventBus.getDefault().register(this);

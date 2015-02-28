@@ -72,6 +72,22 @@ public class ConstactFragment extends Fragment {
         });
     }
 
+    @Subcriber
+    private void primitiveParam(int aInt) {
+        Toast.makeText(getActivity(), "int = " + aInt, Toast.LENGTH_SHORT).show();
+    }
+
+    @Subcriber
+    private void primitiveArrayParam(int[] aInt) {
+        Toast.makeText(getActivity(), "int array = " + aInt[0] + ", " + aInt[1], Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    @Subcriber
+    private void primitiveParam(boolean ab) {
+        Toast.makeText(getActivity(), "boolean = " + ab, Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
