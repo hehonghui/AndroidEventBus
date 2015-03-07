@@ -2,7 +2,7 @@
 
   这是一个Android平台的事件总线框架, 它简化了Activity、Fragment、Service等组件之间的交互，很大程度上降低了它们之间的耦合，使得我们的代码更加简洁，耦合性更低，提升我们的代码质量。          
   
-  更多请求请参考[AndroidEventBus 框架发布](http://blog.csdn.net/bboyfeiyu/article/details/43450553);        
+  更多详情请参考[AndroidEventBus 框架发布](http://blog.csdn.net/bboyfeiyu/article/details/43450553);        
   
    ****A english readme is here [README-en.md](README-en.md).****    
   
