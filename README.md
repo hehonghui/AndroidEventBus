@@ -126,7 +126,7 @@ allprojects {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
-    // 添加依赖
+    // add AndroidEventBus dependency
     compile 'org.simple:androideventbus:1.0.2'
 }
 ```
