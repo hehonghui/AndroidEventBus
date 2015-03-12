@@ -143,7 +143,15 @@ private void onEventMainThread(User aUser) {
 ```        
 
 If there are two receiving functions of the same parameter type and both are executed on the main thread, how to name them distinctively? Supposing that there are two functions meeting the requirements and the event is adding user, but because the EventBus judges receiving function only by parameter type of the event, both function will be executed. The strategy of AndroidEventBus is to add a “tag” for each event, and use parameter type and “tag” to jointly mark the uniqueness of the vent so as to ensure precise delivery.      
-These are the differences between AndroidEventBus and EventBus of greenrobot. But it is understandable for greenrobot’s approach considering performance. And what I try to express is that there are very limited quantity of events posted in an App and the performance difference is negligible while user experience is well sensible. What I need to point out is that I know little about the ins and outs of EventsBus of greenrobot and there could be errors among what I’ve mentioned. If that happens, you are more than welcome to correct me.     
+These are the differences between AndroidEventBus and EventBus of greenrobot. But it is understandable for greenrobot’s approach considering performance. And what I try to express is that there are very limited quantity of events posted in an App and the performance difference is negligible while user experience is well sensible. What I need to point out is that I know little about the ins and outs of EventsBus of greenrobot and there could be errors among what I’ve mentioned. If that happens, you are more than welcome to correct me.        
+
+### Comparison Of Characteristics
+
+|         library     | Whether the subscription function can be executed on other thread |         features          |
+|---------------------|-----------------------|
+| [greenrobot's EventBus](https://github.com/greenrobot/EventBus)  |  yes  | It adopts name pattern which is efficient but inconvenient to use. |
+| [square's otto](https://github.com/square/otto)    |  no  | It is convenient to use annotation but it’s not as efficient as EventBus|   
+| [AndroidEventBus]()  |  yes  | It is convenient to use annotation but it’s not as efficient as EventBus. The subscription supports tag (like the Action in Broadcast Receiver) which can make event delivery more accurate and applicable to more usage scenarios.  |        
 ## Thanks Note         
 I really appreciate E-pal “淡蓝色的星期三” for his proposing of bugs and feedback and I hope more and more friends will join our team of AndroidEventBus Development.    
    
