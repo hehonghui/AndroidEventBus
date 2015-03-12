@@ -148,7 +148,7 @@ If there are two receiving functions of the same parameter type and both are exe
 ### Comparison Of Characteristics
 
 |         library     | Whether the subscription function can be executed on other thread |         features          |
-|---------------------|-----------------------|
+|---------------------|-----------------------|------------------|
 | [greenrobot's EventBus](https://github.com/greenrobot/EventBus)  |  yes  | It adopts name pattern which is efficient but inconvenient to use. |
 | [square's otto](https://github.com/square/otto)    |  no  | It is convenient to use annotation but it’s not as efficient as EventBus|   
 | [AndroidEventBus]()  |  yes  | It is convenient to use annotation but it’s not as efficient as EventBus. The subscription supports tag (like the Action in Broadcast Receiver) which can make event delivery more accurate and applicable to more usage scenarios.  |        
