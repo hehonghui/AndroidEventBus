@@ -145,7 +145,13 @@ private void onEventMainThread(User aUser) {
    如果你有两个同参数类型的接收函数，并且都要执行在主线程,那如何命名呢 ？  即使你有两个符合要求的函数吧,那么我实际上是添加用户的事件,但是由于EventBus只根据事件参数类型来判断接收函数,因此会导致两个函数都会被执行。AndroidEventBus的策略是为每个事件添加一个tag,参数类型和tag共同标识一个事件的唯一性,这样就确保了事件的精确投递。       
    
    这就是AndroidEventBus和greenrobot的EventBus的不同,当然greenrobot出于性能的考虑这么处理也可以理解，但是我们在应用中发布的事件数量是很有限的，性能差异可以忽略，但使用体验上却是很直接的。另外由于本人对greenrobot的EventBus前世今生并不是很了解,很可能上述我所说的有误,如果是那样,欢迎您指出。                
-   
+
+
+## 使用了AndroidEventBus的已知App
+* [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)     
+
+`欢迎大家给我反馈使用情况`
+
    
 ## 发布历史
 ### V1.0.2   ( 2015.2.28 )

@@ -129,7 +129,7 @@ dependencies {
     // add AndroidEventBus dependency
     compile 'org.simple:androideventbus:1.0.2'
 }
-```
+```    
                
 ## Differing from the EventBus of greenrobot
    1. <a href="https://github.com/greenrobot/EventBus" target="_blank">EventBus</a> of greenrobot is a popular open source library but its user experience is not as friendly. For example, its subscription function is required to start with onEvent, and if a function’s execution thread needs to be designated, it is necessary to add the mode name of execution thread in the name of the function according to certain rules. This may be difficult to understand. Let’s say, if I want the receiving function of some event to be executed on the main thread, I am required to name it as onEventMainThread. What if two of my subscribers share the same parameter name and both are executed on the receiving function of the main thread? It seems impossible to deal with it in such case. And a set-in-stone function name can’t properly reflect the function of the Function, i.e., the self-documentation of the function. AndroidEventBus uses annotation to mark receiving function, by which the function name is not limited. For example, I can name the receiving function as updateUserInfo(Person info). It’s more flexible.
@@ -151,7 +151,12 @@ If there are two receiving functions of the same parameter type and both are exe
 |---------------------|-----------------------|------------------|
 | [greenrobot's EventBus](https://github.com/greenrobot/EventBus)  |  yes  | It adopts name pattern which is efficient but inconvenient to use. |
 | [square's otto](https://github.com/square/otto)    |  no  | It is convenient to use annotation but it’s not as efficient as EventBus|   
-| [AndroidEventBus]()  |  yes  | It is convenient to use annotation but it’s not as efficient as EventBus. The subscription supports tag (like the Action in Broadcast Receiver) which can make event delivery more accurate and applicable to more usage scenarios.  |        
+| [AndroidEventBus]()  |  yes  | It is convenient to use annotation but it’s not as efficient as EventBus. The subscription supports tag (like the Action in Broadcast Receiver) which can make event delivery more accurate and applicable to more usage scenarios.  |   ## AndroidEventBus is adopted in the following app
+* [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)      
+
+
+ 
+    
 ## Thanks Note         
 I really appreciate E-pal “淡蓝色的星期三” for his proposing of bugs and feedback and I hope more and more friends will join our team of AndroidEventBus Development.    
    
