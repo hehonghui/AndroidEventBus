@@ -127,10 +127,7 @@ dependencies {
     compile 'org.simple:androideventbus:1.0.2'
 }
 ```
-
-
-## 感谢
-   在此非常感谢网友“淡蓝色的星期三”提出的bug以及反馈,也希望更多的朋友能够加入到Android EventBus的开发中来。           
+         
 
 ## 与greenrobot的EventBus的不同
    1. greenrobot的<a href="https://github.com/greenrobot/EventBus" target="_blank">EventBus</a>是一个非常流行的开源库,但是它在使用体验上并不友好,例如它的订阅函数必须以onEvent开头,并且如果需要指定该函数运行的线程则又要根据规则将函数名加上执行线程的模式名,这么说很难理解,比如我要将某个事件的接收函数执行在主线程,那么函数名必须为onEventMainThread。那如果我一个订阅者中有两个参数名相同,且都执行在主线程的接收函数呢? 这个时候似乎它就没法处理了。而且规定死了函数命名,那就不能很好的体现该函数的功能,也就是函数的自文档性。AndroidEventBus使用注解来标识接收函数,这样函数名不受限制,比如我可以把接收函数名写成updateUserInfo(Person info),这样就灵活得多了。    
@@ -153,6 +150,11 @@ private void onEventMainThread(User aUser) {
 `欢迎大家给我反馈使用情况`
 
    
+
+## 感谢
+   在此非常感谢网友“淡蓝色的星期三”提出的bug以及反馈,也希望更多的朋友能够加入到Android EventBus的开发中来。  
+   
+      
 ## 发布历史
 ### V1.0.2   ( 2015.2.28 )
 1. 修复订阅方法的参数是基本类型( int, boolean等 )不能接收事件的问题。
