@@ -143,6 +143,14 @@ private void onEventMainThread(User aUser) {
    
    这就是AndroidEventBus和greenrobot的EventBus的不同,当然greenrobot出于性能的考虑这么处理也可以理解，但是我们在应用中发布的事件数量是很有限的，性能差异可以忽略，但使用体验上却是很直接的。另外由于本人对greenrobot的EventBus前世今生并不是很了解,很可能上述我所说的有误,如果是那样,欢迎您指出。                
 
+### 与EventBus、otto的特性对比
+
+|         名称         | 订阅函数是否可执行在其他线程 |         特点          |
+|---------------------|-----------------------|
+| [greenrobot的EventBus](https://github.com/greenrobot/EventBus)  |  是  | 使用name pattern模式，效率高，但使用不方便。
+| [square的otto](https://github.com/square/otto)    | 否  | 使用注解，使用方便，但效率比不了EventBus。   
+| [AndroidEventBus]()  |  是  | 使用注解，使用方便，但效率比不上EventBus。订阅函数支持tag(类似广播接收器的Action)使得事件的投递更加准确，能适应更多使用场景。 | 
+
 
 ## 使用了AndroidEventBus的已知App
 * [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)     
