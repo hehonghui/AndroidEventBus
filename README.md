@@ -46,28 +46,28 @@ public class YourActivity extends Activity {
     // code ......
     
     // A receiving method with a default tag will execute on UI thread.
-    @Subcriber
+    @Subscriber
     private void updateUser(User user) {
         Log.e("", "### update user name = " + user.name);
     }
 
 	// When there is a “my_tag”, only events designated with “my_tag” can 
 	// trigger the function and execute on UI thread when a user posts an event.
-    @Subcriber(tag = "my_tag")
+    @Subscriber(tag = "my_tag")
     private void updateUserWithTag(User user) {
         Log.e("", "### update user with my_tag, name = " + user.name);
     }
     
 	// When there is a “my_tag”, only events designated with “my_tag” can trigger the function.
 	// The function will execute on the same thread as the one post function is executed on.   
-    @Subcriber(tag = "my_tag", mode=ThreadMode.POST)
+    @Subscriber(tag = "my_tag", mode=ThreadMode.POST)
     private void updateUserWithMode(User user) {
         Log.e("", "### update user with my_tag, name = " + user.name);
     }
 
 	// When there is a “my_tag”, only events designated with “my_tag” can trigger  
 	// the function and execute on an independent thread when a user posts an event.
-    @Subcriber(tag = "my_tag", mode = ThreadMode.ASYNC)
+    @Subscriber(tag = "my_tag", mode = ThreadMode.ASYNC)
     private void updateUserAsync(User user) {
         Log.e("", "### update user async , name = " + user.name + ", thread name = " + Thread.currentThread().getName());
     }
@@ -181,3 +181,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```      
+Subscriber

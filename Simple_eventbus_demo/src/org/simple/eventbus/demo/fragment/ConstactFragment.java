@@ -29,7 +29,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.simple.eventbus.EventBus;
-import org.simple.eventbus.Subcriber;
+import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.ThreadMode;
 import org.simple.eventbus.demo.R;
 import org.simple.eventbus.demo.bean.User;
@@ -72,18 +72,18 @@ public class ConstactFragment extends Fragment {
         });
     }
 
-    @Subcriber
+    @Subscriber
     private void primitiveParam(int aInt) {
         Toast.makeText(getActivity(), "int = " + aInt, Toast.LENGTH_SHORT).show();
     }
 
-    @Subcriber
+    @Subscriber
     private void primitiveArrayParam(int[] aInt) {
         Toast.makeText(getActivity(), "int array = " + aInt[0] + ", " + aInt[1], Toast.LENGTH_SHORT)
                 .show();
     }
 
-    @Subcriber
+    @Subscriber
     private void primitiveParam(boolean ab) {
         Toast.makeText(getActivity(), "boolean = " + ab, Toast.LENGTH_SHORT).show();
     }
@@ -103,7 +103,7 @@ public class ConstactFragment extends Fragment {
     /**
      * @param person
      */
-    @Subcriber
+    @Subscriber
     public void addPerson(User person) {
         mConstacts.add(person);
         mAdapter.notifyDataSetChanged();
@@ -114,7 +114,7 @@ public class ConstactFragment extends Fragment {
      * 
      * @param person
      */
-    @Subcriber(tag = MenuFragment.REMOVE_TAG)
+    @Subscriber(tag = MenuFragment.REMOVE_TAG)
     private void removePersonPrivate(User person) {
         mConstacts.remove(person);
         mAdapter.notifyDataSetChanged();
@@ -125,7 +125,7 @@ public class ConstactFragment extends Fragment {
      * 
      * @param event
      */
-    @Subcriber(tag = MenuFragment.ASYNC_TAG, mode = ThreadMode.ASYNC)
+    @Subscriber(tag = MenuFragment.ASYNC_TAG, mode = ThreadMode.ASYNC)
     private void asyncMethod(final User person) {
         try {
             final String threadName = Thread.currentThread().getName();

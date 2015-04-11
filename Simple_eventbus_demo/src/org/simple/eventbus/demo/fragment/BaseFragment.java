@@ -27,7 +27,7 @@ package org.simple.eventbus.demo.fragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import org.simple.eventbus.Subcriber;
+import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.demo.bean.User;
 
 /**
@@ -37,7 +37,7 @@ public class BaseFragment extends Fragment {
 
     static final String SUPER_TAG = "super_tag";
 
-    @Subcriber(tag = SUPER_TAG)
+    @Subscriber(tag = SUPER_TAG)
     private void privateMethodInSuper(User user) {
         Log.e(getTag(), "### supper private Method In Super invoked ( default tag ) ");
     }

@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface Subcriber {
+public @interface Subscriber {
     /**
      * 事件的tag,类似于BroadcastReceiver中的Action,事件的标识符
      * 

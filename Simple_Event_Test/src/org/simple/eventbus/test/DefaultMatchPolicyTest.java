@@ -28,7 +28,7 @@ import android.test.AndroidTestCase;
 
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.EventType;
-import org.simple.eventbus.Subcriber;
+import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.matchpolicy.DefaultMatchPolicy;
 import org.simple.eventbus.matchpolicy.MatchPolicy;
 import org.simple.eventbus.test.mock.User;
@@ -54,12 +54,12 @@ public class DefaultMatchPolicyTest extends AndroidTestCase {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subcriber
+    @Subscriber
     private void whatEver(User user) {
 
     }
 
-    @Subcriber
+    @Subscriber
     private void singleObjectParam(Object obj) {
 
     }

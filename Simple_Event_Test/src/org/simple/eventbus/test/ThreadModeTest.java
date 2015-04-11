@@ -28,7 +28,7 @@ import android.test.AndroidTestCase;
 import android.util.Log;
 
 import org.simple.eventbus.EventBus;
-import org.simple.eventbus.Subcriber;
+import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.ThreadMode;
 import org.simple.eventbus.handler.AsyncEventHandler;
 import org.simple.eventbus.test.mock.User;
@@ -59,7 +59,7 @@ public class ThreadModeTest extends AndroidTestCase {
         waitDispatchEvent();
     }
 
-    @Subcriber(tag = MAIN_TAG)
+    @Subscriber(tag = MAIN_TAG)
     private void executeOnUIThread(User user) {
         assertEquals("main-thread", user.name);
         // can not test main thread mode
@@ -71,7 +71,7 @@ public class ThreadModeTest extends AndroidTestCase {
         waitDispatchEvent();
     }
 
-    @Subcriber(tag = POST_TAG, mode = ThreadMode.POST)
+    @Subscriber(tag = POST_TAG, mode = ThreadMode.POST)
     private void executeOnPostThread(User user) {
         assertEquals("post-thread", user.name);
         assertEquals(uiThread, Thread.currentThread());
@@ -82,7 +82,7 @@ public class ThreadModeTest extends AndroidTestCase {
         waitDispatchEvent();
     }
 
-    @Subcriber(tag = ASYNC_TAG, mode = ThreadMode.ASYNC)
+    @Subscriber(tag = ASYNC_TAG, mode = ThreadMode.ASYNC)
     private void executeOnAsyncThread(User user) {
         assertEquals("async-thread", user.name);
         Log.e(getName(), "### executeOnAsyncThread flag");

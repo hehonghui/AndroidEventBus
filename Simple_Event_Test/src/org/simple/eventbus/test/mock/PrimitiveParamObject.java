@@ -24,33 +24,33 @@
 
 package org.simple.eventbus.test.mock;
 
-import org.simple.eventbus.Subcriber;
+import org.simple.eventbus.Subscriber;
 
 /**
  * @author mrsimple
  */
 public class PrimitiveParamObject {
-    @Subcriber
+    @Subscriber
     public void intParam(int aInt) {
 
     }
 
-    @Subcriber
+    @Subscriber
     public void booleanParam(boolean ab) {
 
     }
 
-    @Subcriber
+    @Subscriber
     public void floatParam(float aFloat) {
 
     }
 
-    @Subcriber
+    @Subscriber
     public void doubleParam(double aDouble) {
 
     }
 
-    @Subcriber
+    @Subscriber
     public void intArrayParam(int[] ints) {
 
     }

@@ -68,7 +68,7 @@ public class SubsciberMethodHunter {
             for (int i = 0; i < allMethods.length; i++) {
                 Method method = allMethods[i];
                 // 根据注解来解析函数
-                Subcriber annotation = method.getAnnotation(Subcriber.class);
+                Subscriber annotation = method.getAnnotation(Subscriber.class);
                 if (annotation != null) {
                     // 获取方法参数
                     Class<?>[] paramsTypeClass = method.getParameterTypes();

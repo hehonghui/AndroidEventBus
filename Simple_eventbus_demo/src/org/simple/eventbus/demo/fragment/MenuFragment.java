@@ -25,7 +25,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.simple.eventbus.EventBus;
-import org.simple.eventbus.Subcriber;
+import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.ThreadMode;
 import org.simple.eventbus.demo.R;
 import org.simple.eventbus.demo.bean.User;
@@ -180,7 +180,7 @@ public class MenuFragment extends BaseFragment {
         EventBus.getDefault().post(userLisr);
     }
 
-    @Subcriber
+    @Subscriber
     private void subcribeList(List<User> users) {
         for (int i = 0; i < users.size(); i++) {
             Log.e(getTag(), "### user name = " + users.get(i));
@@ -192,7 +192,7 @@ public class MenuFragment extends BaseFragment {
      * 
      * @param clickPerson
      */
-    @Subcriber(tag = CLICK_TAG)
+    @Subscriber(tag = CLICK_TAG)
     private void updateClickUserName(User clickPerson) {
         mUserNameTv.setText(clickPerson.name);
     }
@@ -200,7 +200,7 @@ public class MenuFragment extends BaseFragment {
     /**
      * 模拟从异步线程发来的更新信息, {@link PostThread#run()}
      */
-    @Subcriber
+    @Subscriber
     private void receiveFrom(String name) {
         // 从哪个线程投递来的消息
         mThreadTv.setText("from " + name);
@@ -211,7 +211,7 @@ public class MenuFragment extends BaseFragment {
      * 
      * @param event
      */
-    @Subcriber(mode = ThreadMode.POST)
+    @Subscriber(mode = ThreadMode.POST)
     private void invokeInPostThread(String event) {
         Log.e(getTag(), "### invokeInPostThread invoke in thread =  "
                 + Thread.currentThread().getName());
@@ -255,7 +255,7 @@ public class MenuFragment extends BaseFragment {
          * 
          * @param name
          */
-        @Subcriber(tag = THREAD_TAG)
+        @Subscriber(tag = THREAD_TAG)
         private void sayHello(String name) {
             Log.d(getTag(), "### hello, " + name + " -->  in " + getName());
         }

@@ -16,23 +16,23 @@
 
 package org.simple.eventbus.test.mock;
 
-import org.simple.eventbus.Subcriber;
+import org.simple.eventbus.Subscriber;
 
 /**
  * @author mrsimple
  */
 public class MockSubcriber {
 
-    @Subcriber
+    @Subscriber
     void onEventNoParam() {
     }
 
-    @Subcriber
+    @Subscriber
     void onEventTwoParam(User person, int id) {
 
     }
 
-    @Subcriber
+    @Subscriber
     void onEvent(User person) {
         System.out.println("invoke onEvent(Person person) in " + this.getClass().getName());
         System.out.println("person name =  " + person.name);
@@ -43,7 +43,7 @@ public class MockSubcriber {
      * 
      * @param person
      */
-    @Subcriber
+    @Subscriber
     void addPerson(User person) {
         System.out.println("invoke addPerson(Person person) in " + this.getClass().getName());
         System.out.println("person name =  " + person.name);
@@ -54,7 +54,7 @@ public class MockSubcriber {
      * 
      * @param person
      */
-    @Subcriber(tag = "test")
+    @Subscriber(tag = "test")
     void methodWithTag(User person) {
 
     }
@@ -64,7 +64,7 @@ public class MockSubcriber {
      * 
      * @param person
      */
-    @Subcriber(tag = "another")
+    @Subscriber(tag = "another")
     void methodWithAnotherTag(User person) {
 
     }
@@ -74,7 +74,7 @@ public class MockSubcriber {
      * 
      * @param object
      */
-    @Subcriber
+    @Subscriber
     void onEvent(Object object) {
         System.out.println("invoke onEvent(Person person) in " + this.getClass().getName());
     }

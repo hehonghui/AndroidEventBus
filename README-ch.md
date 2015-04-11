@@ -8,7 +8,7 @@
   
 ## 基本结构
  ![结构图](http://img.blog.csdn.net/20150203125508110)      
- AndroidEventBus类似于观察者模式,通过register函数将需要订阅事件的对象注册到事件总线中,然后根据@Subcriber注解来查找对象中的订阅方法,并且将这些订阅方法和订阅对象存储在map中。当用户在某个地方发布一个事件时,事件总线根据事件的参数类型和tag找到对应的订阅者对象,最后执行订阅者对象中的方法。这些订阅方法会执行在用户指定的线程模型中,比如mode=ThreadMode.ASYNC则表示该订阅方法执行在子线程中,更多细节请看下面的说明。        	
+ AndroidEventBus类似于观察者模式,通过register函数将需要订阅事件的对象注册到事件总线中,然后根据@Subscriber注解来查找对象中的订阅方法,并且将这些订阅方法和订阅对象存储在map中。当用户在某个地方发布一个事件时,事件总线根据事件的参数类型和tag找到对应的订阅者对象,最后执行订阅者对象中的方法。这些订阅方法会执行在用户指定的线程模型中,比如mode=ThreadMode.ASYNC则表示该订阅方法执行在子线程中,更多细节请看下面的说明。        	
 
 ## 使用AndroidEventBus 
  你可以按照下面几个步骤来使用AndroidEventBus.     
@@ -46,26 +46,26 @@ public class YourActivity extends Activity {
     // code ......
     
     // 接收方法,默认的tag,执行在UI线程
-    @Subcriber
+    @Subscriber
     private void updateUser(User user) {
         Log.e("", "### update user name = " + user.name);
     }
 
 	// 含有my_tag,当用户post事件时,只有指定了"my_tag"的事件才会触发该函数,执行在UI线程
-    @Subcriber(tag = "my_tag")
+    @Subscriber(tag = "my_tag")
     private void updateUserWithTag(User user) {
         Log.e("", "### update user with my_tag, name = " + user.name);
     }
     
     // 含有my_tag,当用户post事件时,只有指定了"my_tag"的事件才会触发该函数,
     // post函数在哪个线程执行,该函数就执行在哪个线程    
-    @Subcriber(tag = "my_tag", mode=ThreadMode.POST)
+    @Subscriber(tag = "my_tag", mode=ThreadMode.POST)
     private void updateUserWithMode(User user) {
         Log.e("", "### update user with my_tag, name = " + user.name);
     }
 
 	// 含有my_tag,当用户post事件时,只有指定了"my_tag"的事件才会触发该函数,执行在一个独立的线程
-    @Subcriber(tag = "my_tag", mode = ThreadMode.ASYNC)
+    @Subscriber(tag = "my_tag", mode = ThreadMode.ASYNC)
     private void updateUserAsync(User user) {
         Log.e("", "### update user async , name = " + user.name + ", thread name = " + Thread.currentThread().getName());
     }
@@ -143,6 +143,14 @@ private void onEventMainThread(User aUser) {
    
    这就是AndroidEventBus和greenrobot的EventBus的不同,当然greenrobot出于性能的考虑这么处理也可以理解，但是我们在应用中发布的事件数量是很有限的，性能差异可以忽略，但使用体验上却是很直接的。另外由于本人对greenrobot的EventBus前世今生并不是很了解,很可能上述我所说的有误,如果是那样,欢迎您指出。                
 
+### 与EventBus、otto的特性对比
+
+|         名称         | 订阅函数是否可执行在其他线程 |         特点          |
+|---------------------|-----------------------|
+| [greenrobot的EventBus](https://github.com/greenrobot/EventBus)  |  是  | 使用name pattern模式，效率高，但使用不方便。
+| [square的otto](https://github.com/square/otto)    | 否  | 使用注解，使用方便，但效率比不了EventBus。   
+| [AndroidEventBus]()  |  是  | 使用注解，使用方便，但效率比不上EventBus。订阅函数支持tag(类似广播接收器的Action)使得事件的投递更加准确，能适应更多使用场景。 | 
+
 
 ## 使用了AndroidEventBus的已知App
 * [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)     
@@ -164,7 +172,7 @@ private void onEventMainThread(User aUser) {
 
 
 ### v1.0     ( 2015.2.9 )
-1. 事件总线框架发布，使用@Subcriber注解标识订阅方法；
+1. 事件总线框架发布，使用@Subscriber注解标识订阅方法；
 2. 订阅方法支持tag标识，使得事件投递更加精准。      
 
 

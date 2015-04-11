@@ -16,13 +16,13 @@
 
 package org.simple.eventbus.test.mock;
 
-import org.simple.eventbus.Subcriber;
+import org.simple.eventbus.Subscriber;
 
 /**
  * @author mrsimple
  */
 public class SingleSubscriber {
-    @Subcriber
+    @Subscriber
     void onEvent(Object event) {
         System.out.println("invoke onEvent(Object event) in " + this.getClass().getName());
     }
