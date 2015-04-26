@@ -7,7 +7,7 @@
    ****A english readme is here [README-en.md](README-en.md).****    
   
 ## 基本结构
- ![结构图](http://img.blog.csdn.net/20150203125508110)      
+ ![结构图](http://img.blog.csdn.net/20150426223040789)      
  AndroidEventBus类似于观察者模式,通过register函数将需要订阅事件的对象注册到事件总线中,然后根据@Subscriber注解来查找对象中的订阅方法,并且将这些订阅方法和订阅对象存储在map中。当用户在某个地方发布一个事件时,事件总线根据事件的参数类型和tag找到对应的订阅者对象,最后执行订阅者对象中的方法。这些订阅方法会执行在用户指定的线程模型中,比如mode=ThreadMode.ASYNC则表示该订阅方法执行在子线程中,更多细节请看下面的说明。        	
 
 ## 使用AndroidEventBus 
