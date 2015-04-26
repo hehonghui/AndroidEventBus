@@ -5,7 +5,7 @@ This is an EventBus library for Android. It simplifies the communication between
    ****中文版 [README.md](README-ch.md).****    
   
 ## Basic Architecture
- ![arch](http://img.blog.csdn.net/20150203125508110)         
+ ![arch](http://img.blog.csdn.net/20150426223040789)         
   
 AndroidEventBus is like the Observer Pattern. It will have the objects which need to subscribe events registered into the EventBus through Function “register” and store such subscription methods and subscription objects in Map. When a user posts an event somewhere, the EventBus will find corresponding subscription object in accordance with the parameter type and tag of the Event and then execute the method in subscription object. These subscription methods will be executed in the Thread Mode designated by the user. For example, mode=ThreadMode. ASNYC means the subscription method is executed in the sub-thread. Please refer to the following instructions for more details.      	
 
@@ -143,15 +143,21 @@ private void onEventMainThread(User aUser) {
 ```        
 
 If there are two receiving functions of the same parameter type and both are executed on the main thread, how to name them distinctively? Supposing that there are two functions meeting the requirements and the event is adding user, but because the EventBus judges receiving function only by parameter type of the event, both function will be executed. The strategy of AndroidEventBus is to add a “tag” for each event, and use parameter type and “tag” to jointly mark the uniqueness of the vent so as to ensure precise delivery.      
-These are the differences between AndroidEventBus and EventBus of greenrobot. But it is understandable for greenrobot’s approach considering performance. And what I try to express is that there are very limited quantity of events posted in an App and the performance difference is negligible while user experience is well sensible. What I need to point out is that I know little about the ins and outs of EventsBus of greenrobot and there could be errors among what I’ve mentioned. If that happens, you are more than welcome to correct me.        
 
-### Comparison Of Characteristics
+These are the differences between AndroidEventBus and EventBus of greenrobot. But it is understandable for greenrobot’s approach considering performance. And what I try to express is that there are very limited quantity of events posted in an App and the performance difference is negligible while user experience is well sensible. What I need to point out is that I know little about the ins and outs of EventsBus of greenrobot and there could be errors among what I’ve mentioned. If that happens, you are more than welcome to correct me.        
+
+
+### Comparison Of Characteristics
 
 |         library     | Whether the subscription function can be executed on other thread |         features          |
 |---------------------|-----------------------|------------------|
 | [greenrobot's EventBus](https://github.com/greenrobot/EventBus)  |  yes  | It adopts name pattern which is efficient but inconvenient to use. |
 | [square's otto](https://github.com/square/otto)    |  no  | It is convenient to use annotation but it’s not as efficient as EventBus|   
-| [AndroidEventBus]()  |  yes  | It is convenient to use annotation but it’s not as efficient as EventBus. The subscription supports tag (like the Action in Broadcast Receiver) which can make event delivery more accurate and applicable to more usage scenarios.  |   ## AndroidEventBus is adopted in the following app
+| [AndroidEventBus]()  |  yes  | It is convenient to use annotation but it’s not as efficient as EventBus. The subscription supports tag (like the Action in Broadcast Receiver) which can make event delivery more accurate and applicable to more usage scenarios.  |   
+
+
+
+## AndroidEventBus is adopted in the following app
 * [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)      
 
 
@@ -161,8 +167,18 @@ If there are two receiving functions of the same parameter type and both are exe
 I really appreciate E-pal “淡蓝色的星期三” for his proposing of bugs and feedback and I hope more and more friends will join our team of AndroidEventBus Development.    
    
    
-## Release Note### V1.0.2 ( 2015.2.28 )Solved the problem of failing to receive an event when the parameter of the subscription method is a basic type (int, Boolean, etc.)### V1.0.1 ( 2015.2.13 )1. Solved the problem that the subscription method can’t receive an event because the subscription method is delivered as sub-type when posting an event while it was originally of basic type.     
-### v1.0 ( 2015.2.9 )1.	Release an EventBus library; use @Subscriber annotation to mark subscription method2.	The subscription method supports “tag” mark, which makes event delivery more precise.     
+## Release Note
+### V1.0.2 ( 2015.2.28 )
+Solved the problem of failing to receive an event when the parameter of the subscription method is a basic type (int, Boolean, etc.)
+
+### V1.0.1 ( 2015.2.13 )
+1. Solved the problem that the subscription method can’t receive an event because the subscription method is delivered as sub-type when posting an event while it was originally of basic type.     
+
+
+### v1.0 ( 2015.2.9 )
+1.	Release an EventBus library; use @Subscriber annotation to mark subscription method
+2.	The subscription method supports “tag” mark, which makes event delivery more precise.
+     
 
 
 ## License
