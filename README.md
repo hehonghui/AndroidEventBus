@@ -155,7 +155,15 @@ These are the differences between AndroidEventBus and EventBus of greenrobot. Bu
 | [square's otto](https://github.com/square/otto)    |  no  | It is convenient to use annotation but it’s not as efficient as EventBus|   
 | [AndroidEventBus]()  |  yes  | It is convenient to use annotation but it’s not as efficient as EventBus. The subscription supports tag (like the Action in Broadcast Receiver) which can make event delivery more accurate and applicable to more usage scenarios.  |   
 
+## Proguard
 
+```
+-keep class org.simple.** { *; }
+-keep interface org.simple.** { *; }
+-keepclassmembers class * {
+    @org.simple.eventbus.Subscriber <methods>;
+}
+```
 
 ## AndroidEventBus is adopted in the following app
 * [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)      
