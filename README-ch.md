@@ -152,6 +152,16 @@ private void onEventMainThread(User aUser) {
 | [AndroidEventBus]()  |  是  | 使用注解，使用方便，但效率比不上EventBus。订阅函数支持tag(类似广播接收器的Action)使得事件的投递更加准确，能适应更多使用场景。 | 
 
 
+## 混淆配置
+
+```
+-keep class org.simple.** { *; }
+-keep interface org.simple.** { *; }
+-keepclassmembers class * {
+    @org.simple.eventbus.Subscriber <methods>;
+}
+```
+
 ## 使用了AndroidEventBus的已知App
 * [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)     
 
