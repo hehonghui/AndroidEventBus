@@ -23,6 +23,9 @@ import org.simple.eventbus.handler.UIThreadEventHandler;
 import org.simple.eventbus.matchpolicy.DefaultMatchPolicy;
 import org.simple.eventbus.matchpolicy.MatchPolicy;
 
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -71,7 +74,11 @@ public final class EventBus {
      * EventType-Subcriptions map
      */
     private final Map<EventType, CopyOnWriteArrayList<Subscription>> mSubcriberMap = new ConcurrentHashMap<EventType, CopyOnWriteArrayList<Subscription>>();
-
+    /**
+     * 
+     */
+    private List<EventType> mStickyEvents = Collections
+            .synchronizedList(new LinkedList<EventType>());
     /**
      * the thread local event queue, every single thread has it's own queue.
      */
@@ -144,6 +151,11 @@ public final class EventBus {
         }
     }
 
+    public void registerSticky(Object subscriber) {
+        this.register(subscriber);
+        mDispatcher.dispatchStickyEvents(subscriber);
+    }
+
     /**
      * @param subscriber
      */
@@ -175,6 +187,36 @@ public final class EventBus {
     public void post(Object event, String tag) {
         mLocalEvents.get().offer(new EventType(event.getClass(), tag));
         mDispatcher.dispatchEvents(event);
+    }
+
+    public void postSticky(Object event) {
+        postSticky(event, EventType.DEFAULT_TAG);
+    }
+
+    public void postSticky(Object event, String tag) {
+        EventType eventType = new EventType(event.getClass(), tag);
+        eventType.event = event;
+        mStickyEvents.add(eventType);
+    }
+
+    public void removeStickyEvent(Class<?> eventClass) {
+        removeStickyEvent(eventClass, EventType.DEFAULT_TAG);
+    }
+
+    /**
+     * 移除Sticky事件
+     * 
+     * @param type
+     */
+    public void removeStickyEvent(Class<?> eventClass, String tag) {
+        Iterator<EventType> iterator = mStickyEvents.iterator();
+        while (iterator.hasNext()) {
+            EventType eventType = iterator.next();
+            if (eventType.paramClass.equals(eventClass)
+                    && eventType.tag.equals(tag)) {
+                iterator.remove();
+            }
+        }
     }
 
     /**
@@ -279,6 +321,12 @@ public final class EventBus {
          */
         MatchPolicy mMatchPolicy = new DefaultMatchPolicy();
 
+        void dispatchStickyEvents(Object subscriber) {
+            for (EventType eventType : mStickyEvents) {
+                handleStickyEvent(eventType, eventType.event, subscriber);
+            }
+        }
+
         /**
          * @param event
          */
@@ -308,6 +356,29 @@ public final class EventBus {
 
             for (EventType eventType : eventTypes) {
                 handleEvent(eventType, aEvent);
+            }
+        }
+
+        /**
+         * 处理单个事件
+         * 
+         * @param eventType
+         * @param aEvent
+         */
+        private void handleStickyEvent(EventType eventType, Object aEvent, Object subscriber) {
+            List<Subscription> subscriptions = mSubcriberMap.get(eventType);
+            if (subscriptions == null) {
+                return;
+            }
+
+            for (Subscription subscription : subscriptions) {
+                final ThreadMode mode = subscription.threadMode;
+                EventHandler eventHandler = getEventHandler(mode);
+                if (subscription.subscriber.equals(subscriber)) {
+                    // 处理事件
+                    eventHandler.handleEvent(subscription, aEvent);
+                }
+
             }
         }
 

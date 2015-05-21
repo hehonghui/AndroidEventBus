@@ -16,6 +16,7 @@
 
 package org.simple.eventbus.demo.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import org.simple.eventbus.EventBus;
 import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.ThreadMode;
 import org.simple.eventbus.demo.R;
+import org.simple.eventbus.demo.StickyActivity;
 import org.simple.eventbus.demo.bean.User;
 
 import java.util.ArrayList;
@@ -155,6 +157,17 @@ public class MenuFragment extends BaseFragment {
         startThreads();
 
         EventBus.getDefault().register(this);
+
+        
+        EventBus.getDefault().postSticky(new User("我的i没那个子"));
+        rootView.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                Intent intent = new Intent(getActivity(), StickyActivity.class);
+                startActivity(intent);
+            }
+        }, 3000);
         return rootView;
     }
 

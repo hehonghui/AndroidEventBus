@@ -83,7 +83,7 @@ public class SubsciberMethodHunter {
                 }
             } // end for
 
-            // 获取父类,以继续查找父类中复合要求的方法
+            // 获取父类,以继续查找父类中符合要求的方法
             clazz = clazz.getSuperclass();
         }
     }

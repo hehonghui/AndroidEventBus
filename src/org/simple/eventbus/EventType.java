@@ -38,6 +38,7 @@ public final class EventType {
      */
     public String tag = DEFAULT_TAG;
 
+    public Object event ;
     /**
      * @param aClass
      */
