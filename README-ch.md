@@ -164,6 +164,7 @@ private void onEventMainThread(User aUser) {
 
 ## 使用了AndroidEventBus的已知App
 * [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)     
+* [考拉FM](http://www.wandoujia.com/apps/com.itings.myradio)
 
 `欢迎大家给我反馈使用情况`
 
