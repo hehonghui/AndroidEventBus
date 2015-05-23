@@ -76,7 +76,7 @@ public class SubsciberMethodHunter {
                     if (paramsTypeClass != null && paramsTypeClass.length == 1) {
                         Class<?> paramType = convertType(paramsTypeClass[0]);
                         EventType eventType = new EventType(paramType, annotation.tag());
-                        TargetMethod subscribeMethod = new TargetMethod(method, paramType,
+                        TargetMethod subscribeMethod = new TargetMethod(method, eventType,
                                 annotation.mode());
                         subscibe(eventType, subscribeMethod, subscriber);
                     }

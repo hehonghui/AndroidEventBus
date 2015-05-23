@@ -24,6 +24,7 @@ import org.simple.eventbus.EventType;
 import org.simple.eventbus.Subscription;
 import org.simple.eventbus.test.mock.MockSubcriber;
 import org.simple.eventbus.test.mock.SingleSubscriber;
+import org.simple.eventbus.test.mock.StickySubscriber;
 import org.simple.eventbus.test.mock.User;
 
 import java.util.Collection;
@@ -130,6 +131,48 @@ public class EventBusTest extends AndroidTestCase {
 
     public void testUnRegisterNull() {
         bus.unregister(null);
+    }
+
+    public void testStickyEvents() {
+        assertEquals(0, bus.getStickyEvents().size());
+        bus.postSticky("hello");
+        assertEquals(1, bus.getStickyEvents().size());
+        final String tag = "sticky";
+        bus.postSticky("world", tag);
+        assertEquals(2, bus.getStickyEvents().size());
+
+        bus.removeStickyEvent(String.class);
+        assertEquals(1, bus.getStickyEvents().size());
+
+        bus.removeStickyEvent(String.class, tag);
+        assertEquals(0, bus.getStickyEvents().size());
+    }
+
+    public void testStickySubscriber() {
+        StickySubscriber subscriber = new StickySubscriber();
+        assertEquals(null, subscriber.mStickyName);
+        assertEquals(null, subscriber.mStickyTag);
+        // 未注册时发布事件,那么对象接收不到事件
+        bus.post("hello");
+        // 普通注册形式
+        bus.register(subscriber);
+        assertEquals(null, subscriber.mStickyName);
+        assertEquals(null, subscriber.mStickyTag);
+        bus.unregister(subscriber);
+
+        // post sticky事件
+        bus.postSticky("simple");
+        // 以sticky的形式注册
+        bus.registerSticky(subscriber);
+
+        // 接收到数据
+        assertEquals("simple", subscriber.mStickyName);
+        assertEquals(null, subscriber.mStickyTag);
+
+        // post sticky事件, 含有tag, 这里需要注意
+        bus.postSticky("simple", "sticky");
+        assertEquals("sticky", subscriber.mStickyTag);
+
     }
 
     /**

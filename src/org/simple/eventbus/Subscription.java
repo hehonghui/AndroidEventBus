@@ -36,6 +36,10 @@ public class Subscription {
      * 执行事件的线程模型
      */
     public ThreadMode threadMode;
+    /**
+     * 事件类型
+     */
+    public EventType eventType;
 
     /**
      * @param subscriber
@@ -45,6 +49,7 @@ public class Subscription {
         this.subscriber = subscriber;
         this.targetMethod = targetMethod.method;
         this.threadMode = targetMethod.threadMode;
+        this.eventType = targetMethod.eventType;
     }
 
     @Override

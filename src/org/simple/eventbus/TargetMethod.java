@@ -31,7 +31,8 @@ import java.lang.reflect.Method;
     /**
      * 事件类型
      */
-    public Class<?> eventType;
+//    public Class<?> eventType;
+    public EventType eventType ;
     /**
      * 处理事件的线程模式
      */
@@ -42,10 +43,10 @@ import java.lang.reflect.Method;
      * @param eventType
      * @param mode
      */
-    public TargetMethod(Method md, Class<?> clazz, ThreadMode mode) {
+    public TargetMethod(Method md, EventType type, ThreadMode mode) {
         this.method = md;
         this.method.setAccessible(true);
-        this.eventType = clazz;
+        this.eventType = type;
         this.threadMode = mode;
     }
 

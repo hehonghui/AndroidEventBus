@@ -151,9 +151,15 @@ public final class EventBus {
         }
     }
 
+    /**
+     * 以sticky的形式注册,则会在注册成功之后迭代所有的sticky事件
+     * 
+     * @param subscriber
+     */
     public void registerSticky(Object subscriber) {
         this.register(subscriber);
-        mDispatcher.dispatchStickyEvents(subscriber);
+        // 处理sticky事件
+        mDispatcher.dispatchStickyEvents();
     }
 
     /**
@@ -163,7 +169,6 @@ public final class EventBus {
         if (subscriber == null) {
             return;
         }
-
         synchronized (this) {
             mMethodHunter.removeMethodsFromMap(subscriber);
         }
@@ -197,6 +202,8 @@ public final class EventBus {
         EventType eventType = new EventType(event.getClass(), tag);
         eventType.event = event;
         mStickyEvents.add(eventType);
+        // 处理sticky事件
+        mDispatcher.handleStickyEvent(eventType);
     }
 
     public void removeStickyEvent(Class<?> eventClass) {
@@ -217,6 +224,10 @@ public final class EventBus {
                 iterator.remove();
             }
         }
+    }
+
+    public List<EventType> getStickyEvents() {
+        return mStickyEvents;
     }
 
     /**
@@ -321,9 +332,9 @@ public final class EventBus {
          */
         MatchPolicy mMatchPolicy = new DefaultMatchPolicy();
 
-        void dispatchStickyEvents(Object subscriber) {
+        void dispatchStickyEvents() {
             for (EventType eventType : mStickyEvents) {
-                handleStickyEvent(eventType, eventType.event, subscriber);
+                handleStickyEvent(eventType);
             }
         }
 
@@ -365,18 +376,18 @@ public final class EventBus {
          * @param eventType
          * @param aEvent
          */
-        private void handleStickyEvent(EventType eventType, Object aEvent, Object subscriber) {
+        private void handleStickyEvent(EventType eventType) {
             List<Subscription> subscriptions = mSubcriberMap.get(eventType);
             if (subscriptions == null) {
                 return;
             }
 
-            for (Subscription subscription : subscriptions) {
-                final ThreadMode mode = subscription.threadMode;
+            for (Subscription subItem : subscriptions) {
+                final ThreadMode mode = subItem.threadMode;
                 EventHandler eventHandler = getEventHandler(mode);
-                if (subscription.subscriber.equals(subscriber)) {
+                if (subItem.eventType.equals(eventType)) {
                     // 处理事件
-                    eventHandler.handleEvent(subscription, aEvent);
+                    eventHandler.handleEvent(subItem, eventType.event);
                 }
 
             }
@@ -406,11 +417,9 @@ public final class EventBus {
             if (mode == ThreadMode.ASYNC) {
                 return mAsyncEventHandler;
             }
-
             if (mode == ThreadMode.POST) {
                 return mPostThreadHandler;
             }
-
             return mUIThreadEventHandler;
         }
     } // end of EventDispatcher

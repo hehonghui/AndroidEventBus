@@ -158,8 +158,7 @@ public class MenuFragment extends BaseFragment {
 
         EventBus.getDefault().register(this);
 
-        
-        EventBus.getDefault().postSticky(new User("我的i没那个子"));
+        EventBus.getDefault().postSticky(new User("我来自Sticky事件"));
         rootView.postDelayed(new Runnable() {
 
             @Override
