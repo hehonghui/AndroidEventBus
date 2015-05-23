@@ -165,6 +165,7 @@ public final class EventBus {
     /**
      * @param subscriber
      */
+    @Deprecated
     public void unregister(Object subscriber) {
         if (subscriber == null) {
             return;
@@ -402,9 +403,8 @@ public final class EventBus {
          * @return
          */
         private boolean isTarget(Subscription item, Object subscriber) {
-            return subscriber != null
-                    && item.subscriber.equals(subscriber)
-                    || subscriber == null;
+            return subscriber == null || (subscriber != null
+                    && item.subscriber.get().equals(subscriber));
         }
 
         /**

@@ -236,16 +236,6 @@ public class MenuFragment extends BaseFragment {
         EventBus.getDefault().post(new User("super"), SUPER_TAG);
     }
 
-    @Override
-    public void onDestroy() {
-        // for (PostThread timerThread : threads) {
-        // timerThread.interrupt();
-        // }
-
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
-
     /**
      * 投递线程,不断地给主线程投递消息,同时也接受主线程投递过来的消息
      * 
@@ -284,8 +274,6 @@ public class MenuFragment extends BaseFragment {
                     e.printStackTrace();
                 }
             }
-
-            EventBus.getDefault().unregister(this);
         }
     }
 }

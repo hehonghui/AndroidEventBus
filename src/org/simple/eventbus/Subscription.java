@@ -16,6 +16,8 @@
 
 package org.simple.eventbus;
 
+import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 
 /**
@@ -27,7 +29,7 @@ public class Subscription {
     /**
      * 订阅者对象
      */
-    public Object subscriber;
+    public Reference<Object> subscriber;
     /**
      * 接受者的方法
      */
@@ -46,7 +48,7 @@ public class Subscription {
      * @param method
      */
     public Subscription(Object subscriber, TargetMethod targetMethod) {
-        this.subscriber = subscriber;
+        this.subscriber = new WeakReference<Object>(subscriber);
         this.targetMethod = targetMethod.method;
         this.threadMode = targetMethod.threadMode;
         this.eventType = targetMethod.eventType;
@@ -70,10 +72,10 @@ public class Subscription {
         if (getClass() != obj.getClass())
             return false;
         Subscription other = (Subscription) obj;
-        if (subscriber == null) {
-            if (other.subscriber != null)
+        if (subscriber.get() == null) {
+            if (other.subscriber.get() != null)
                 return false;
-        } else if (!subscriber.equals(other.subscriber))
+        } else if (!subscriber.get().equals(other.subscriber.get()))
             return false;
         if (targetMethod == null) {
             if (other.targetMethod != null)

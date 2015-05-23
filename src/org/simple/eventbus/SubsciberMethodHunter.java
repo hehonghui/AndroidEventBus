@@ -121,18 +121,21 @@ public class SubsciberMethodHunter {
         while (iterator.hasNext()) {
             CopyOnWriteArrayList<Subscription> subscriptions = iterator.next();
             if (subscriptions != null) {
-                List<Subscription> foundSubscriptions = new LinkedList<Subscription>();
+                List<Subscription> foundSubscriptions = new
+                        LinkedList<Subscription>();
                 Iterator<Subscription> subIterator = subscriptions.iterator();
                 while (subIterator.hasNext()) {
                     Subscription subscription = subIterator.next();
-                    if (subscription.subscriber.equals(subscriber)) {
+                    // 获取引用
+                    Object cacheObject = subscription.subscriber.get();
+                    if (cacheObject.equals(subscriber)) {
                         Log.d("", "### 移除订阅 " + subscriber.getClass().getName());
-                        foundSubscriptions.add(subscription);
+                         foundSubscriptions.add(subscription);
                     }
                 }
 
                 // 移除该subscriber的相关的Subscription
-                subscriptions.removeAll(foundSubscriptions);
+                 subscriptions.removeAll(foundSubscriptions);
             }
 
             // 如果针对某个Event的订阅者数量为空了,那么需要从map中清除

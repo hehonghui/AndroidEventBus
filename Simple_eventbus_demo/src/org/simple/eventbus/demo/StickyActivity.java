@@ -33,30 +33,31 @@ import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.demo.bean.User;
 
 public class StickyActivity extends Activity {
-    
-    TextView nameTv ;
-    TextView ageTv ;
-    
+
+    TextView nameTv;
+    TextView ageTv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sticky_activity);
-        
-        nameTv = (TextView)findViewById(R.id.name_tv) ;
-        ageTv = (TextView)findViewById(R.id.age_tv) ;
-        
+
+        nameTv = (TextView) findViewById(R.id.name_tv);
+        ageTv = (TextView) findViewById(R.id.age_tv);
+
         EventBus.getDefault().registerSticky(this);
     }
 
     @Subscriber
     private void onReceiveStickyEvent(User info) {
-          nameTv.setText(info.name);
-          ageTv.setText("age ----- 32");
+        nameTv.setText(info.name);
+        ageTv.setText("age ----- 32");
     }
-    
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
+        // 采用弱引用,无需注销
+        // EventBus.getDefault().unregister(this);
     }
 }

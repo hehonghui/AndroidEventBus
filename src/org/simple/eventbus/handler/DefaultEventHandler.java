@@ -34,12 +34,12 @@ public class DefaultEventHandler implements EventHandler {
      */
     public void handleEvent(Subscription subscription, Object event) {
         if (subscription == null
-                || subscription.subscriber == null) {
+                || subscription.subscriber.get() == null) {
             return;
         }
         try {
             // 执行
-            subscription.targetMethod.invoke(subscription.subscriber, event);
+            subscription.targetMethod.invoke(subscription.subscriber.get(), event);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
