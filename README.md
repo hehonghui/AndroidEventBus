@@ -114,7 +114,7 @@ It will be enough to add the jar file into the “quote” part of the Project, 
 allprojects {
     repositories {
         jcenter()
-        maven { url 'https://github.com/bboyfeiyu/AndroidEventBus_maven/raw/master/releases' }
+        maven { url 'https://github.com/bboyfeiyu/AndroidEventBus/raw/master/releases' }
     }
 }
 ```
@@ -123,10 +123,9 @@ allprojects {
 
 ```
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.3'
+
     // add AndroidEventBus dependency
-    compile 'org.simple:androideventbus:lastest'
+    compile 'org.simple:eventbus:latest'
 }
 ```    
                
