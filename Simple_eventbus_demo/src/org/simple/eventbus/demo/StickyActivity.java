@@ -53,4 +53,10 @@ public class StickyActivity extends Activity {
           nameTv.setText(info.name);
           ageTv.setText("age ----- 32");
     }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 }
