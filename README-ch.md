@@ -111,7 +111,7 @@ public class YourActivity extends Activity {
 allprojects {
     repositories {
         jcenter()
-        maven { url 'https://github.com/bboyfeiyu/AndroidEventBus_maven/raw/master/releases' }
+        maven { url 'https://github.com/bboyfeiyu/AndroidEventBus/raw/master/releases' }
     }
 }
 ```
@@ -123,7 +123,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     
     // 添加依赖
-    compile 'org.simple:androideventbus:latest'
+	compile 'org.simple:eventbus:latest'
 }
 ```
          
