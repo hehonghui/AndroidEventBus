@@ -105,7 +105,7 @@ The receiving function will use “tag” to mark receivable types of events, ju
 
 ## Usage 
 ### integrate with jar
-It will be enough to add the jar file into the “quote” part of the Project, AndroidEventBus.[AndroidEventBus.jar](lib/androideventbus-1.0.2.jar?raw=true "download")      
+It will be enough to add the jar file into the “quote” part of the Project, AndroidEventBus.[AndroidEventBus.jar](lib/androideventbus-1.0.3.jar?raw=true "download")      
 
 
 ### Gradle
@@ -127,7 +127,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
     // add AndroidEventBus dependency
-    compile 'org.simple:androideventbus:1.0.2'
+    compile 'org.simple:androideventbus:lastest'
 }
 ```    
                
@@ -161,7 +161,7 @@ If there are two receiving functions of the same parameter type and both are exe
 I really appreciate E-pal “淡蓝色的星期三” for his proposing of bugs and feedback and I hope more and more friends will join our team of AndroidEventBus Development.    
    
    
-## Release Note### V1.0.2 ( 2015.2.28 )Solved the problem of failing to receive an event when the parameter of the subscription method is a basic type (int, Boolean, etc.)### V1.0.1 ( 2015.2.13 )1. Solved the problem that the subscription method can’t receive an event because the subscription method is delivered as sub-type when posting an event while it was originally of basic type.     
+## Release Note### V1.0.3 ( 2015.5.23 )1. support Sticky Events.### V1.0.2 ( 2015.2.28 )Solved the problem of failing to receive an event when the parameter of the subscription method is a basic type (int, Boolean, etc.)### V1.0.1 ( 2015.2.13 )1. Solved the problem that the subscription method can’t receive an event because the subscription method is delivered as sub-type when posting an event while it was originally of basic type.     
 ### v1.0 ( 2015.2.9 )1.	Release an EventBus library; use @Subscriber annotation to mark subscription method2.	The subscription method supports “tag” mark, which makes event delivery more precise.     
 
 
