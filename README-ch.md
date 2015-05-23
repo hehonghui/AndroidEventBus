@@ -7,16 +7,15 @@
    ****A english readme is here [README-en.md](README-en.md).****    
   
 ## 基本结构
- ![结构图](http://img.blog.csdn.net/20150203125508110)      
+ ![结构图](http://img.blog.csdn.net/20150426223040789)      
  AndroidEventBus类似于观察者模式,通过register函数将需要订阅事件的对象注册到事件总线中,然后根据@Subscriber注解来查找对象中的订阅方法,并且将这些订阅方法和订阅对象存储在map中。当用户在某个地方发布一个事件时,事件总线根据事件的参数类型和tag找到对应的订阅者对象,最后执行订阅者对象中的方法。这些订阅方法会执行在用户指定的线程模型中,比如mode=ThreadMode.ASYNC则表示该订阅方法执行在子线程中,更多细节请看下面的说明。        	
 
 ## 使用AndroidEventBus 
  你可以按照下面几个步骤来使用AndroidEventBus.     
          
-*    1. 注册事件接收对象      
+*  1. 注册事件接收对象      
 
 ```
-   
 public class YourActivity extends Activity {
 
     @Override
@@ -103,7 +102,7 @@ public class YourActivity extends Activity {
 
 ## 集成
 ### jar文件集成
-将jar文件添加到工程中的引用中即可,[AndroidEventBus.jar下载](lib/androideventbus-1.0.2.jar?raw=true "点击下载到本地")      
+将jar文件添加到工程中的引用中即可,[AndroidEventBus.jar下载](lib/androideventbus-1.0.3.jar?raw=true "点击下载到本地")      
 
 ### Android Studio集成
 *    在Project的build.gradle中添加仓库地址     
@@ -122,9 +121,9 @@ allprojects {
 ```
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.3'
+    
     // 添加依赖
-    compile 'org.simple:androideventbus:1.0.2'
+    compile 'org.simple:androideventbus:latest'
 }
 ```
          
@@ -146,14 +145,25 @@ private void onEventMainThread(User aUser) {
 ### 与EventBus、otto的特性对比
 
 |         名称         | 订阅函数是否可执行在其他线程 |         特点          |
-|---------------------|-----------------------|
-| [greenrobot的EventBus](https://github.com/greenrobot/EventBus)  |  是  | 使用name pattern模式，效率高，但使用不方便。
-| [square的otto](https://github.com/square/otto)    | 否  | 使用注解，使用方便，但效率比不了EventBus。   
+|---------------------|-----------------------|---------------------------------|
+| [greenrobot的EventBus](https://github.com/greenrobot/EventBus)  |  是  | 使用name pattern模式，效率高，但使用不方便。|
+| [square的otto](https://github.com/square/otto)    | 否  | 使用注解，使用方便，但效率比不了EventBus。   |
 | [AndroidEventBus]()  |  是  | 使用注解，使用方便，但效率比不上EventBus。订阅函数支持tag(类似广播接收器的Action)使得事件的投递更加准确，能适应更多使用场景。 | 
 
 
+## 混淆配置
+
+```
+-keep class org.simple.** { *; }
+-keep interface org.simple.** { *; }
+-keepclassmembers class * {
+    @org.simple.eventbus.Subscriber <methods>;
+}
+```
+
 ## 使用了AndroidEventBus的已知App
 * [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)     
+* [考拉FM](http://www.wandoujia.com/apps/com.itings.myradio)
 
 `欢迎大家给我反馈使用情况`
 
@@ -164,6 +174,11 @@ private void onEventMainThread(User aUser) {
    
       
 ## 发布历史
+
+### V1.0.3   ( 2015.5.23 )
+1. 支持Sticky事件。
+
+
 ### V1.0.2   ( 2015.2.28 )
 1. 修复订阅方法的参数是基本类型( int, boolean等 )不能接收事件的问题。
 
