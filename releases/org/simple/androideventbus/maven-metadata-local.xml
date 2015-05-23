@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.simple</groupId>
+  <artifactId>androideventbus</artifactId>
+  <versioning>
+    <release>latest</release>
+    <versions>
+      <version>latest</version>
+    </versions>
+    <lastUpdated>20150523105404</lastUpdated>
+  </versioning>
+</metadata>
