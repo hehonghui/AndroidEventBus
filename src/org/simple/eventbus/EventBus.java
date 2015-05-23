@@ -159,7 +159,7 @@ public final class EventBus {
     public void registerSticky(Object subscriber) {
         this.register(subscriber);
         // 处理sticky事件
-        mDispatcher.dispatchStickyEvents();
+        mDispatcher.dispatchStickyEvents(subscriber);
     }
 
     /**
@@ -203,7 +203,7 @@ public final class EventBus {
         eventType.event = event;
         mStickyEvents.add(eventType);
         // 处理sticky事件
-        mDispatcher.handleStickyEvent(eventType);
+        mDispatcher.handleStickyEvent(eventType, null);
     }
 
     public void removeStickyEvent(Class<?> eventClass) {
@@ -332,9 +332,9 @@ public final class EventBus {
          */
         MatchPolicy mMatchPolicy = new DefaultMatchPolicy();
 
-        void dispatchStickyEvents() {
+        void dispatchStickyEvents(Object subscriber) {
             for (EventType eventType : mStickyEvents) {
-                handleStickyEvent(eventType);
+                handleStickyEvent(eventType, subscriber);
             }
         }
 
@@ -376,7 +376,7 @@ public final class EventBus {
          * @param eventType
          * @param aEvent
          */
-        private void handleStickyEvent(EventType eventType) {
+        private void handleStickyEvent(EventType eventType, Object subscriber) {
             List<Subscription> subscriptions = mSubcriberMap.get(eventType);
             if (subscriptions == null) {
                 return;
@@ -385,12 +385,26 @@ public final class EventBus {
             for (Subscription subItem : subscriptions) {
                 final ThreadMode mode = subItem.threadMode;
                 EventHandler eventHandler = getEventHandler(mode);
-                if (subItem.eventType.equals(eventType)) {
+                if (isTarget(subItem, subscriber) &&
+                        subItem.eventType.equals(eventType)) {
                     // 处理事件
                     eventHandler.handleEvent(subItem, eventType.event);
                 }
 
             }
+        }
+
+        /**
+         * 如果传递进来的订阅者不为空,那么该Sticky事件只传递给该订阅者(注册时),否则所有订阅者都传递(发布时).
+         * 
+         * @param item
+         * @param subscriber
+         * @return
+         */
+        private boolean isTarget(Subscription item, Object subscriber) {
+            return subscriber != null
+                    && item.subscriber.equals(subscriber)
+                    || subscriber == null;
         }
 
         /**
