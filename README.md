@@ -3,6 +3,13 @@
 This is an EventBus library for Android. It simplifies the communication between Activities, Fragments, Threads, Services, etc. and lowers the coupling among them to a great extent, thus making simplifier codes, lower coupling possible and improving code quality.             
   
    ****中文版 [README.md](README-ch.md).****    
+
+## new feature
+
+1. support sticky event;
+2. no need to unregister the subscriber manually,because we hold the subscriber with weakreference.
+
+ 
   
 ## Basic Architecture
  ![arch](http://img.blog.csdn.net/20150426223040789)         
@@ -25,13 +32,6 @@ public class YourActivity extends Activity {
         setContentView(R.layout.main_activity);
         // register the receiver object
         EventBus.getDefault().register(this);
-    }
-    
-    @Override
-    protected void onDestroy() {
-        // Don’t forget to unregister !!
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
     }
 }
    
@@ -96,6 +96,9 @@ The receiving function will use “tag” to mark receivable types of events, ju
     
     // post a event with tag, the tag is like broadcast's action
     EventBus.getDefault().post(new User("mr.simple"), "my_tag");
+    
+    // post sticky event
+    EventBus.getDefault().postSticky(new User("sticky"));
 
 ```         
 
@@ -104,20 +107,10 @@ The receiving function will use “tag” to mark receivable types of events, ju
 
 ## Usage 
 ### integrate with jar
-It will be enough to add the jar file into the “quote” part of the Project, AndroidEventBus.[AndroidEventBus.jar](lib/androideventbus-1.0.3.jar?raw=true "download")      
+It will be enough to add the jar file into the “quote” part of the Project, AndroidEventBus.[AndroidEventBus.jar](lib/androideventbus-1.0.4.jar?raw=true "download")      
 
 
 ### Gradle
-*    Add the repository url to build.gradle of the Project.     
-
-```
-allprojects {
-    repositories {
-        jcenter()
-        maven { url 'https://github.com/bboyfeiyu/AndroidEventBus/raw/master/releases' }
-    }
-}
-```
 
 * Add dependency in build.gradle of the Module .
 
@@ -125,7 +118,7 @@ allprojects {
 dependencies {
 
     // add AndroidEventBus dependency
-    compile 'org.simple:eventbus:latest'
+    compile 'org.simple:androideventbus:1.0.4'
 }
 ```    
                
@@ -170,7 +163,7 @@ These are the differences between AndroidEventBus and EventBus of greenrobot. Bu
 I really appreciate E-pal “淡蓝色的星期三” for his proposing of bugs and feedback and I hope more and more friends will join our team of AndroidEventBus Development.    
    
  
-## Release Note### V1.0.3 ( 2015.5.23 )1. support Sticky Events.### V1.0.2 ( 2015.2.28 )Solved the problem of failing to receive an event when the parameter of the subscription method is a basic type (int, Boolean, etc.)### V1.0.1 ( 2015.2.13 )1. Solved the problem that the subscription method can’t receive an event because the subscription method is delivered as sub-type when posting an event while it was originally of basic type.     
+## Release Note### V1.0.4 ( 2015.5.23 )1. support Sticky Events and use WeakReference to hold the Subscriber, So you don't need to unregister the subscriber manually.### V1.0.2 ( 2015.2.28 )Solved the problem of failing to receive an event when the parameter of the subscription method is a basic type (int, Boolean, etc.)### V1.0.1 ( 2015.2.13 )1. Solved the problem that the subscription method can’t receive an event because the subscription method is delivered as sub-type when posting an event while it was originally of basic type.     
 ### v1.0 ( 2015.2.9 )1.	Release an EventBus library; use @Subscriber annotation to mark subscription method2.	The subscription method supports “tag” mark, which makes event delivery more precise.    
 
 ## License

@@ -5,6 +5,12 @@
   更多详情请参考[AndroidEventBus 框架发布](http://blog.csdn.net/bboyfeiyu/article/details/43450553);        
   
    ****A english readme is here [README-en.md](README-en.md).****    
+
+## 最新特性
+
+1. 支持 sticky event;
+2. 使用弱引用持有订阅对象，因此不需要手动注销。
+
   
 ## 基本结构
  ![结构图](http://img.blog.csdn.net/20150426223040789)      
@@ -102,19 +108,9 @@ public class YourActivity extends Activity {
 
 ## 集成
 ### jar文件集成
-将jar文件添加到工程中的引用中即可,[AndroidEventBus.jar下载](lib/androideventbus-1.0.3.jar?raw=true "点击下载到本地")      
+将jar文件添加到工程中的引用中即可,[AndroidEventBus.jar下载](lib/androideventbus-1.0.4.jar?raw=true "点击下载到本地")      
 
 ### Android Studio集成
-*    在Project的build.gradle中添加仓库地址     
-
-```
-allprojects {
-    repositories {
-        jcenter()
-        maven { url 'https://github.com/bboyfeiyu/AndroidEventBus/raw/master/releases' }
-    }
-}
-```
 
 *   在Module的build.gradle添加依赖
 
@@ -123,7 +119,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     
     // 添加依赖
-	compile 'org.simple:eventbus:latest'
+	compile 'org.simple:androideventbus:1.0.4'
+	
 }
 ```
          
@@ -175,8 +172,9 @@ private void onEventMainThread(User aUser) {
       
 ## 发布历史
 
-### V1.0.3   ( 2015.5.23 )
-1. 支持Sticky事件。
+### V1.0.4   ( 2015.5.23 )
+1. 支持Sticky事件;
+2. 弱引用持有订阅对象，不需要手动注销。
 
 
 ### V1.0.2   ( 2015.2.28 )
