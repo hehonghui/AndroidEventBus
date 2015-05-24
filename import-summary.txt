@@ -1,0 +1,247 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .DS_Store
+* .gitignore
+* LICENSE
+* README-ch.md
+* README.md
+* Simple_Event_Test/
+* Simple_Event_Test/.classpath
+* Simple_Event_Test/.project
+* Simple_Event_Test/.settings/
+* Simple_Event_Test/.settings/org.eclipse.jdt.core.prefs
+* Simple_Event_Test/AndroidManifest.xml
+* Simple_Event_Test/bin/
+* Simple_Event_Test/bin/AndroidManifest.xml
+* Simple_Event_Test/bin/R.txt
+* Simple_Event_Test/bin/Simple_Event_Test.apk
+* Simple_Event_Test/bin/classes.dex
+* Simple_Event_Test/bin/classes/
+* Simple_Event_Test/bin/classes/org/
+* Simple_Event_Test/bin/classes/org/simple/
+* Simple_Event_Test/bin/classes/org/simple/eventbus/
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/BuildConfig.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/BusTestSuite.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/DefaultMatchPolicyTest.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/EventBusTest.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/EventTypeTest.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/PrimitiveEventTest.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/R$attr.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/R$drawable.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/R$string.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/R.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/SubscriberMethodHunterTest.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/ThreadModeTest.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/mock/
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/mock/MockSubcriber.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/mock/PrimitiveParamObject.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/mock/SingleSubscriber.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/mock/StickySubscriber.class
+* Simple_Event_Test/bin/classes/org/simple/eventbus/test/mock/User.class
+* Simple_Event_Test/bin/dexedLibs/
+* Simple_Event_Test/bin/dexedLibs/annotations-11ca25d19a580d1c649765d2b7481f67.jar
+* Simple_Event_Test/bin/dexedLibs/simple_eventbus-52ced744db42055e0a11d1e561a1584e.jar
+* Simple_Event_Test/bin/jarlist.cache
+* Simple_Event_Test/bin/res/
+* Simple_Event_Test/bin/res/crunch/
+* Simple_Event_Test/bin/res/crunch/drawable-hdpi/
+* Simple_Event_Test/bin/res/crunch/drawable-hdpi/ic_launcher.png
+* Simple_Event_Test/bin/res/crunch/drawable-ldpi/
+* Simple_Event_Test/bin/res/crunch/drawable-ldpi/ic_launcher.png
+* Simple_Event_Test/bin/res/crunch/drawable-mdpi/
+* Simple_Event_Test/bin/res/crunch/drawable-mdpi/ic_launcher.png
+* Simple_Event_Test/bin/res/crunch/drawable-xhdpi/
+* Simple_Event_Test/bin/res/crunch/drawable-xhdpi/ic_launcher.png
+* Simple_Event_Test/bin/resources.ap_
+* Simple_Event_Test/gen/
+* Simple_Event_Test/gen/org/
+* Simple_Event_Test/gen/org/simple/
+* Simple_Event_Test/gen/org/simple/eventbus/
+* Simple_Event_Test/gen/org/simple/eventbus/test/
+* Simple_Event_Test/gen/org/simple/eventbus/test/BuildConfig.java
+* Simple_Event_Test/gen/org/simple/eventbus/test/R.java
+* Simple_Event_Test/proguard-project.txt
+* Simple_Event_Test/project.properties
+* Simple_Event_Test/res/
+* Simple_Event_Test/res/drawable-hdpi/
+* Simple_Event_Test/res/drawable-hdpi/ic_launcher.png
+* Simple_Event_Test/res/drawable-ldpi/
+* Simple_Event_Test/res/drawable-ldpi/ic_launcher.png
+* Simple_Event_Test/res/drawable-mdpi/
+* Simple_Event_Test/res/drawable-mdpi/ic_launcher.png
+* Simple_Event_Test/res/drawable-xhdpi/
+* Simple_Event_Test/res/drawable-xhdpi/ic_launcher.png
+* Simple_Event_Test/res/values/
+* Simple_Event_Test/res/values/strings.xml
+* Simple_Event_Test/src/
+* Simple_Event_Test/src/org/
+* Simple_Event_Test/src/org/simple/
+* Simple_Event_Test/src/org/simple/eventbus/
+* Simple_Event_Test/src/org/simple/eventbus/test/
+* Simple_Event_Test/src/org/simple/eventbus/test/BusTestSuite.java
+* Simple_Event_Test/src/org/simple/eventbus/test/DefaultMatchPolicyTest.java
+* Simple_Event_Test/src/org/simple/eventbus/test/EventBusTest.java
+* Simple_Event_Test/src/org/simple/eventbus/test/EventTypeTest.java
+* Simple_Event_Test/src/org/simple/eventbus/test/PrimitiveEventTest.java
+* Simple_Event_Test/src/org/simple/eventbus/test/SubscriberMethodHunterTest.java
+* Simple_Event_Test/src/org/simple/eventbus/test/ThreadModeTest.java
+* Simple_Event_Test/src/org/simple/eventbus/test/mock/
+* Simple_Event_Test/src/org/simple/eventbus/test/mock/MockSubcriber.java
+* Simple_Event_Test/src/org/simple/eventbus/test/mock/PrimitiveParamObject.java
+* Simple_Event_Test/src/org/simple/eventbus/test/mock/SingleSubscriber.java
+* Simple_Event_Test/src/org/simple/eventbus/test/mock/StickySubscriber.java
+* Simple_Event_Test/src/org/simple/eventbus/test/mock/User.java
+* Simple_eventbus_demo/
+* Simple_eventbus_demo/.classpath
+* Simple_eventbus_demo/.project
+* Simple_eventbus_demo/.settings/
+* Simple_eventbus_demo/.settings/org.eclipse.jdt.core.prefs
+* Simple_eventbus_demo/AndroidManifest.xml
+* Simple_eventbus_demo/bin/
+* Simple_eventbus_demo/bin/AndroidManifest.xml
+* Simple_eventbus_demo/bin/R.txt
+* Simple_eventbus_demo/bin/Simple_eventbus_demo.apk
+* Simple_eventbus_demo/bin/classes.dex
+* Simple_eventbus_demo/bin/classes/
+* Simple_eventbus_demo/bin/classes/org/
+* Simple_eventbus_demo/bin/classes/org/simple/
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/BuildConfig.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/MainActivity.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/R$attr.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/R$drawable.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/R$id.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/R$layout.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/R$string.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/R$style.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/R.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/StickyActivity.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/bean/
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/bean/User.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/BaseFragment.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/ConstactFragment$1.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/ConstactFragment$2.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/ConstactFragment.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/MenuFragment$1.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/MenuFragment$2.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/MenuFragment$3.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/MenuFragment$4.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/MenuFragment$5.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/MenuFragment$6.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/MenuFragment$7.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/MenuFragment$8.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/MenuFragment$PostThread.class
+* Simple_eventbus_demo/bin/classes/org/simple/eventbus/demo/fragment/MenuFragment.class
+* Simple_eventbus_demo/bin/dexedLibs/
+* Simple_eventbus_demo/bin/dexedLibs/android-support-v4-9d5fb9a50d7bc3805f2c74234c88731a.jar
+* Simple_eventbus_demo/bin/dexedLibs/annotations-11ca25d19a580d1c649765d2b7481f67.jar
+* Simple_eventbus_demo/bin/dexedLibs/simple_eventbus-52ced744db42055e0a11d1e561a1584e.jar
+* Simple_eventbus_demo/bin/jarlist.cache
+* Simple_eventbus_demo/bin/res/
+* Simple_eventbus_demo/bin/res/crunch/
+* Simple_eventbus_demo/bin/res/crunch/drawable-xhdpi/
+* Simple_eventbus_demo/bin/res/crunch/drawable-xhdpi/event_bus.png
+* Simple_eventbus_demo/bin/res/crunch/drawable-xhdpi/ic_launcher.png
+* Simple_eventbus_demo/bin/res/crunch/drawable-xxhdpi/
+* Simple_eventbus_demo/bin/res/crunch/drawable-xxhdpi/ic_launcher.png
+* Simple_eventbus_demo/bin/resources.ap_
+* Simple_eventbus_demo/gen/
+* Simple_eventbus_demo/gen/org/
+* Simple_eventbus_demo/gen/org/simple/
+* Simple_eventbus_demo/gen/org/simple/eventbus/
+* Simple_eventbus_demo/gen/org/simple/eventbus/demo/
+* Simple_eventbus_demo/gen/org/simple/eventbus/demo/BuildConfig.java
+* Simple_eventbus_demo/gen/org/simple/eventbus/demo/R.java
+* Simple_eventbus_demo/ic_launcher-web.png
+* Simple_eventbus_demo/libs/
+* Simple_eventbus_demo/libs/android-support-v4.jar
+* Simple_eventbus_demo/proguard-project.txt
+* Simple_eventbus_demo/project.properties
+* Simple_eventbus_demo/res/
+* Simple_eventbus_demo/res/drawable-xhdpi/
+* Simple_eventbus_demo/res/drawable-xhdpi/event_bus.png
+* Simple_eventbus_demo/res/drawable-xhdpi/ic_launcher.png
+* Simple_eventbus_demo/res/drawable-xxhdpi/
+* Simple_eventbus_demo/res/drawable-xxhdpi/ic_launcher.png
+* Simple_eventbus_demo/res/layout/
+* Simple_eventbus_demo/res/layout/include_sticky_activity.xml
+* Simple_eventbus_demo/res/layout/list_fragment.xml
+* Simple_eventbus_demo/res/layout/main_activity.xml
+* Simple_eventbus_demo/res/layout/menu_fragment.xml
+* Simple_eventbus_demo/res/layout/sticky_activity.xml
+* Simple_eventbus_demo/res/layout/test_sticky_activity.xml
+* Simple_eventbus_demo/res/values/
+* Simple_eventbus_demo/res/values/strings.xml
+* Simple_eventbus_demo/res/values/styles.xml
+* Simple_eventbus_demo/src/
+* Simple_eventbus_demo/src/org/
+* Simple_eventbus_demo/src/org/simple/
+* Simple_eventbus_demo/src/org/simple/eventbus/
+* Simple_eventbus_demo/src/org/simple/eventbus/demo/
+* Simple_eventbus_demo/src/org/simple/eventbus/demo/MainActivity.java
+* Simple_eventbus_demo/src/org/simple/eventbus/demo/StickyActivity.java
+* Simple_eventbus_demo/src/org/simple/eventbus/demo/bean/
+* Simple_eventbus_demo/src/org/simple/eventbus/demo/bean/User.java
+* Simple_eventbus_demo/src/org/simple/eventbus/demo/fragment/
+* Simple_eventbus_demo/src/org/simple/eventbus/demo/fragment/BaseFragment.java
+* Simple_eventbus_demo/src/org/simple/eventbus/demo/fragment/ConstactFragment.java
+* Simple_eventbus_demo/src/org/simple/eventbus/demo/fragment/MenuFragment.java
+* lib/
+* lib/androideventbus-1.0.2.jar
+* lib/androideventbus-1.0.3.jar
+* proguard-project.txt
+* releases/
+* releases/.DS_Store
+* releases/org/
+* releases/org/.DS_Store
+* releases/org/simple/
+* releases/org/simple/.DS_Store
+* releases/org/simple/eventbus/
+* releases/org/simple/eventbus/latest/
+* releases/org/simple/eventbus/latest/eventbus-latest.jar
+* releases/org/simple/eventbus/latest/eventbus-latest.jar.md5
+* releases/org/simple/eventbus/latest/eventbus-latest.jar.sha1
+* releases/org/simple/eventbus/latest/eventbus-latest.pom
+* releases/org/simple/eventbus/latest/eventbus-latest.pom.md5
+* releases/org/simple/eventbus/latest/eventbus-latest.pom.sha1
+* releases/org/simple/eventbus/maven-metadata-local.xml
+* releases/org/simple/eventbus/maven-metadata-local.xml.md5
+* releases/org/simple/eventbus/maven-metadata-local.xml.sha1
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => app/src/main/AndroidManifest.xml
+* assets/ => app/src/main/assets
+* res/ => app/src/main/res
+* src/ => app/src/main/java/
+* src/.DS_Store => app/src/main/resources/.DS_Store
+* src/org/.DS_Store => app/src/main/resources/org/.DS_Store
+* src/org/simple/.DS_Store => app/src/main/resources/org/simple/.DS_Store
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)
