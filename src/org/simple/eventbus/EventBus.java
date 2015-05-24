@@ -403,8 +403,9 @@ public final class EventBus {
          * @return
          */
         private boolean isTarget(Subscription item, Object subscriber) {
+            Object cacheObject = item.subscriber != null ? item.subscriber.get() : null;
             return subscriber == null || (subscriber != null
-                    && item.subscriber.get().equals(subscriber));
+                    && cacheObject != null && cacheObject.equals(subscriber));
         }
 
         /**
