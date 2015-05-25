@@ -31,13 +31,7 @@ public class YourActivity extends Activity {
         // 注册对象
         EventBus.getDefault().register(this);
     }
-    
-    @Override
-    protected void onDestroy() {
-        // 不要忘记注销！！！！
-        EventBus.getDefault().unregister(this);
-        super.onDestroy();
-    }
+   
 }
    
 ```      
