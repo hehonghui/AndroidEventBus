@@ -119,7 +119,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     
     // 添加依赖
-	compile 'org.simple:androideventbus:1.0.4'
+	compile 'org.simple:androideventbus:latest'
 	
 }
 ```

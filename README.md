@@ -118,7 +118,7 @@ It will be enough to add the jar file into the “quote” part of the Project, 
 dependencies {
 
     // add AndroidEventBus dependency
-    compile 'org.simple:androideventbus:1.0.4'
+    compile 'org.simple:androideventbus:latest'
 }
 ```    
                
