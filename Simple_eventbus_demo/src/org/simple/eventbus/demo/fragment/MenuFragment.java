@@ -165,7 +165,6 @@ public class MenuFragment extends BaseFragment {
             public void onClick(View v) {
                 // 发布Sticky事件
                 EventBus.getDefault().postSticky(new StickyUser("我来自Sticky事件 - StickyUser类"));
-                EventBus.getDefault().postSticky(new User("我来自Sticky事件- User类"));
 
                 // 跳转页面
                 Intent intent = new Intent(getActivity(), StickyActivity.class);
@@ -173,6 +172,11 @@ public class MenuFragment extends BaseFragment {
             }
         });
         return rootView;
+    }
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     /**

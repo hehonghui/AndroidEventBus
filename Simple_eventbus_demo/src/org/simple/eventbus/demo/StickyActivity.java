@@ -55,12 +55,13 @@ public class StickyActivity extends Activity {
         ageTv.setText("age ----- 32");
 
         Log.e("", "### 找到 接到sticky消息 " + info.name);
+        // 接受到事件之后可以手动移除Sticky事件
+        EventBus.getDefault().removeStickyEvent(info.getClass());
     }
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        // 采用弱引用,无需注销
         // EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }
