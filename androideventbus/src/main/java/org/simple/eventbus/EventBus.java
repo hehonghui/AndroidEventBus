@@ -16,6 +16,8 @@
 
 package org.simple.eventbus;
 
+import android.util.Log;
+
 import org.simple.eventbus.handler.AsyncEventHandler;
 import org.simple.eventbus.handler.DefaultEventHandler;
 import org.simple.eventbus.handler.EventHandler;
@@ -23,6 +25,7 @@ import org.simple.eventbus.handler.UIThreadEventHandler;
 import org.simple.eventbus.matchpolicy.DefaultMatchPolicy;
 import org.simple.eventbus.matchpolicy.MatchPolicy;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -40,21 +43,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * ,订阅者中的订阅函数通过{@link Subscriber}注解来标识tag和线程模型,这样使得用户体检较为友好,代码也更加整洁.
  * <p>
  * 用户需要在发布事件前通过@{@link #register(Object)}方法将订阅者注册到EventBus中,EventBus会解析该订阅者中使用了
- * {@link Subscriber}标识的函数,并且将它们以事件类型为key,以{@link Subscription}
+ * {@link Subscriber}标识的函数,并且将它们以{@link EventType}为key,以{@link Subscription}
  * 列表为value存储在map中. 当用户post一个事件时通过事件到map中找到对应的订阅者,然后按照订阅函数的线程模型将函数执行在对应的线程中.
  * <p>
- * 最新版的EventBus使用弱引用只有订阅者,因此不需要手动调用{@link #unregister(Object)}函数注销该对象。
+ * 最后在不在需要订阅事件时,应该调用{@link #unregister(Object)}函数注销该对象,避免内存泄露!
  * 例如在Activity或者Fragment的onDestory函数中注销对Activity或者Fragment的订阅.
  * <p>
- * 注意 : 如果发布的事件的参数类型是订阅的事件参数的子类,订阅函数默认也会被执行。例如你在订阅函数中订阅的是Activity类型的事件,
- * 但是在发布时发布的是MainActivty的事件,而MainActivity继承自Activity,因此这种情况下订阅函数也会被执行。
- * 如果你需要订阅函数能够接收到的事件类型必须严格匹配 ,你可以构造一个EventBusConfig对象,
- * 然后设置MatchPolicy然后在使用事件总线之前使用该EventBusConfig来初始化事件总线. <code>
- *      EventBusConfig config = new EventBusConfig();
-        config.setMatchPolicy(new StrictMatchPolicy());
-        EventBus.getDefault().initWithConfig(config);
- * </code>
- * 
+ * 注意 : 如果发布的事件的参数类型是订阅的事件参数的子类,订阅函数默认也会被执行。
+ *
  * @author mrsimple
  */
 public final class EventBus {
@@ -74,7 +70,7 @@ public final class EventBus {
      */
     private final Map<EventType, CopyOnWriteArrayList<Subscription>> mSubcriberMap = new ConcurrentHashMap<EventType, CopyOnWriteArrayList<Subscription>>();
     /**
-     * 
+     *
      */
     private List<EventType> mStickyEvents = Collections
             .synchronizedList(new LinkedList<EventType>());
@@ -112,7 +108,7 @@ public final class EventBus {
 
     /**
      * constructor with desc
-     * 
+     *
      * @param desc the descriptor of eventbus
      */
     public EventBus(String desc) {
@@ -120,7 +116,7 @@ public final class EventBus {
     }
 
     /**
-     * @return EventBus实例
+     * @return
      */
     public static EventBus getDefault() {
         if (sDefaultBus == null) {
@@ -137,7 +133,7 @@ public final class EventBus {
      * register a subscriber into the mSubcriberMap, the key is subscriber's
      * method's name and tag which annotated with {@link Subscriber}, the value is
      * a list of Subscription.
-     * 
+     *
      * @param subscriber the target subscriber
      */
     public void register(Object subscriber) {
@@ -152,7 +148,7 @@ public final class EventBus {
 
     /**
      * 以sticky的形式注册,则会在注册成功之后迭代所有的sticky事件
-     * 
+     *
      * @param subscriber
      */
     public void registerSticky(Object subscriber) {
@@ -164,7 +160,6 @@ public final class EventBus {
     /**
      * @param subscriber
      */
-    @Deprecated
     public void unregister(Object subscriber) {
         if (subscriber == null) {
             return;
@@ -176,7 +171,7 @@ public final class EventBus {
 
     /**
      * post a event
-     * 
+     *
      * @param event
      */
     public void post(Object event) {
@@ -184,8 +179,8 @@ public final class EventBus {
     }
 
     /**
-     * post event with tag
-     * 
+     * 发布事件
+     *
      * @param event 要发布的事件
      * @param tag 事件的tag, 类似于BroadcastReceiver的action
      */
@@ -194,27 +189,37 @@ public final class EventBus {
         mDispatcher.dispatchEvents(event);
     }
 
+    /**
+     * 发布Sticky事件,tag为EventType.DEFAULT_TAG
+     *
+     * @param event
+     */
     public void postSticky(Object event) {
         postSticky(event, EventType.DEFAULT_TAG);
     }
 
+    /**
+     * 发布含有tag的Sticky事件
+     *
+     * @param event 事件
+     * @param tag 事件tag
+     */
     public void postSticky(Object event, String tag) {
         EventType eventType = new EventType(event.getClass(), tag);
         eventType.event = event;
         mStickyEvents.add(eventType);
         // 处理sticky事件
-        mDispatcher.handleStickyEvent(eventType, null);
+//        mDispatcher.handleStickyEvent(eventType, null);
     }
 
     public void removeStickyEvent(Class<?> eventClass) {
         removeStickyEvent(eventClass, EventType.DEFAULT_TAG);
     }
 
-
     /**
      * 移除Sticky事件
-     * @param eventClass 事件的类型
-     * @param tag 事件的ttag
+     * @param eventClass 事件Class类型
+     * @param tag 事件tag
      */
     public void removeStickyEvent(Class<?> eventClass, String tag) {
         Iterator<EventType> iterator = mStickyEvents.iterator();
@@ -233,7 +238,7 @@ public final class EventBus {
 
     /**
      * 设置订阅函数匹配策略
-     * 
+     *
      * @param policy 匹配策略
      */
     public void setMatchPolicy(MatchPolicy policy) {
@@ -242,7 +247,7 @@ public final class EventBus {
 
     /**
      * 设置执行在UI线程的事件处理器
-     * 
+     *
      * @param handler
      */
     public void setUIThreadEventHandler(EventHandler handler) {
@@ -251,7 +256,7 @@ public final class EventBus {
 
     /**
      * 设置执行在post线程的事件处理器
-     * 
+     *
      * @param handler
      */
     public void setPostThreadHandler(EventHandler handler) {
@@ -260,7 +265,7 @@ public final class EventBus {
 
     /**
      * 设置执行在异步线程的事件处理器
-     * 
+     *
      * @param handler
      */
     public void setAsyncEventHandler(EventHandler handler) {
@@ -269,7 +274,7 @@ public final class EventBus {
 
     /**
      * 返回订阅map
-     * 
+     *
      * @return
      */
     public Map<EventType, CopyOnWriteArrayList<Subscription>> getSubscriberMap() {
@@ -278,7 +283,7 @@ public final class EventBus {
 
     /**
      * 获取等待处理的事件队列
-     * 
+     *
      * @return
      */
     public Queue<EventType> getEventQueue() {
@@ -295,16 +300,20 @@ public final class EventBus {
 
     /**
      * get the descriptor of EventBus
-     * 
+     *
      * @return the descriptor of EventBus
      */
     public String getDescriptor() {
         return mDesc;
     }
 
+    public EventDispatcher getDispatcher() {
+        return mDispatcher;
+    }
+
     /**
      * 事件分发器
-     * 
+     *
      * @author mrsimple
      */
     private class EventDispatcher {
@@ -333,12 +342,6 @@ public final class EventBus {
          */
         MatchPolicy mMatchPolicy = new DefaultMatchPolicy();
 
-        void dispatchStickyEvents(Object subscriber) {
-            for (EventType eventType : mStickyEvents) {
-                handleStickyEvent(eventType, subscriber);
-            }
-        }
-
         /**
          * @param event
          */
@@ -351,21 +354,14 @@ public final class EventBus {
 
         /**
          * 根据aEvent查找到所有匹配的集合,然后处理事件
-         * 
+         *
          * @param type
          * @param aEvent
          */
         private void deliveryEvent(EventType type, Object aEvent) {
-            Class<?> eventClass = aEvent.getClass();
-            List<EventType> eventTypes = null;
             // 如果有缓存则直接从缓存中取
-            if (mCacheEventTypes.containsKey(eventClass)) {
-                eventTypes = mCacheEventTypes.get(type);
-            } else {
-                eventTypes = mMatchPolicy.findMatchEventTypes(type, aEvent);
-                mCacheEventTypes.put(type, eventTypes);
-            }
-
+            List<EventType> eventTypes = getMatchedEventTypes(type, aEvent);
+            // 迭代所有匹配的事件并且分发给订阅者
             for (EventType eventType : eventTypes) {
                 handleEvent(eventType, aEvent);
             }
@@ -373,43 +369,7 @@ public final class EventBus {
 
         /**
          * 处理单个事件
-         * 
-         * @param eventType
-         * @param aEvent
-         */
-        private void handleStickyEvent(EventType eventType, Object subscriber) {
-            List<Subscription> subscriptions = mSubcriberMap.get(eventType);
-            if (subscriptions == null) {
-                return;
-            }
-
-            for (Subscription subItem : subscriptions) {
-                final ThreadMode mode = subItem.threadMode;
-                EventHandler eventHandler = getEventHandler(mode);
-                if (isTarget(subItem, subscriber) &&
-                        subItem.eventType.equals(eventType)) {
-                    // 处理事件
-                    eventHandler.handleEvent(subItem, eventType.event);
-                }
-
-            }
-        }
-
-        /**
-         * 如果传递进来的订阅者不为空,那么该Sticky事件只传递给该订阅者(注册时),否则所有订阅者都传递(发布时).
-         * 
-         * @param item
-         * @param subscriber
-         * @return
-         */
-        private boolean isTarget(Subscription item, Object subscriber) {
-            return subscriber == null || (subscriber != null
-                    && item.subscriber.get().equals(subscriber));
-        }
-
-        /**
-         * 处理单个事件
-         * 
+         *
          * @param eventType
          * @param aEvent
          */
@@ -425,6 +385,70 @@ public final class EventBus {
                 // 处理事件
                 eventHandler.handleEvent(subscription, aEvent);
             }
+        }
+
+        private List<EventType> getMatchedEventTypes(EventType type, Object aEvent) {
+            List<EventType> eventTypes = null;
+            // 如果有缓存则直接从缓存中取
+            if (mCacheEventTypes.containsKey(type)) {
+                eventTypes = mCacheEventTypes.get(type);
+            } else {
+                eventTypes = mMatchPolicy.findMatchEventTypes(type, aEvent);
+                mCacheEventTypes.put(type, eventTypes);
+            }
+
+            return eventTypes != null ? eventTypes : new ArrayList<EventType>();
+        }
+
+        void dispatchStickyEvents(Object subscriber) {
+            for (EventType eventType : mStickyEvents) {
+                handleStickyEvent(eventType, subscriber);
+            }
+        }
+
+        /**
+         * 处理单个Sticky事件
+         *
+         * @param eventType
+         * @param aEvent
+         */
+        private void handleStickyEvent(EventType eventType, Object subscriber) {
+            List<EventType> eventTypes = getMatchedEventTypes(eventType, eventType.event);
+            // 事件
+            Object event = eventType.event;
+            for (EventType foundEventType : eventTypes) {
+                Log.e("", "### 找到的类型 : " + foundEventType.paramClass.getSimpleName()
+                        + ", event class : " + event.getClass().getSimpleName());
+                final List<Subscription> subscriptions = mSubcriberMap.get(foundEventType);
+                if (subscriptions == null) {
+                    continue;
+                }
+                for (Subscription subItem : subscriptions) {
+                    final ThreadMode mode = subItem.threadMode;
+                    EventHandler eventHandler = getEventHandler(mode);
+                    // 如果订阅者为空,那么该sticky事件分发给所有订阅者.否则只分发给该订阅者
+                    if (isTarget(subItem, subscriber)
+                            && (subItem.eventType.equals(foundEventType)
+                            || subItem.eventType.paramClass
+                            .isAssignableFrom(foundEventType.paramClass))) {
+                        // 处理事件
+                        eventHandler.handleEvent(subItem, event);
+                    }
+                }
+            }
+        }
+
+        /**
+         * 如果传递进来的订阅者不为空,那么该Sticky事件只传递给该订阅者(注册时),否则所有订阅者都传递(发布时).
+         *
+         * @param item
+         * @param subscriber
+         * @return
+         */
+        private boolean isTarget(Subscription item, Object subscriber) {
+            Object cacheObject = item.subscriber != null ? item.subscriber.get() : null;
+            return subscriber == null || (subscriber != null
+                    && cacheObject != null && cacheObject.equals(subscriber));
         }
 
         private EventHandler getEventHandler(ThreadMode mode) {
