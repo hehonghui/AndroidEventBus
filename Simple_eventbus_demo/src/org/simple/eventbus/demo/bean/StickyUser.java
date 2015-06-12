@@ -22,45 +22,12 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus.demo;
+package org.simple.eventbus.demo.bean;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
+public class StickyUser extends User {
 
-import org.simple.eventbus.EventBus;
-import org.simple.eventbus.Subscriber;
-import org.simple.eventbus.demo.bean.User;
-
-public class StickyActivity extends Activity {
-
-    TextView nameTv;
-    TextView ageTv;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.sticky_activity);
-
-        nameTv = (TextView) findViewById(R.id.name_tv);
-        ageTv = (TextView) findViewById(R.id.age_tv);
-
-        EventBus.getDefault().registerSticky(this);
+    public StickyUser(String aName) {
+        super(aName + " - Sticky");
     }
 
-    @Subscriber
-    private void onReceiveStickyEvent(User info) {
-        nameTv.setText(info.name);
-        ageTv.setText("age ----- 32");
-
-        Log.e("", "### 找到 接到sticky消息 " + info.name);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // 采用弱引用,无需注销
-        // EventBus.getDefault().unregister(this);
-    }
 }

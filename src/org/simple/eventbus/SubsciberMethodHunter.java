@@ -54,7 +54,9 @@ public class SubsciberMethodHunter {
     }
 
     /**
-     * @param subscriber
+     * 查找订阅对象中的所有订阅函数,订阅函数的参数只能有一个.找到订阅函数之后构建Subscription存储到Map中
+     * 
+     * @param subscriber 订阅对象
      * @return
      */
     public void findSubcribeMethods(Object subscriber) {
@@ -72,7 +74,7 @@ public class SubsciberMethodHunter {
                 if (annotation != null) {
                     // 获取方法参数
                     Class<?>[] paramsTypeClass = method.getParameterTypes();
-                    // just only one param
+                    // 订阅函数只支持一个参数
                     if (paramsTypeClass != null && paramsTypeClass.length == 1) {
                         Class<?> paramType = convertType(paramsTypeClass[0]);
                         EventType eventType = new EventType(paramType, annotation.tag());
@@ -82,20 +84,20 @@ public class SubsciberMethodHunter {
                     }
                 }
             } // end for
-
-            // 获取父类,以继续查找父类中符合要求的方法
+              // 获取父类,以继续查找父类中符合要求的方法
             clazz = clazz.getSuperclass();
         }
     }
 
     /**
-     * @param event
-     * @param method
-     * @param subscriber
+     * 按照EventType存储订阅者列表,这里的EventType就是事件类型,一个事件对应0到多个订阅者.
+     * 
+     * @param event 事件
+     * @param method 订阅方法对象
+     * @param subscriber 订阅者
      */
     private void subscibe(EventType event, TargetMethod method, Object subscriber) {
-        CopyOnWriteArrayList<Subscription> subscriptionLists = mSubcriberMap
-                .get(event);
+        CopyOnWriteArrayList<Subscription> subscriptionLists = mSubcriberMap.get(event);
         if (subscriptionLists == null) {
             subscriptionLists = new CopyOnWriteArrayList<Subscription>();
         }
@@ -130,12 +132,12 @@ public class SubsciberMethodHunter {
                     Object cacheObject = subscription.subscriber.get();
                     if (cacheObject.equals(subscriber)) {
                         Log.d("", "### 移除订阅 " + subscriber.getClass().getName());
-                         foundSubscriptions.add(subscription);
+                        foundSubscriptions.add(subscription);
                     }
                 }
 
                 // 移除该subscriber的相关的Subscription
-                 subscriptions.removeAll(foundSubscriptions);
+                subscriptions.removeAll(foundSubscriptions);
             }
 
             // 如果针对某个Event的订阅者数量为空了,那么需要从map中清除

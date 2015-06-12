@@ -10,5 +10,6 @@
     <string name="post_to_thread">post to thread</string>
     <string name="post_primitive">post primitive type</string>
     <string name="execute_async">this execute async, thread = </string>
+    <string name="post_sticky">post sticky</string>
 
 </resources>

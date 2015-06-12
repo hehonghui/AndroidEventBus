@@ -30,6 +30,7 @@ import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.ThreadMode;
 import org.simple.eventbus.demo.R;
 import org.simple.eventbus.demo.StickyActivity;
+import org.simple.eventbus.demo.bean.StickyUser;
 import org.simple.eventbus.demo.bean.User;
 
 import java.util.ArrayList;
@@ -158,15 +159,19 @@ public class MenuFragment extends BaseFragment {
 
         EventBus.getDefault().register(this);
 
-        EventBus.getDefault().postSticky(new User("我来自Sticky事件"));
-        rootView.postDelayed(new Runnable() {
+        rootView.findViewById(R.id.post_sticky_tv).setOnClickListener(new OnClickListener() {
 
             @Override
-            public void run() {
+            public void onClick(View v) {
+                // 发布Sticky事件
+                EventBus.getDefault().postSticky(new StickyUser("我来自Sticky事件 - StickyUser类"));
+                EventBus.getDefault().postSticky(new User("我来自Sticky事件- User类"));
+
+                // 跳转页面
                 Intent intent = new Intent(getActivity(), StickyActivity.class);
                 startActivity(intent);
             }
-        }, 3000);
+        });
         return rootView;
     }
 
