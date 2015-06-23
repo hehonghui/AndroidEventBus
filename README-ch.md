@@ -32,6 +32,12 @@ public class YourActivity extends Activity {
         EventBus.getDefault().register(this);
     }
    
+      @Override
+    protected void onDestroy() {
+        // 注销
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }
    
 ```      

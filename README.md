@@ -31,6 +31,13 @@ public class YourActivity extends Activity {
         // register the receiver object
         EventBus.getDefault().register(this);
     }
+    
+   @Override
+    protected void onDestroy() {
+        // Don’t forget to unregister !!
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }
    
 ```      
