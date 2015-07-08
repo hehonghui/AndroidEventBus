@@ -26,6 +26,7 @@ package org.simple.eventbus;
 
 import android.util.Log;
 
+import java.lang.Object;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -129,7 +130,8 @@ public class SubsciberMethodHunter {
                     Subscription subscription = subIterator.next();
                     // 获取引用
                     Object cacheObject = subscription.subscriber.get();
-                    if (cacheObject.equals(subscriber)) {
+                    if ( isObjectsEqual(cacheObject, subscriber )
+                            || cacheObject == null ) {
                         Log.d("", "### 移除订阅 " + subscriber.getClass().getName());
                         foundSubscriptions.add(subscription);
                     }
@@ -144,6 +146,11 @@ public class SubsciberMethodHunter {
                 iterator.remove();
             }
         }
+    }
+
+    private boolean isObjectsEqual(Object cachedObj, Object subscriber) {
+        return cachedObj != null
+                &&  cachedObj.equals(subscriber);
     }
 
     /**
