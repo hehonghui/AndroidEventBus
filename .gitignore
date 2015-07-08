@@ -10,6 +10,8 @@ gen/
 *.apk
 *.ap_
 
+releases/
+
 # Files for the Dalvik VM
 *.dex
 
