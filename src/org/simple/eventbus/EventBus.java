@@ -193,6 +193,10 @@ public final class EventBus {
      * @param tag 事件的tag, 类似于BroadcastReceiver的action
      */
     public void post(Object event, String tag) {
+        if (event == null) {
+            Log.e(this.getClass().getSimpleName(), "The event object is null");
+            return;
+        }
         mLocalEvents.get().offer(new EventType(event.getClass(), tag));
         mDispatcher.dispatchEvents(event);
     }
@@ -213,11 +217,13 @@ public final class EventBus {
      * @param tag 事件tag
      */
     public void postSticky(Object event, String tag) {
+        if (event == null) {
+            Log.e(this.getClass().getSimpleName(), "The event object is null");
+            return;
+        }
         EventType eventType = new EventType(event.getClass(), tag);
         eventType.event = event;
         mStickyEvents.add(eventType);
-        // 处理sticky事件
-//        mDispatcher.handleStickyEvent(eventType, null);
     }
 
     public void removeStickyEvent(Class<?> eventClass) {
