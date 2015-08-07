@@ -123,7 +123,7 @@ It will be enough to add the jar file into the “quote” part of the Project, 
 dependencies {
 
     // add AndroidEventBus dependency
-    compile 'org.simple:androideventbus:latest'
+    compile 'org.simple:androideventbus:1.0.5'
 }
 ```    
                
@@ -168,10 +168,26 @@ These are the differences between AndroidEventBus and EventBus of greenrobot. Bu
 I really appreciate E-pal “淡蓝色的星期三” for his proposing of bugs and feedback and I hope more and more friends will join our team of AndroidEventBus Development.    
    
  
-## Release Note### V1.0.4 ( 2015.5.23 )1. support Sticky Events and use WeakReference to hold the Subscriber.
+## Release Note
 
-### V1.0.2 ( 2015.2.28 )Solved the problem of failing to receive an event when the parameter of the subscription method is a basic type (int, Boolean, etc.)### V1.0.1 ( 2015.2.13 )1. Solved the problem that the subscription method can’t receive an event because the subscription method is delivered as sub-type when posting an event while it was originally of basic type.     
-### v1.0 ( 2015.2.9 )1.	Release an EventBus library; use @Subscriber annotation to mark subscription method2.	The subscription method supports “tag” mark, which makes event delivery more precise.    
+### V1.0.5 ( 2015.6.20 )
+1. fix bugs.
+
+### V1.0.4 ( 2015.5.23 )
+1. support Sticky Events and use WeakReference to hold the Subscriber.
+
+
+### V1.0.2 ( 2015.2.28 )
+Solved the problem of failing to receive an event when the parameter of the subscription method is a basic type (int, Boolean, etc.)
+
+### V1.0.1 ( 2015.2.13 )
+1. Solved the problem that the subscription method can’t receive an event because the subscription method is delivered as sub-type when posting an event while it was originally of basic type.     
+
+
+### v1.0 ( 2015.2.9 )
+1.	Release an EventBus library; use @Subscriber annotation to mark subscription method
+2.	The subscription method supports “tag” mark, which makes event delivery more precise.
+    
 
 ## License
 ```
