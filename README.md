@@ -10,6 +10,11 @@ This is an EventBus library for Android. It simplifies the communication between
 
 1. support sticky event;
 
+## AndroidEventBus is adopted in the following app
+* [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)     
+* [考拉FM](http://www.wandoujia.com/apps/com.itings.myradio)
+* [羞羞](http://www.wandoujia.com/apps/com.yelong.wesex)
+* [大题小作](http://www.pkdati.com/)
   
 ## Basic Architecture
  ![arch](http://img.blog.csdn.net/20150426223040789)         
@@ -162,9 +167,6 @@ These are the differences between AndroidEventBus and EventBus of greenrobot. Bu
     @org.simple.eventbus.Subscriber <methods>;
 }
 ```
-
-## AndroidEventBus is adopted in the following app
-* [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)      
 
 ## Thanks Note         
 I really appreciate E-pal “淡蓝色的星期三” for his proposing of bugs and feedback and I hope more and more friends will join our team of AndroidEventBus Development.    
