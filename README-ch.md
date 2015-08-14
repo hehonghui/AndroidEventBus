@@ -11,6 +11,13 @@
 1. 支持 sticky event;
 2. 使用弱引用持有订阅对象。
 
+## 使用了AndroidEventBus的已知App
+* [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)     
+* [考拉FM](http://www.wandoujia.com/apps/com.itings.myradio)
+* [羞羞](http://www.wandoujia.com/apps/com.yelong.wesex)
+* [大题小作](http://www.pkdati.com/)
+
+`欢迎大家给我反馈使用情况`
   
 ## 基本结构
  ![结构图](http://img.blog.csdn.net/20150426223040789)      
@@ -157,15 +164,6 @@ private void onEventMainThread(User aUser) {
     @org.simple.eventbus.Subscriber <methods>;
 }
 ```
-
-## 使用了AndroidEventBus的已知App
-* [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)     
-* [考拉FM](http://www.wandoujia.com/apps/com.itings.myradio)
-* [羞羞](http://www.wandoujia.com/apps/com.yelong.wesex)
-
-`欢迎大家给我反馈使用情况`
-
-   
 
 ## 感谢
    在此非常感谢网友“淡蓝色的星期三”提出的bug以及反馈,也希望更多的朋友能够加入到Android EventBus的开发中来。  
