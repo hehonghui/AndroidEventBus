@@ -15,6 +15,7 @@ This is an EventBus library for Android. It simplifies the communication between
 * [考拉FM](http://www.wandoujia.com/apps/com.itings.myradio)
 * [羞羞](http://www.wandoujia.com/apps/com.yelong.wesex)
 * [大题小作](http://www.pkdati.com/)
+* [易方达基金管家](http://www.wandoujia.com/apps/com.efunds.trade)
   
 ## Basic Architecture
  ![arch](http://img.blog.csdn.net/20150426223040789)         
