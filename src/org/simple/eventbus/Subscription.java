@@ -33,7 +33,7 @@ public class Subscription {
 	/**
 	 * 接受者的方法
 	 */
-	public Reference<Method> targetMethod;
+	public Method targetMethod;
 	/**
 	 * 执行事件的线程模型
 	 */
@@ -59,7 +59,7 @@ public class Subscription {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((subscriber == null) ? 0 : subscriber.hashCode());
-		result = prime * result + ((targetMethod == null || null == targetMethod.get()) ? 0 : targetMethod.hashCode());
+		result = prime * result + ((targetMethod == null) ? 0 : targetMethod.hashCode());
 		return result;
 	}
 
@@ -77,8 +77,8 @@ public class Subscription {
 				return false;
 		} else if (!subscriber.get().equals(other.subscriber.get()))
 			return false;
-		if (targetMethod == null || null == targetMethod.get()) {
-			if (other.targetMethod != null && null != other.targetMethod.get())
+		if (targetMethod == null) {
+			if (other.targetMethod != null)
 				return false;
 		} else if (!targetMethod.equals(other.targetMethod))
 			return false;

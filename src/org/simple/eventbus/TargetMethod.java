@@ -16,8 +16,6 @@
 
 package org.simple.eventbus;
 
-import java.lang.ref.Reference;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 
 /**
@@ -29,7 +27,7 @@ class TargetMethod {
 	/**
 	 * 订阅者的目标函数
 	 */
-	public Reference<Method> method;
+	public Method method;
 	/**
 	 * 事件类型
 	 */
@@ -47,7 +45,7 @@ class TargetMethod {
 	 */
 	public TargetMethod(Method md, EventType type, ThreadMode mode) {
 		md.setAccessible(true);
-		this.method = new WeakReference<Method>(md);
+		this.method = md;
 		this.eventType = type;
 		this.threadMode = mode;
 	}
@@ -57,7 +55,7 @@ class TargetMethod {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((eventType == null) ? 0 : eventType.hashCode());
-		result = prime * result + ((method == null || null == method.get()) ? 0 : method.get().getName().hashCode());
+		result = prime * result + ((method == null) ? 0 : method.getName().hashCode());
 		return result;
 	}
 
@@ -75,10 +73,10 @@ class TargetMethod {
 				return false;
 		} else if (!eventType.equals(other.eventType))
 			return false;
-		if (method == null || null == method.get()) {
-			if (other.method != null && null != method.get())
+		if (method == null) {
+			if (other.method != null)
 				return false;
-		} else if (!method.get().getName().equals(other.method.get().getName()))
+		} else if (!method.getName().equals(other.method.getName()))
 			return false;
 		return true;
 	}
