@@ -34,10 +34,10 @@ import java.util.List;
  */
 public class StrictMatchPolicy implements MatchPolicy {
 
-    @Override
-    public List<EventType> findMatchEventTypes(EventType type, Object aEvent) {
-        List<EventType> result = new LinkedList<EventType>();
-        result.add(type);
-        return result;
-    }
+	@Override
+	public List<EventType> findMatchEventTypes(EventType type, Class<?> eventClass) {
+		List<EventType> result = new LinkedList<EventType>();
+		result.add(type);
+		return result;
+	}
 }
