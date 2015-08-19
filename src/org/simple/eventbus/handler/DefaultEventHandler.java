@@ -16,9 +16,10 @@
 
 package org.simple.eventbus.handler;
 
-import org.simple.eventbus.Subscription;
-
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.simple.eventbus.Subscription;
 
 /**
  * 事件在哪个线程post,事件的接收就在哪个线程
@@ -26,26 +27,30 @@ import java.lang.reflect.InvocationTargetException;
  * @author mrsimple
  */
 public class DefaultEventHandler implements EventHandler {
-    /**
-     * handle the event
-     * 
-     * @param subscription
-     * @param event
-     */
-    public void handleEvent(Subscription subscription, Object event) {
-        if (subscription == null
-                || subscription.subscriber.get() == null) {
-            return;
-        }
-        try {
-            // 执行
-            subscription.targetMethod.invoke(subscription.subscriber.get(), event);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
+	/**
+	 * handle the event
+	 * 
+	 * @param subscription
+	 * @param event
+	 */
+	public void handleEvent(Subscription subscription, Object event) {
+		if (subscription == null || subscription.subscriber.get() == null || null == subscription.targetMethod || null == subscription.targetMethod.get()) {
+			return;
+		}
+		try {
+			// 执行
+			Method method = subscription.targetMethod.get();
+			if (method.getParameterTypes().length < 1) {
+				method.invoke(subscription.subscriber.get());
+			} else {
+				method.invoke(subscription.subscriber.get(), event);
+			}
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+	}
 }

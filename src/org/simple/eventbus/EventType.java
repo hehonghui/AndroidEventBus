@@ -32,14 +32,14 @@ public final class EventType {
 	/**
 	 * 参数类型
 	 */
-	Class<?> paramClass;
+	private Class<?> paramClass;
 	/**
 	 * 函数的tag
 	 */
 	public String tag = DEFAULT_TAG;
 
-	public Class<?> eventClass;
-	public Object event;
+	Class<?> eventClass;
+	Object event;
 
 	/**
 	 * @param aClass
@@ -54,12 +54,12 @@ public final class EventType {
 	}
 
 	@Override
-	public String toString() {
-		return "EventType [paramClass=" + paramClass.getName() + ", tag=" + tag + "]";
+	public final String toString() {
+		return "EventType [paramClass=" + (null != paramClass ? paramClass.getName() : "EmptyParams") + ", tag=" + tag + "]";
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((paramClass == null) ? 0 : paramClass.hashCode());
@@ -68,7 +68,7 @@ public final class EventType {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -87,6 +87,28 @@ public final class EventType {
 		} else if (!tag.equals(other.tag))
 			return false;
 		return true;
+	}
+
+	public final boolean equals(Class<?> cls, String tag) {
+		if (paramClass == null) {
+			if (cls != null)
+				return false;
+		} else if (!paramClass.equals(cls))
+			return false;
+		if (this.tag == null) {
+			if (tag != null)
+				return false;
+		} else if (!this.tag.equals(tag))
+			return false;
+		return true;
+	}
+
+	public final String getParamName() {
+		return null != paramClass ? paramClass.getSimpleName() : "EmptyParam";
+	}
+
+	public final boolean isAssignableFromParam(EventType foundEventType) {
+		return null != paramClass ? paramClass.isAssignableFrom(foundEventType.paramClass) : paramClass == foundEventType.paramClass;
 	}
 
 }

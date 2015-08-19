@@ -34,12 +34,15 @@ public class DefaultMatchPolicy implements MatchPolicy {
 	@Override
 	public List<EventType> findMatchEventTypes(EventType type, Class<?> eventClass) {
 		List<EventType> result = new LinkedList<EventType>();
+		if (null == eventClass) {
+			result.add(type);
+			return result;
+		}
 		while (eventClass != null) {
 			result.add(new EventType(eventClass, type.tag));
 			addInterfaces(result, eventClass, type.tag);
 			eventClass = eventClass.getSuperclass();
 		}
-
 		return result;
 	}
 
