@@ -17,7 +17,7 @@
 * [羞羞](http://www.wandoujia.com/apps/com.yelong.wesex)
 * [大题小作](http://www.pkdati.com/)
 * [易泊商户](http://www.myebox.cn/)
-* [易方达基金管家](http://www.wandoujia.com/apps/com.efunds.trade)
+* [易方达移动OA](http://www.wandoujia.com/apps/com.efunds.trade)
 
 `欢迎大家给我反馈使用情况`
   
