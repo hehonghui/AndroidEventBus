@@ -32,5 +32,5 @@ import java.util.List;
  * @author mrsimple
  */
 public interface MatchPolicy {
-    List<EventType> findMatchEventTypes(EventType type, Object aEvent);
+    List<EventType> findMatchEventTypes(EventType type, Class<?> eventClass);
 }

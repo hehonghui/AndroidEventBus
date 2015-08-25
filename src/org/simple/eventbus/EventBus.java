@@ -16,8 +16,6 @@
 
 package org.simple.eventbus;
 
-import android.util.Log;
-
 import org.simple.eventbus.handler.AsyncEventHandler;
 import org.simple.eventbus.handler.DefaultEventHandler;
 import org.simple.eventbus.handler.EventHandler;
@@ -185,6 +183,18 @@ public final class EventBus {
     public void post(Object event) {
         post(event, EventType.DEFAULT_TAG);
     }
+    
+    public void post(Class<?> eventClass) {
+    	post(null, EventType.DEFAULT_TAG, eventClass);
+    }
+    
+    public void post(String tag) {
+    	post(null, tag, null);
+    }
+    
+    public void post(String tag, Class<?> eventClass) {
+    	post(null, tag, eventClass);
+    }
 
     /**
      * 发布事件
@@ -193,11 +203,18 @@ public final class EventBus {
      * @param tag 事件的tag, 类似于BroadcastReceiver的action
      */
     public void post(Object event, String tag) {
-        if (event == null) {
-            Log.e(this.getClass().getSimpleName(), "The event object is null");
-            return;
-        }
-        mLocalEvents.get().offer(new EventType(event.getClass(), tag));
+    	post(event, tag, null == event ? null : event.getClass());
+    }
+    
+    /**
+     * 发布事件
+     * 
+     * @param event 要发布的事件
+     * @param tag 事件的tag, 类似于BroadcastReceiver的action
+     * @param eventClass 事件类类型
+     */
+    public void post(Object event, String tag, Class<?> eventClass) {
+        mLocalEvents.get().offer(new EventType(eventClass, tag));
         mDispatcher.dispatchEvents(event);
     }
 
@@ -209,6 +226,18 @@ public final class EventBus {
     public void postSticky(Object event) {
         postSticky(event, EventType.DEFAULT_TAG);
     }
+    
+    public void postSticky(Class<?> eventClass) {
+    	postSticky(null, EventType.DEFAULT_TAG, eventClass);
+    }
+    
+    public void postSticky(String tag) {
+    	postSticky(null, tag, null);
+    }
+    
+    public void postSticky(String tag, Class<?> eventClass) {
+    	postSticky(null, tag, eventClass);
+    }
 
     /**
      * 发布含有tag的Sticky事件
@@ -217,13 +246,17 @@ public final class EventBus {
      * @param tag 事件tag
      */
     public void postSticky(Object event, String tag) {
-        if (event == null) {
-            Log.e(this.getClass().getSimpleName(), "The event object is null");
-            return;
-        }
+        postSticky(event, tag, null == event ? null : event.getClass());
+    }
+    
+    public void postSticky(Object event, String tag, Class<?> eventClass) {
         EventType eventType = new EventType(event.getClass(), tag);
         eventType.event = event;
         mStickyEvents.add(eventType);
+    }
+    
+    public void removeStickyEvent(String tag) {
+    	removeStickyEvent(null, tag);
     }
 
     public void removeStickyEvent(Class<?> eventClass) {
@@ -239,8 +272,7 @@ public final class EventBus {
         Iterator<EventType> iterator = mStickyEvents.iterator();
         while (iterator.hasNext()) {
             EventType eventType = iterator.next();
-            if (eventType.paramClass.equals(eventClass)
-                    && eventType.tag.equals(tag)) {
+            if (eventType.equals(eventClass, tag)) {
                 iterator.remove();
             }
         }
@@ -407,7 +439,7 @@ public final class EventBus {
             if (mCacheEventTypes.containsKey(type)) {
                 eventTypes = mCacheEventTypes.get(type);
             } else {
-                eventTypes = mMatchPolicy.findMatchEventTypes(type, aEvent);
+                eventTypes = mMatchPolicy.findMatchEventTypes(type, type.getEventClass());
                 mCacheEventTypes.put(type, eventTypes);
             }
 
@@ -431,8 +463,6 @@ public final class EventBus {
             // 事件
             Object event = eventType.event;
             for (EventType foundEventType : eventTypes) {
-                Log.e("", "### 找到的类型 : " + foundEventType.paramClass.getSimpleName()
-                        + ", event class : " + event.getClass().getSimpleName());
                 final List<Subscription> subscriptions = mSubcriberMap.get(foundEventType);
                 if (subscriptions == null) {
                     continue;
@@ -443,8 +473,7 @@ public final class EventBus {
                     // 如果订阅者为空,那么该sticky事件分发给所有订阅者.否则只分发给该订阅者
                     if (isTarget(subItem, subscriber)
                             && (subItem.eventType.equals(foundEventType)
-                            || subItem.eventType.paramClass
-                                    .isAssignableFrom(foundEventType.paramClass))) {
+                            || subItem.eventType.isAssignableFromEventClass(foundEventType))) {
                         // 处理事件
                         eventHandler.handleEvent(subItem, event);
                     }

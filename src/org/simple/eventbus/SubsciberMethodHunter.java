@@ -24,8 +24,6 @@
 
 package org.simple.eventbus;
 
-import android.util.Log;
-
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -75,8 +73,8 @@ public class SubsciberMethodHunter {
                     // 获取方法参数
                     Class<?>[] paramsTypeClass = method.getParameterTypes();
                     // 订阅函数只支持一个参数
-                    if (paramsTypeClass != null && paramsTypeClass.length == 1) {
-                        Class<?> paramType = convertType(paramsTypeClass[0]);
+                    if (paramsTypeClass != null && paramsTypeClass.length <= 1) {
+                        Class<?> paramType = (paramsTypeClass.length == 0 ? null : convertType(paramsTypeClass[0]));
                         EventType eventType = new EventType(paramType, annotation.tag());
                         TargetMethod subscribeMethod = new TargetMethod(method, eventType,
                                 annotation.mode());
@@ -132,7 +130,6 @@ public class SubsciberMethodHunter {
                     Object cacheObject = subscription.subscriber.get();
                     if (isObjectsEqual(cacheObject, subscriber)
                             || cacheObject == null) {
-                        Log.d("", "### 移除订阅 " + subscriber.getClass().getName());
                         foundSubscriptions.add(subscription);
                     }
                 }
