@@ -246,11 +246,11 @@ public final class EventBus {
      * @param tag 事件tag
      */
     public void postSticky(Object event, String tag) {
-        postSticky(event, tag, null == event ? null : event.getClass());
+        postSticky(event, tag, event == null ? null : event.getClass());
     }
     
     public void postSticky(Object event, String tag, Class<?> eventClass) {
-        EventType eventType = new EventType(event.getClass(), tag);
+        EventType eventType = new EventType(eventClass, tag);
         eventType.event = event;
         mStickyEvents.add(eventType);
     }

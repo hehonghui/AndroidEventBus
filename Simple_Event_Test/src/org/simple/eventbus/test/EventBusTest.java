@@ -88,6 +88,10 @@ public class EventBusTest extends AndroidTestCase {
         assertEquals(2, getSubscriptions(new EventType(User.class)).size());
         // Object类型的函数为1一个
         assertEquals(1, getSubscriptions(new EventType(Object.class)).size());
+        // NULL类型的函数为2一个
+        assertEquals(2, getSubscriptions(new EventType(null)).size());
+        // NULL类型tag为tag_null的函数为1一个
+        assertEquals(1, getSubscriptions(new EventType(null, "tag_null")).size());
     }
 
     /**
@@ -105,6 +109,9 @@ public class EventBusTest extends AndroidTestCase {
 
         // 类型为Person且tag为"another"的有效注册函数为1个.
         assertEquals(1, getSubscriptions(new EventType(User.class, "another")).size());
+
+        // 类型为NULL且tag为"tag_null"的有效注册函数为1个.
+        assertEquals(1, getSubscriptions(new EventType(null, "tag_null")).size());
     }
 
     /**
@@ -115,6 +122,8 @@ public class EventBusTest extends AndroidTestCase {
         // 正常注册与发布
         bus.register(mockActivity);
         bus.post(new User("mr.simple"));
+        bus.post(User.class);
+        bus.post("tag_null");
 
         // 移除对象
         bus.unregister(mockActivity);
@@ -135,16 +144,26 @@ public class EventBusTest extends AndroidTestCase {
 
     public void testStickyEvents() {
         assertEquals(0, bus.getStickyEvents().size());
-        bus.postSticky("hello");
+        bus.postSticky("hello", EventType.DEFAULT_TAG);
         assertEquals(1, bus.getStickyEvents().size());
         final String tag = "sticky";
         bus.postSticky("world", tag);
         assertEquals(2, bus.getStickyEvents().size());
+        
+        bus.postSticky(String.class);
+        assertEquals(3, bus.getStickyEvents().size());
+        bus.postSticky(tag);
+        assertEquals(4, bus.getStickyEvents().size());
+        bus.postSticky(tag, String.class);
+        assertEquals(5, bus.getStickyEvents().size());
 
         bus.removeStickyEvent(String.class);
-        assertEquals(1, bus.getStickyEvents().size());
+        assertEquals(3, bus.getStickyEvents().size());
 
         bus.removeStickyEvent(String.class, tag);
+        assertEquals(1, bus.getStickyEvents().size());
+
+        bus.removeStickyEvent(null, tag);
         assertEquals(0, bus.getStickyEvents().size());
     }
 
@@ -153,7 +172,7 @@ public class EventBusTest extends AndroidTestCase {
         assertEquals(null, subscriber.mStickyName);
         assertEquals(null, subscriber.mStickyTag);
         // 未注册时发布事件,那么对象接收不到事件
-        bus.post("hello");
+        bus.post("hello", EventType.DEFAULT_TAG);
         // 普通注册形式
         bus.register(subscriber);
         assertEquals(null, subscriber.mStickyName);
@@ -161,7 +180,7 @@ public class EventBusTest extends AndroidTestCase {
         bus.unregister(subscriber);
 
         // post sticky事件
-        bus.postSticky("simple");
+        bus.postSticky("simple", EventType.DEFAULT_TAG);
         // 以sticky的形式注册
         bus.registerSticky(subscriber);
 
