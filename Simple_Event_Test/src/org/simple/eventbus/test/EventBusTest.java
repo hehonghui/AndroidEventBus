@@ -187,10 +187,13 @@ public class EventBusTest extends AndroidTestCase {
         // 接收到数据
         assertEquals("simple", subscriber.mStickyName);
         assertEquals(null, subscriber.mStickyTag);
+        bus.unregister(subscriber);
 
         // post sticky事件, 含有tag, 这里需要注意
         bus.postSticky("simple", "sticky");
+        bus.registerSticky(subscriber);
         assertEquals("sticky", subscriber.mStickyTag);
+        bus.unregister(subscriber);
 
     }
 
