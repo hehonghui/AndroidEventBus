@@ -16,6 +16,7 @@ This is an EventBus library for Android. It simplifies the communication between
 * [羞羞](http://www.wandoujia.com/apps/com.yelong.wesex)
 * [大题小作](http://www.pkdati.com/)
 * [易方达移动OA](http://www.wandoujia.com/apps/com.efunds.trade)
+* [Novu - Your Health Rewarded](https://play.google.com/store/apps/details?id=com.novu.novu)
   
 ## Basic Architecture
  ![arch](http://img.blog.csdn.net/20150426223040789)         
