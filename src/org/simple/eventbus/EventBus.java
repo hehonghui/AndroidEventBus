@@ -184,7 +184,10 @@ public final class EventBus {
 	 * @param event
 	 */
 	public void post(Object event) {
-		post(event, EventType.DEFAULT_TAG, null != event ? event.getClass() : null);
+		if (isSkipEvent(event)) {
+			return;
+		}
+		post(event, EventType.DEFAULT_TAG, event.getClass());
 	}
 
 	/**
@@ -192,7 +195,7 @@ public final class EventBus {
 	 * 
 	 * @param eventClass
 	 */
-	public void post(Class<?> eventClass) {
+	public void postEmptyEvent(Class<?> eventClass) {
 		post(null, EventType.DEFAULT_TAG, eventClass);
 	}
 
@@ -232,7 +235,10 @@ public final class EventBus {
 	 * @param event
 	 */
 	public void postSticky(Object event) {
-		postSticky(event, EventType.DEFAULT_TAG, null != event ? event.getClass() : null);
+		if (isSkipEvent(event)) {
+			return;
+		}
+		postSticky(event, EventType.DEFAULT_TAG, event.getClass());
 	}
 
 	/**
@@ -244,7 +250,7 @@ public final class EventBus {
 		postSticky(null, tag, null);
 	}
 
-	public void postSticky(Class<?> eventClass) {
+	public void postStickyEmptyEvent(Class<?> eventClass) {
 		postSticky(null, EventType.DEFAULT_TAG, eventClass);
 	}
 
@@ -409,7 +415,7 @@ public final class EventBus {
 		 */
 		void dispatchEvents(Object aEvent) {
 			Queue<EventType> eventsQueue = mLocalEvents.get();
-			while (eventsQueue.size() > 0) {
+			while (!eventsQueue.isEmpty()) {
 				deliveryEvent(eventsQueue.poll(), aEvent);
 			}
 		}
@@ -455,7 +461,7 @@ public final class EventBus {
 			if (mCacheEventTypes.containsKey(type)) {
 				eventTypes = mCacheEventTypes.get(type);
 			} else {
-				eventTypes = mMatchPolicy.findMatchEventTypes(type, type.eventClass);
+				eventTypes = mMatchPolicy.findMatchEventTypes(type, type.paramClass);
 				mCacheEventTypes.put(type, eventTypes);
 			}
 
@@ -519,4 +525,7 @@ public final class EventBus {
 		}
 	} // end of EventDispatcher
 
+	private boolean isSkipEvent(Object event) {
+		return null == event;
+	}
 }

@@ -32,14 +32,11 @@ public final class EventType {
 	/**
 	 * 参数类型
 	 */
-	private Class<?> paramClass;
+	Class[]<?> paramClass;
 	/**
 	 * 函数的tag
 	 */
 	public String tag = DEFAULT_TAG;
-
-	Class<?> eventClass;
-	Object event;
 
 	/**
 	 * @param aClass
@@ -48,7 +45,9 @@ public final class EventType {
 		this(aClass, DEFAULT_TAG);
 	}
 
-	public EventType(Class<?> aClass, String aTag) {
+	Object event;
+
+	public EventType(Class[]<?> aClass, String aTag) {
 		paramClass = aClass;
 		tag = aTag;
 	}
