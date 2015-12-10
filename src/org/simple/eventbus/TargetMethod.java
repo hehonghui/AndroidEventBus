@@ -40,7 +40,7 @@ import java.lang.reflect.Method;
 
     /**
      * @param md
-     * @param eventType
+     * @param type
      * @param mode
      */
     public TargetMethod(Method md, EventType type, ThreadMode mode) {
@@ -48,15 +48,6 @@ import java.lang.reflect.Method;
         this.method.setAccessible(true);
         this.eventType = type;
         this.threadMode = mode;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((eventType == null) ? 0 : eventType.hashCode());
-        result = prime * result + ((method == null) ? 0 : method.getName().hashCode());
-        return result;
     }
 
     @Override

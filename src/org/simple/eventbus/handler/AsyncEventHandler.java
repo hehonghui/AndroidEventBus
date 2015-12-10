@@ -49,7 +49,7 @@ public class AsyncEventHandler implements EventHandler {
      * @param subscription
      * @param event
      */
-    public void handleEvent(final Subscription subscription, final Object event) {
+    public void handleEvent(final Subscription subscription, final Object... event) {
         mDispatcherThread.post(new Runnable() {
 
             @Override

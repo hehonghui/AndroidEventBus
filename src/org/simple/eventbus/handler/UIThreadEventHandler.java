@@ -41,7 +41,7 @@ public class UIThreadEventHandler implements EventHandler {
      * @param subscription
      * @param event
      */
-    public void handleEvent(final Subscription subscription, final Object event) {
+    public void handleEvent(final Subscription subscription, final Object... event) {
         mUIHandler.post(new Runnable() {
 
             @Override

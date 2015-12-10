@@ -36,7 +36,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * the subscriber method hunter, find all of the subscriber's methods which
  * annotated with @Subcriber.
- * 
+ *
  * @author mrsimple
  */
 public class SubsciberMethodHunter {
@@ -55,7 +55,7 @@ public class SubsciberMethodHunter {
 
     /**
      * 查找订阅对象中的所有订阅函数,订阅函数的参数只能有一个.找到订阅函数之后构建Subscription存储到Map中
-     * 
+     *
      * @param subscriber 订阅对象
      * @return
      */
@@ -75,25 +75,71 @@ public class SubsciberMethodHunter {
                     // 获取方法参数
                     Class<?>[] paramsTypeClass = method.getParameterTypes();
                     // 订阅函数只支持一个参数
-                    if (paramsTypeClass != null && paramsTypeClass.length == 1) {
-                        Class<?> paramType = convertType(paramsTypeClass[0]);
-                        EventType eventType = new EventType(paramType, annotation.tag());
+                    if (paramsTypeClass != null && paramsTypeClass.length == 0) {
+                        Class<?> paramType = NULL.class;
+                        EventType eventType = new EventType(annotation.tag(), paramType);
+                        TargetMethod subscribeMethod = new TargetMethod(method, eventType,
+                                annotation.mode());
+                        subscibe(eventType, subscribeMethod, subscriber);
+                    } else if (paramsTypeClass != null && paramsTypeClass.length > 0 ) {
+                        Class<?>[] transform = new Class<?>[paramsTypeClass.length];
+                        for (int j = 0; j < paramsTypeClass.length; j++) {
+                            Class<?> sub = paramsTypeClass[j];
+                            transform[j] = convertType(sub);
+                        }
+                        EventType eventType = new EventType(annotation.tag(), transform);
                         TargetMethod subscribeMethod = new TargetMethod(method, eventType,
                                 annotation.mode());
                         subscibe(eventType, subscribeMethod, subscriber);
                     }
                 }
             } // end for
-              // 获取父类,以继续查找父类中符合要求的方法
+            // 获取父类,以继续查找父类中符合要求的方法
             clazz = clazz.getSuperclass();
         }
     }
 
+    private boolean isSystemCalss(String name) {
+        return name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("android.");
+    }
+
+    /**
+     * if the subscriber method's type is primitive, convert it to corresponding
+     * Object type. for example, int to Integer.
+     *
+     * @param eventType origin Event Type
+     * @return
+     */
+    private Class<?> convertType(Class<?> eventType) {
+        Class<?> returnClass = eventType;
+        if (eventType.equals(boolean.class)) {
+            returnClass = Boolean.class;
+        } else if (eventType.equals(int.class)) {
+            returnClass = Integer.class;
+        } else if (eventType.equals(float.class)) {
+            returnClass = Float.class;
+        } else if (eventType.equals(double.class)) {
+            returnClass = Double.class;
+        } else if (eventType.equals(long.class)) {
+            returnClass = Long.class;
+        } else if (eventType.equals(short.class)) {
+            returnClass = Short.class;
+        } else if (eventType.equals(byte.class)) {
+            returnClass = Byte.class;
+        } else if (eventType.equals(char.class)) {
+            returnClass = Character.class;
+        } else if (eventType.equals(void.class)) {
+            returnClass = Void.class;
+        }
+
+        return returnClass;
+    }
+
     /**
      * 按照EventType存储订阅者列表,这里的EventType就是事件类型,一个事件对应0到多个订阅者.
-     * 
-     * @param event 事件
-     * @param method 订阅方法对象
+     *
+     * @param event      事件
+     * @param method     订阅方法对象
      * @param subscriber 订阅者
      */
     private void subscibe(EventType event, TargetMethod method, Object subscriber) {
@@ -114,7 +160,7 @@ public class SubsciberMethodHunter {
 
     /**
      * remove subscriber methods from map
-     * 
+     *
      * @param subscriber
      */
     public void removeMethodsFromMap(Object subscriber) {
@@ -151,32 +197,6 @@ public class SubsciberMethodHunter {
     private boolean isObjectsEqual(Object cachedObj, Object subscriber) {
         return cachedObj != null
                 && cachedObj.equals(subscriber);
-    }
-
-    /**
-     * if the subscriber method's type is primitive, convert it to corresponding
-     * Object type. for example, int to Integer.
-     * 
-     * @param eventType origin Event Type
-     * @return
-     */
-    private Class<?> convertType(Class<?> eventType) {
-        Class<?> returnClass = eventType;
-        if (eventType.equals(boolean.class)) {
-            returnClass = Boolean.class;
-        } else if (eventType.equals(int.class)) {
-            returnClass = Integer.class;
-        } else if (eventType.equals(float.class)) {
-            returnClass = Float.class;
-        } else if (eventType.equals(double.class)) {
-            returnClass = Double.class;
-        }
-
-        return returnClass;
-    }
-
-    private boolean isSystemCalss(String name) {
-        return name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("android.");
     }
 
 }
