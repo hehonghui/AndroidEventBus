@@ -417,8 +417,8 @@ public final class EventBus {
             // 事件
             Object event = eventType.event;
             for (EventType foundEventType : eventTypes) {
-                Log.e("", "### 找到的类型 : " + foundEventType.paramClass.getSimpleName()
-                        + ", event class : " + event.getClass().getSimpleName());
+//                Log.e("", "### 找到的类型 : " + foundEventType.paramClass.getSimpleName()
+//                        + ", event class : " + event.getClass().getSimpleName());
                 final List<Subscription> subscriptions = mSubcriberMap.get(foundEventType);
                 if (subscriptions == null) {
                     continue;

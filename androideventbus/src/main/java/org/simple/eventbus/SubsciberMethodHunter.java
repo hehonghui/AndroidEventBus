@@ -132,7 +132,7 @@ public class SubsciberMethodHunter {
                     Object cacheObject = subscription.subscriber.get();
                     if ( isObjectsEqual(cacheObject, subscriber )
                             || cacheObject == null ) {
-                        Log.d("", "### 移除订阅 " + subscriber.getClass().getName());
+//                        Log.d("", "### 移除订阅 " + subscriber.getClass().getName());
                         foundSubscriptions.add(subscription);
                     }
                 }
