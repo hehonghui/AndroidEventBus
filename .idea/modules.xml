@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Simple_EventBus.iml" filepath="$PROJECT_DIR$/Simple_EventBus.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/androideventbus.iml" filepath="$PROJECT_DIR$/app/androideventbus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidEventBus.iml" filepath="$PROJECT_DIR$/AndroidEventBus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/androideventbus/androideventbus.iml" filepath="$PROJECT_DIR$/androideventbus/androideventbus.iml" />
     </modules>
   </component>
 </project>
