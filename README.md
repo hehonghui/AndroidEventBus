@@ -16,6 +16,7 @@ This is an EventBus library for Android. It simplifies the communication between
 * [羞羞](http://www.wandoujia.com/apps/com.yelong.wesex)
 * [大题小作](http://www.pkdati.com/)
 * [易方达移动OA](http://www.wandoujia.com/apps/com.efunds.trade)
+* [Novu - Your Health Rewarded](https://play.google.com/store/apps/details?id=com.novu.novu)
   
 ## Basic Architecture
  ![arch](http://img.blog.csdn.net/20150426223040789)         
@@ -120,7 +121,7 @@ The receiving function will use “tag” to mark receivable types of events, ju
 
 ## Usage 
 ### integrate with jar
-It will be enough to add the jar file into the “quote” part of the Project, AndroidEventBus.[AndroidEventBus.jar](lib/androideventbus-1.0.4.jar?raw=true "download")      
+It will be enough to add the jar file into the “quote” part of the Project, AndroidEventBus.[AndroidEventBus.jar](lib/androideventbus-1.0.5.1.jar?raw=true "download")      
 
 
 ### Gradle
@@ -131,7 +132,7 @@ It will be enough to add the jar file into the “quote” part of the Project, 
 dependencies {
 
     // add AndroidEventBus dependency
-    compile 'org.simple:androideventbus:1.0.5'
+    compile 'org.simple:androideventbus:1.0.5.1'
 }
 ```    
                
