@@ -105,7 +105,7 @@ public final class EventBus {
     /**
      * The Default EventBus instance
      */
-    private static EventBus sDefaultBus;
+    private static volatile EventBus sDefaultBus;
 
     /**
      * private Constructor
