@@ -167,6 +167,7 @@ private void onEventMainThread(User aUser) {
 -keepclassmembers class * {
     @org.simple.eventbus.Subscriber <methods>;
 }
+-keepattributes *Annotation*
 ```
 
 ## 感谢
