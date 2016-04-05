@@ -169,6 +169,7 @@ These are the differences between AndroidEventBus and EventBus of greenrobot. Bu
 -keepclassmembers class * {
     @org.simple.eventbus.Subscriber <methods>;
 }
+-keepattributes *Annotation*
 ```
 
 ## Thanks Note         
