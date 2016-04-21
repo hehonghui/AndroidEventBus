@@ -34,7 +34,7 @@ public final class EventType {
      * 函数的tag
      */
     public String tag = DEFAULT_TAG;
-    public Object event;
+    public Object[] event;
     /**
      * 参数类型
      */

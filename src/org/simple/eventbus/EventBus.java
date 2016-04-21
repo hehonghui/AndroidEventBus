@@ -238,6 +238,7 @@ public final class EventBus {
                 c[i] = o.getClass();
             }
             EventType eventType = new EventType(tag, c);
+            eventType.event = event;
             mStickyEvents.add(eventType);
             mLocalEvents.get().offer(eventType);
             mDispatcher.dispatchEvents(event);
@@ -479,7 +480,7 @@ public final class EventBus {
         private void handleStickyEvent(EventType eventType, Object subscriber) {
             List<EventType> eventTypes = getMatchedEventTypes(eventType, eventType.event);
             // 事件
-            Object event = eventType.event;
+            Object[] event = eventType.event;
             for (EventType foundEventType : eventTypes) {
                 Log.e("", "### 找到的类型 : " + foundEventType.paramClass.toString()
                         + ", event class : " + event.getClass().getSimpleName());
