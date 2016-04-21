@@ -261,10 +261,10 @@ public final class EventBus {
         } else {
             Class<?>[] c = new Class<?>[eventClass.length];
             for (int i = 0; i < eventClass.length; i++) {
-                Object o = eventClass[i];
+                Class<?> o = eventClass[i];
                 if (o == null)
-                    o = new NULL();
-                c[i] = o.getClass();
+                    o = new NULL().getClass();
+                c[i] = o;
             }
             other = new EventType(tag, c);
         }
