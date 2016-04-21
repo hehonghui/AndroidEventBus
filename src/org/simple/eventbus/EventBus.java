@@ -80,7 +80,7 @@ public final class EventBus {
      * the thread local event queue, every single thread has it's own queue.
      */
     ThreadLocal<Queue<EventType>> mLocalEvents = new ThreadLocal<Queue<EventType>>() {
-        protected java.util.Queue<EventType> initialValue() {
+        protected Queue<EventType> initialValue() {
             return new ConcurrentLinkedQueue<EventType>();
         }
 
@@ -484,7 +484,7 @@ public final class EventBus {
             for (EventType foundEventType : eventTypes) {
                 Log.e("", "### 找到的类型 : " + foundEventType.paramClass.toString()
                         + ", event class : " + event.getClass().getSimpleName());
-                final List<Subscription> subscriptions = mSubcriberMap.get(foundEventType);
+                final List<Subscription> subscriptions = loadMapKey(mSubcriberMap, foundEventType);
                 if (subscriptions == null) {
                     continue;
                 }
