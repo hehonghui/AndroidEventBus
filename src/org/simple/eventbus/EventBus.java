@@ -26,7 +26,6 @@ import org.simple.eventbus.matchpolicy.DefaultMatchPolicy;
 import org.simple.eventbus.matchpolicy.MatchPolicy;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -226,9 +225,11 @@ public final class EventBus {
         if (event == null || event.length == 0) {
             EventType eventType = new EventType(tag, new NULL().getClass());
             eventType.event = event;
-            mStickyEvents.add(eventType);
-            mLocalEvents.get().offer(eventType);
-            mDispatcher.dispatchEvents(event);
+            if (!checkStickyContains(eventType)) {
+                mStickyEvents.add(eventType);
+                mLocalEvents.get().offer(eventType);
+                mDispatcher.dispatchEvents(event);
+            }
         } else {
             Class<?>[] c = new Class<?>[event.length];
             for (int i = 0; i < event.length; i++) {
@@ -239,10 +240,35 @@ public final class EventBus {
             }
             EventType eventType = new EventType(tag, c);
             eventType.event = event;
-            mStickyEvents.add(eventType);
-            mLocalEvents.get().offer(eventType);
-            mDispatcher.dispatchEvents(event);
+            if (!checkStickyContains(eventType)) {
+                mStickyEvents.add(eventType);
+                mLocalEvents.get().offer(eventType);
+                mDispatcher.dispatchEvents(event);
+            }
         }
+    }
+
+    private boolean checkStickyContains(EventType eventType) {
+        Iterator<EventType> iterator = mStickyEvents.iterator();
+        while (iterator.hasNext()) {
+            EventType mEventType = iterator.next();
+            if (eventType.equals(mEventType)) {
+                if (mEventType.event == eventType.event)
+                    return true;
+                else if (mEventType.event != null && eventType.event != null && mEventType.event.length == eventType.event.length) {
+                    int all = 0;
+                    for (int i = 0; i < mEventType.event.length; i++) {
+                        if (mEventType.event[i].equals(eventType.event[i])) {
+                            all++;
+                        }
+                    }
+                    if (all == mEventType.event.length) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void removeStickyEvent(Class<?>... eventClass) {

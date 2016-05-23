@@ -9,4 +9,9 @@ public class NULL {
     public Object getValue() {
         return value;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return getClass().equals(o.getClass());
+    }
 }
