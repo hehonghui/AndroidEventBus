@@ -2,9 +2,7 @@
 
 This is an EventBus library for Android. It simplifies the communication between Activities, Fragments, Threads, Services, etc. and lowers the coupling among them to a great extent, thus making simplifier codes, lower coupling possible and improving code quality.             
   
-   ****中文版 [README.md](README-ch.md).****    
-
-   **AndroidEventBus技术交流群群   号：312090070。有问题或者有建议可以到该群中咨询，谢谢。**
+   ****中文版 [README.md](README-ch.md).【该项目不再维护】****    
 
 ## new feature
 
