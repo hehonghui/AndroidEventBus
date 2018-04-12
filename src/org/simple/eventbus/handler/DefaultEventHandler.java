@@ -16,6 +16,7 @@
 
 package org.simple.eventbus.handler;
 
+import org.simple.eventbus.NULL;
 import org.simple.eventbus.Subscription;
 
 import java.lang.reflect.InvocationTargetException;
@@ -32,13 +33,16 @@ public class DefaultEventHandler implements EventHandler {
      * @param subscription
      * @param event
      */
-    public void handleEvent(Subscription subscription, Object event) {
+    public void handleEvent(Subscription subscription, Object... event) {
         if (subscription == null
                 || subscription.subscriber.get() == null) {
             return;
         }
         try {
             // 执行
+            if (event == null || event.length == 0 || (event.length == 1 && event[0] instanceof NULL)) {
+                event = null;
+            }
             subscription.targetMethod.invoke(subscription.subscriber.get(), event);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

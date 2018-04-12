@@ -30,5 +30,5 @@ public interface EventHandler {
      * @param subscription 订阅对象
      * @param event 待处理的事件
      */
-    void handleEvent(Subscription subscription, Object event);
+    void handleEvent(Subscription subscription, Object... event);
 }

@@ -25,6 +25,7 @@
 package org.simple.eventbus.matchpolicy;
 
 import org.simple.eventbus.EventType;
+import org.simple.eventbus.NULL;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,33 +33,43 @@ import java.util.List;
 public class DefaultMatchPolicy implements MatchPolicy {
 
     @Override
-    public List<EventType> findMatchEventTypes(EventType type, Object aEvent) {
-        Class<?> eventClass = aEvent.getClass();
+    public List<EventType> findMatchEventTypes(EventType type, Object... aEvent) {
         List<EventType> result = new LinkedList<EventType>();
-        while (eventClass != null) {
-            result.add(new EventType(eventClass, type.tag));
-            addInterfaces(result, eventClass, type.tag);
-            eventClass = eventClass.getSuperclass();
+        if (aEvent == null || aEvent.length == 0) {
+            Class<?>[] eventClass = new Class[]{new NULL().getClass()};
+            result.add(new EventType(type.tag, eventClass));
+        } else {
+            Class<?>[] eventClass = new Class<?>[aEvent.length];
+            for (int i = 0; i < aEvent.length; i++) {
+                Object o = aEvent[i];
+                if (o == null)
+                    o = new NULL();
+                eventClass[i] = o.getClass();
+            }
+//            while (eventClass != null) {
+            result.add(new EventType(type.tag, eventClass));
+//                eventClass = addInterfaces(result, type.tag, eventClass);
+//            }
         }
 
         return result;
     }
 
     /**
-     * 获取该事件的所有接口类型
-     * 
+     * 获取该对象的所有接口类型
+     *
      * @param eventTypes 存储列表
-     * @param interfaces 事件实现的所有接口
+     * @param eventClass 事件实现的所有接口
      */
-    private void addInterfaces(List<EventType> eventTypes, Class<?> eventClass, String tag) {
+    private void addInterface(List<EventType> eventTypes, String tag, Class<?> eventClass) {
         if (eventClass == null) {
             return;
         }
         Class<?>[] interfacesClasses = eventClass.getInterfaces();
         for (Class<?> interfaceClass : interfacesClasses) {
             if (!eventTypes.contains(interfaceClass)) {
-                eventTypes.add(new EventType(interfaceClass, tag));
-                addInterfaces(eventTypes, interfaceClass, tag);
+                eventTypes.add(new EventType(tag, interfaceClass));
+                addInterface(eventTypes, tag, interfaceClass);
             }
         }
     }

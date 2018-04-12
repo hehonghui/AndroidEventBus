@@ -6,7 +6,10 @@ This is an EventBus library for Android. It simplifies the communication between
 
 ## new feature
 
-1. support sticky event;
+1.对无参数方法的支持
+2.对多参数方法的支持
+3.sticky可以支持post过程
+4.事件post之后会被消耗
 
 ## AndroidEventBus is adopted in the following app
 * [Accupass - Events around you](https://play.google.com/store/apps/details?id=com.accuvally.android.accupass)     

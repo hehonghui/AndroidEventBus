@@ -45,22 +45,13 @@ public class Subscription {
 
     /**
      * @param subscriber
-     * @param method
+     * @param targetMethod
      */
     public Subscription(Object subscriber, TargetMethod targetMethod) {
         this.subscriber = new WeakReference<Object>(subscriber);
         this.targetMethod = targetMethod.method;
         this.threadMode = targetMethod.threadMode;
         this.eventType = targetMethod.eventType;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((subscriber == null) ? 0 : subscriber.hashCode());
-        result = prime * result + ((targetMethod == null) ? 0 : targetMethod.hashCode());
-        return result;
     }
 
     @Override
