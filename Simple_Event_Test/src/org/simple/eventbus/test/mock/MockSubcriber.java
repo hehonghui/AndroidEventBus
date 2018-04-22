@@ -78,4 +78,14 @@ public class MockSubcriber {
     void onEvent(Object object) {
         System.out.println("invoke onEvent(Person person) in " + this.getClass().getName());
     }
+    
+    @Subscriber
+    void onEvent() {
+        System.out.println("invoke onEvent() in " + this.getClass().getName());
+    }
+    
+    @Subscriber(tag = "tag_null")
+    void methodWithTag() {
+        System.out.println("invoke methodWithTag() tag_null in " + this.getClass().getName());
+    }
 }

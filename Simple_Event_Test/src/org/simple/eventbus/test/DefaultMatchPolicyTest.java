@@ -67,14 +67,19 @@ public class DefaultMatchPolicyTest extends AndroidTestCase {
     public void testFindMatchMethod() {
         MatchPolicy policy = new DefaultMatchPolicy();
         List<EventType> types = policy.findMatchEventTypes(new EventType(User.class,
-                EventType.DEFAULT_TAG), new User("test"));
+                EventType.DEFAULT_TAG), User.class);
         assertEquals(2, types.size());
 
         types.clear();
 
         // 发布一个Object事件
         types = policy.findMatchEventTypes(new EventType(Object.class,
-                EventType.DEFAULT_TAG), new Object());
+        		EventType.DEFAULT_TAG), Object.class);
+        assertEquals(1, types.size());
+
+        // 发布一个null事件
+        types = policy.findMatchEventTypes(new EventType(null,
+                EventType.DEFAULT_TAG), null);
         assertEquals(1, types.size());
     }
 }

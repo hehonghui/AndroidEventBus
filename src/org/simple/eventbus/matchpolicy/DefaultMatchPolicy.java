@@ -32,14 +32,15 @@ import java.util.List;
 public class DefaultMatchPolicy implements MatchPolicy {
 
     @Override
-    public List<EventType> findMatchEventTypes(EventType type, Object aEvent) {
-        Class<?> eventClass = aEvent.getClass();
+    public List<EventType> findMatchEventTypes(EventType type, Class<?> eventClass) {
         List<EventType> result = new LinkedList<EventType>();
-        while (eventClass != null) {
+        do {
             result.add(new EventType(eventClass, type.tag));
             addInterfaces(result, eventClass, type.tag);
-            eventClass = eventClass.getSuperclass();
-        }
+            if(eventClass != null) {
+            	eventClass = eventClass.getSuperclass();
+            }
+        } while (eventClass != null);
 
         return result;
     }

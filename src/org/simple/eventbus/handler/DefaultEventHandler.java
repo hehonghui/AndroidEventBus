@@ -19,6 +19,7 @@ package org.simple.eventbus.handler;
 import org.simple.eventbus.Subscription;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * 事件在哪个线程post,事件的接收就在哪个线程
@@ -34,12 +35,18 @@ public class DefaultEventHandler implements EventHandler {
      */
     public void handleEvent(Subscription subscription, Object event) {
         if (subscription == null
-                || subscription.subscriber.get() == null) {
+                || subscription.subscriber.get() == null
+                || subscription.targetMethod == null) {
             return;
         }
         try {
             // 执行
-            subscription.targetMethod.invoke(subscription.subscriber.get(), event);
+        	final Method method = subscription.targetMethod;
+        	if(method.getParameterTypes().length == 0) {
+        		method.invoke(subscription.subscriber.get());
+        	} else {
+        		method.invoke(subscription.subscriber.get(), event);
+        	}
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
