@@ -3,6 +3,9 @@
 bin/
 gen/
 *.DS_Store
+app/build/
+library/build/
+
 */bin/
 */gen/
 .settings/

@@ -1,8 +1,8 @@
-# ![AndroidEventBus Logo](http://img.blog.csdn.net/20150203120217873)  AndroidEventBus
+# AndroidEventBus
 
 This is an EventBus library for Android. It simplifies the communication between Activities, Fragments, Threads, Services, etc. and lowers the coupling among them to a great extent, thus making simplifier codes, lower coupling possible and improving code quality.             
   
-   ****中文版 [README.md](README-ch.md).【该项目不再维护】****    
+[//]: # (   ****中文版 [README.md]&#40;README-ch.md&#41;.【该项目不再维护】****    )
 
 ## new feature
 
