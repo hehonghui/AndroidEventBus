@@ -369,8 +369,11 @@ public final class EventBus {
          */
         void dispatchEvents(Object aEvent) {
             Queue<EventType> eventsQueue = mLocalEvents.get();
-            while (eventsQueue.size() > 0) {
-                deliveryEvent(eventsQueue.poll(), aEvent);
+            if (eventsQueue != null) {
+                EventType eventType;
+                while ((eventType = eventsQueue.poll()) != null) {
+                    deliveryEvent(eventType, aEvent);
+                }
             }
         }
 
