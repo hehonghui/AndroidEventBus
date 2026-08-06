@@ -24,8 +24,6 @@
 
 package org.simple.eventbus;
 
-import android.util.Log;
-
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -39,18 +37,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * 
  * @author mrsimple
  */
-public class SubsciberMethodHunter {
+public class SubscriberMethodHunter {
 
     /**
      * the event bus's subscriber's map
      */
-    Map<EventType, CopyOnWriteArrayList<Subscription>> mSubcriberMap;
+    Map<EventType, CopyOnWriteArrayList<Subscription>> mSubscriberMap;
 
     /**
      * @param subscriberMap
      */
-    public SubsciberMethodHunter(Map<EventType, CopyOnWriteArrayList<Subscription>> subscriberMap) {
-        mSubcriberMap = subscriberMap;
+    public SubscriberMethodHunter(Map<EventType, CopyOnWriteArrayList<Subscription>> subscriberMap) {
+        mSubscriberMap = subscriberMap;
     }
 
     /**
@@ -59,13 +57,13 @@ public class SubsciberMethodHunter {
      * @param subscriber 订阅对象
      * @return
      */
-    public void findSubcribeMethods(Object subscriber) {
-        if (mSubcriberMap == null) {
-            throw new NullPointerException("the mSubcriberMap is null. ");
+    public void findSubscribeMethods(Object subscriber) {
+        if (mSubscriberMap == null) {
+            throw new NullPointerException("the mSubscriberMap is null. ");
         }
         Class<?> clazz = subscriber.getClass();
         // 查找类中符合要求的注册方法,直到Object类
-        while (clazz != null && !isSystemCalss(clazz.getName())) {
+        while (clazz != null && !isSystemClass(clazz.getName())) {
             final Method[] allMethods = clazz.getDeclaredMethods();
             for (int i = 0; i < allMethods.length; i++) {
                 Method method = allMethods[i];
@@ -80,7 +78,7 @@ public class SubsciberMethodHunter {
                         EventType eventType = new EventType(paramType, annotation.tag());
                         TargetMethod subscribeMethod = new TargetMethod(method, eventType,
                                 annotation.mode());
-                        subscibe(eventType, subscribeMethod, subscriber);
+                        subscribe(eventType, subscribeMethod, subscriber);
                     }
                 }
             } // end for
@@ -96,8 +94,8 @@ public class SubsciberMethodHunter {
      * @param method 订阅方法对象
      * @param subscriber 订阅者
      */
-    private void subscibe(EventType event, TargetMethod method, Object subscriber) {
-        CopyOnWriteArrayList<Subscription> subscriptionLists = mSubcriberMap.get(event);
+    private void subscribe(EventType event, TargetMethod method, Object subscriber) {
+        CopyOnWriteArrayList<Subscription> subscriptionLists = mSubscriberMap.get(event);
         if (subscriptionLists == null) {
             subscriptionLists = new CopyOnWriteArrayList<Subscription>();
         }
@@ -109,7 +107,7 @@ public class SubsciberMethodHunter {
 
         subscriptionLists.add(newSubscription);
         // 将事件类型key和订阅者信息存储到map中
-        mSubcriberMap.put(event, subscriptionLists);
+        mSubscriberMap.put(event, subscriptionLists);
     }
 
     /**
@@ -118,7 +116,7 @@ public class SubsciberMethodHunter {
      * @param subscriber
      */
     public void removeMethodsFromMap(Object subscriber) {
-        Iterator<CopyOnWriteArrayList<Subscription>> iterator = mSubcriberMap
+        Iterator<CopyOnWriteArrayList<Subscription>> iterator = mSubscriberMap
                 .values().iterator();
         while (iterator.hasNext()) {
             CopyOnWriteArrayList<Subscription> subscriptions = iterator.next();
@@ -132,11 +130,9 @@ public class SubsciberMethodHunter {
                     Object cacheObject = subscription.subscriber.get();
                     if (isObjectsEqual(cacheObject, subscriber)
                             || cacheObject == null) {
-                        Log.d("", "### 移除订阅 " + subscriber.getClass().getName());
                         foundSubscriptions.add(subscription);
                     }
                 }
-
                 // 移除该subscriber的相关的Subscription
                 subscriptions.removeAll(foundSubscriptions);
             }
@@ -148,7 +144,7 @@ public class SubsciberMethodHunter {
         }
     }
 
-    private boolean isObjectsEqual(Object cachedObj, Object subscriber) {
+    private static boolean isObjectsEqual(Object cachedObj, Object subscriber) {
         return cachedObj != null
                 && cachedObj.equals(subscriber);
     }
@@ -160,7 +156,7 @@ public class SubsciberMethodHunter {
      * @param eventType origin Event Type
      * @return
      */
-    private Class<?> convertType(Class<?> eventType) {
+    private static Class<?> convertType(Class<?> eventType) {
         Class<?> returnClass = eventType;
         if (eventType.equals(boolean.class)) {
             returnClass = Boolean.class;
@@ -170,13 +166,19 @@ public class SubsciberMethodHunter {
             returnClass = Float.class;
         } else if (eventType.equals(double.class)) {
             returnClass = Double.class;
+        } else if (eventType.equals(long.class)) {
+            returnClass = Long.class;
+        } else if (eventType.equals(short.class)) {
+            returnClass = Short.class;
+        } else if (eventType.equals(byte.class)) {
+            returnClass = Byte.class;
+        } else if (eventType.equals(char.class)) {
+            returnClass = Character.class;
         }
-
         return returnClass;
     }
 
-    private boolean isSystemCalss(String name) {
+    private static boolean isSystemClass(String name) {
         return name.startsWith("java.") || name.startsWith("javax.") || name.startsWith("android.");
     }
-
 }

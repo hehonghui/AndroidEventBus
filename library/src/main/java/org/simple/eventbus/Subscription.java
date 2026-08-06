@@ -45,7 +45,7 @@ public class Subscription {
 
     /**
      * @param subscriber
-     * @param method
+     * @param targetMethod
      */
     public Subscription(Object subscriber, TargetMethod targetMethod) {
         this.subscriber = new WeakReference<Object>(subscriber);

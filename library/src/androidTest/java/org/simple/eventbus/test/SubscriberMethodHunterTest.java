@@ -34,7 +34,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.simple.eventbus.EventBus;
 import org.simple.eventbus.EventType;
-import org.simple.eventbus.SubsciberMethodHunter;
+import org.simple.eventbus.SubscriberMethodHunter;
 import org.simple.eventbus.Subscription;
 import org.simple.eventbus.test.mock.PrimitiveParamObject;
 
@@ -43,7 +43,7 @@ import java.util.List;
 @RunWith(AndroidJUnit4.class)
 public class SubscriberMethodHunterTest  {
 
-    SubsciberMethodHunter mHunter = new SubsciberMethodHunter(EventBus.getDefault()
+    SubscriberMethodHunter mHunter = new SubscriberMethodHunter(EventBus.getDefault()
             .getSubscriberMap());
 
     PrimitiveParamObject object = new PrimitiveParamObject();
@@ -60,7 +60,7 @@ public class SubscriberMethodHunterTest  {
 
     @Test
     public void testFindPrimitiveParamMethod() {
-        mHunter.findSubcribeMethods(object);
+        mHunter.findSubscribeMethods(object);
         List<Subscription> subscriptions = EventBus.getDefault().getSubscriberMap()
                 .get(new EventType(Integer.class));
         assertEquals(1, subscriptions.size());

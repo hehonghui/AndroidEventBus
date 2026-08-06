@@ -100,7 +100,7 @@ public final class EventBus {
      * the subscriber method hunter, find all of the subscriber's methods
      * annotated with @Subcriber
      */
-    SubsciberMethodHunter mMethodHunter = new SubsciberMethodHunter(mSubcriberMap);
+    SubscriberMethodHunter mMethodHunter = new SubscriberMethodHunter(mSubcriberMap);
 
     /**
      * The Default EventBus instance
@@ -150,7 +150,7 @@ public final class EventBus {
         }
 
         synchronized (this) {
-            mMethodHunter.findSubcribeMethods(subscriber);
+            mMethodHunter.findSubscribeMethods(subscriber);
         }
     }
 
