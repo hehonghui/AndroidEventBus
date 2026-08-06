@@ -4,6 +4,7 @@ bin/
 gen/
 *.DS_Store
 app/build/
+.idea/
 library/build/
 
 */bin/

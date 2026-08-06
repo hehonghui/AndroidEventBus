@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="android-support-v4">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Simple_eventbus_demo/libs/android-support-v4.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
