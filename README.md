@@ -18,7 +18,6 @@ This is an EventBus library for Android. It simplifies the communication between
 * [魅族手机中的日历应用]()
   
 ## Basic Architecture
- ![arch](http://img.blog.csdn.net/20150426223040789)         
   
 AndroidEventBus is like the Observer Pattern. It will have the objects which need to subscribe events registered into the EventBus through Function “register” and store such subscription methods and subscription objects in Map. When a user posts an event somewhere, the EventBus will find corresponding subscription object in accordance with the parameter type and tag of the Event and then execute the method in subscription object. These subscription methods will be executed in the Thread Mode designated by the user. For example, mode=ThreadMode. ASNYC means the subscription method is executed in the sub-thread. Please refer to the following instructions for more details.      	
 

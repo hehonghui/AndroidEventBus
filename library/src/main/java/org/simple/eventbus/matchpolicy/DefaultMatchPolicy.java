@@ -40,7 +40,6 @@ public class DefaultMatchPolicy implements MatchPolicy {
             addInterfaces(result, eventClass, type.tag);
             eventClass = eventClass.getSuperclass();
         }
-
         return result;
     }
 

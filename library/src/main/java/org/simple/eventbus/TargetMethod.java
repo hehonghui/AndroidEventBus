@@ -31,7 +31,6 @@ import java.lang.reflect.Method;
     /**
      * 事件类型
      */
-//    public Class<?> eventType;
     public EventType eventType ;
     /**
      * 处理事件的线程模式
