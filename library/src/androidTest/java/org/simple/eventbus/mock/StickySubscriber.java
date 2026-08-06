@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus.test.mock;
+package org.simple.eventbus.mock;
 
 import org.simple.eventbus.Subscriber;
 import org.simple.eventbus.ThreadMode;

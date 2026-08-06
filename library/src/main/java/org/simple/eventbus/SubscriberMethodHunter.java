@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,10 +34,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * the subscriber method hunter, find all of the subscriber's methods which
  * annotated with @Subcriber.
- * 
+ *
  * @author mrsimple
  */
-public class SubscriberMethodHunter {
+class SubscriberMethodHunter {
 
     /**
      * the event bus's subscriber's map
@@ -47,17 +47,17 @@ public class SubscriberMethodHunter {
     /**
      * @param subscriberMap
      */
-    public SubscriberMethodHunter(Map<EventType, CopyOnWriteArrayList<Subscription>> subscriberMap) {
+    SubscriberMethodHunter(Map<EventType, CopyOnWriteArrayList<Subscription>> subscriberMap) {
         mSubscriberMap = subscriberMap;
     }
 
     /**
      * 查找订阅对象中的所有订阅函数,订阅函数的参数只能有一个.找到订阅函数之后构建Subscription存储到Map中
-     * 
+     *
      * @param subscriber 订阅对象
      * @return
      */
-    public void findSubscribeMethods(Object subscriber) {
+    void findSubscribeMethods(Object subscriber) {
         if (mSubscriberMap == null) {
             throw new NullPointerException("the mSubscriberMap is null. ");
         }
@@ -82,16 +82,16 @@ public class SubscriberMethodHunter {
                     }
                 }
             } // end for
-              // 获取父类,以继续查找父类中符合要求的方法
+            // 获取父类,以继续查找父类中符合要求的方法
             clazz = clazz.getSuperclass();
         }
     }
 
     /**
      * 按照EventType存储订阅者列表,这里的EventType就是事件类型,一个事件对应0到多个订阅者.
-     * 
-     * @param event 事件
-     * @param method 订阅方法对象
+     *
+     * @param event      事件
+     * @param method     订阅方法对象
      * @param subscriber 订阅者
      */
     private void subscribe(EventType event, TargetMethod method, Object subscriber) {
@@ -112,10 +112,10 @@ public class SubscriberMethodHunter {
 
     /**
      * remove subscriber methods from map
-     * 
+     *
      * @param subscriber
      */
-    public void removeMethodsFromMap(Object subscriber) {
+    void removeMethodsFromMap(Object subscriber) {
         Iterator<CopyOnWriteArrayList<Subscription>> iterator = mSubscriberMap
                 .values().iterator();
         while (iterator.hasNext()) {
@@ -152,7 +152,7 @@ public class SubscriberMethodHunter {
     /**
      * if the subscriber method's type is primitive, convert it to corresponding
      * Object type. for example, int to Integer.
-     * 
+     *
      * @param eventType origin Event Type
      * @return
      */

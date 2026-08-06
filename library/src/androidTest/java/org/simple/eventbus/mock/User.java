@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.simple.eventbus.test.mock;
+package org.simple.eventbus.mock;
 
 /**
  * @author mrsimple

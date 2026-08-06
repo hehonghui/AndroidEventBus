@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.simple.eventbus.test;
+package org.simple.eventbus;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 

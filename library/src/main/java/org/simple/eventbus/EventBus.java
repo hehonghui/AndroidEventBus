@@ -47,7 +47,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * 列表为value存储在map中. 当用户post一个事件时通过事件到map中找到对应的订阅者,然后按照订阅函数的线程模型将函数执行在对应的线程中.
  * <p>
  * 最后在不在需要订阅事件时,应该调用{@see #unregister(Object)}函数注销该对象,避免内存泄露!
- * 例如在Activity或者Fragment的onDestory函数中注销对Activity或者Fragment的订阅.
+ * 例如在Activity或者Fragment的onDestroy函数中注销对Activity或者Fragment的订阅.
  * <p>
  * 注意 : 如果发布的事件的参数类型是订阅的事件参数的子类,订阅函数默认也会被执行。例如你在订阅函数中订阅的是List<String>类型的事件,
  * 但是在发布时发布的是ArrayList<String>的事件,
@@ -76,7 +76,7 @@ public final class EventBus {
     /**
      * EventType-Subcriptions map
      */
-    private final Map<EventType, CopyOnWriteArrayList<Subscription>> mSubcriberMap = new ConcurrentHashMap<EventType, CopyOnWriteArrayList<Subscription>>();
+    private final Map<EventType, CopyOnWriteArrayList<Subscription>> mSubscriberMap = new ConcurrentHashMap<EventType, CopyOnWriteArrayList<Subscription>>();
     /**
      * 
      */
@@ -100,7 +100,7 @@ public final class EventBus {
      * the subscriber method hunter, find all of the subscriber's methods
      * annotated with @Subcriber
      */
-    SubscriberMethodHunter mMethodHunter = new SubscriberMethodHunter(mSubcriberMap);
+    SubscriberMethodHunter mMethodHunter = new SubscriberMethodHunter(mSubscriberMap);
 
     /**
      * The Default EventBus instance
@@ -234,8 +234,9 @@ public final class EventBus {
 
     /**
      * 移除Sticky事件
-     * 
-     * @param type
+     * @param eventClass
+     * @param tag
+     * @return
      */
     public EventType removeStickyEvent(Class<?> eventClass, String tag) {
         Iterator<EventType> iterator = mStickyEvents.iterator();
@@ -300,7 +301,7 @@ public final class EventBus {
      * @return
      */
     public Map<EventType, CopyOnWriteArrayList<Subscription>> getSubscriberMap() {
-        return mSubcriberMap;
+        return mSubscriberMap;
     }
 
     /**
@@ -317,7 +318,7 @@ public final class EventBus {
      */
     public synchronized void clear() {
         mLocalEvents.get().clear();
-        mSubcriberMap.clear();
+        mSubscriberMap.clear();
     }
 
     /**
@@ -365,7 +366,7 @@ public final class EventBus {
         MatchPolicy mMatchPolicy = new DefaultMatchPolicy();
 
         /**
-         * @param event
+         * @param aEvent
          */
         void dispatchEvents(Object aEvent) {
             Queue<EventType> eventsQueue = mLocalEvents.get();
@@ -399,7 +400,7 @@ public final class EventBus {
          * @param aEvent
          */
         private void handleEvent(EventType eventType, Object aEvent) {
-            List<Subscription> subscriptions = mSubcriberMap.get(eventType);
+            List<Subscription> subscriptions = mSubscriberMap.get(eventType);
             if (subscriptions == null) {
                 return;
             }
@@ -435,16 +436,14 @@ public final class EventBus {
          * 处理单个Sticky事件
          * 
          * @param eventType
-         * @param aEvent
+         * @param subscriber
          */
         private void handleStickyEvent(EventType eventType, Object subscriber) {
             List<EventType> eventTypes = getMatchedEventTypes(eventType, eventType.event);
             // 事件
             Object event = eventType.event;
             for (EventType foundEventType : eventTypes) {
-                Log.e("", "### 找到的类型 : " + foundEventType.paramClass.getSimpleName()
-                        + ", event class : " + event.getClass().getSimpleName());
-                final List<Subscription> subscriptions = mSubcriberMap.get(foundEventType);
+                final List<Subscription> subscriptions = mSubscriberMap.get(foundEventType);
                 if (subscriptions == null) {
                     continue;
                 }

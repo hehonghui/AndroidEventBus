@@ -22,24 +22,36 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus.test;
+package org.simple.eventbus.mock;
 
-import static junit.framework.TestCase.assertEquals;
+import org.simple.eventbus.Subscriber;
 
-import androidx.test.ext.junit.runners.AndroidJUnit4;
+/**
+ * @author mrsimple
+ */
+public class PrimitiveParamObject {
+    @Subscriber
+    public void intParam(int aInt) {
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-@RunWith(AndroidJUnit4.class)
-public class PrimitiveEventTest  {
-
-    @Test
-    public void testPrimitiveType() {
-        paramInt(2);
     }
 
-    public void paramInt(Object aParam) {
-        assertEquals(Integer.class, aParam.getClass());
+    @Subscriber
+    public void booleanParam(boolean ab) {
+
+    }
+
+    @Subscriber
+    public void floatParam(float aFloat) {
+
+    }
+
+    @Subscriber
+    public void doubleParam(double aDouble) {
+
+    }
+
+    @Subscriber
+    public void intArrayParam(int[] ints) {
+
     }
 }

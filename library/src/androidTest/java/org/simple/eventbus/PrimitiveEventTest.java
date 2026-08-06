@@ -22,49 +22,24 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus.test;
+package org.simple.eventbus;
 
 import static junit.framework.TestCase.assertEquals;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.simple.eventbus.EventBus;
-import org.simple.eventbus.EventType;
-import org.simple.eventbus.SubscriberMethodHunter;
-import org.simple.eventbus.Subscription;
-import org.simple.eventbus.test.mock.PrimitiveParamObject;
-
-import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
-public class SubscriberMethodHunterTest  {
-
-    SubscriberMethodHunter mHunter = new SubscriberMethodHunter(EventBus.getDefault()
-            .getSubscriberMap());
-
-    PrimitiveParamObject object = new PrimitiveParamObject();
-
-    @Before
-    public void setUp() throws Exception {
-        EventBus.getDefault().register(object);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        EventBus.getDefault().unregister(object);
-    }
+public class PrimitiveEventTest  {
 
     @Test
-    public void testFindPrimitiveParamMethod() {
-        mHunter.findSubscribeMethods(object);
-        List<Subscription> subscriptions = EventBus.getDefault().getSubscriberMap()
-                .get(new EventType(Integer.class));
-        assertEquals(1, subscriptions.size());
-        assertEquals(object, subscriptions.get(0).subscriber.get());
+    public void testPrimitiveType() {
+        paramInt(2);
     }
 
+    public void paramInt(Object aParam) {
+        assertEquals(Integer.class, aParam.getClass());
+    }
 }

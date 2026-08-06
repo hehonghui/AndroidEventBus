@@ -12,7 +12,7 @@
  *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,36 +22,45 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus.test.mock;
+package org.simple.eventbus;
 
-import org.simple.eventbus.Subscriber;
+import static junit.framework.TestCase.assertEquals;
 
-/**
- * @author mrsimple
- */
-public class PrimitiveParamObject {
-    @Subscriber
-    public void intParam(int aInt) {
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.simple.eventbus.mock.PrimitiveParamObject;
+
+import java.util.List;
+
+@RunWith(AndroidJUnit4.class)
+public class SubscriberMethodHunterTest {
+
+    SubscriberMethodHunter mHunter = new SubscriberMethodHunter(EventBus.getDefault()
+            .getSubscriberMap());
+
+    PrimitiveParamObject object = new PrimitiveParamObject();
+
+    @Before
+    public void setUp() throws Exception {
+        EventBus.getDefault().register(object);
     }
 
-    @Subscriber
-    public void booleanParam(boolean ab) {
-
+    @After
+    public void tearDown() throws Exception {
+        EventBus.getDefault().unregister(object);
     }
 
-    @Subscriber
-    public void floatParam(float aFloat) {
-
+    @Test
+    public void testFindPrimitiveParamMethod() {
+        mHunter.findSubscribeMethods(object);
+        List<Subscription> subscriptions = EventBus.getDefault().getSubscriberMap()
+                .get(new EventType(Integer.class));
+        assertEquals(1, subscriptions.size());
+        assertEquals(object, subscriptions.get(0).subscriber.get());
     }
 
-    @Subscriber
-    public void doubleParam(double aDouble) {
-
-    }
-
-    @Subscriber
-    public void intArrayParam(int[] ints) {
-
-    }
 }

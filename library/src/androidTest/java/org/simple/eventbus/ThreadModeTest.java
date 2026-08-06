@@ -22,11 +22,9 @@
  * THE SOFTWARE.
  */
 
-package org.simple.eventbus.test;
+package org.simple.eventbus;
 
 import static junit.framework.TestCase.assertEquals;
-
-import android.util.Log;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -34,11 +32,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.simple.eventbus.EventBus;
-import org.simple.eventbus.Subscriber;
-import org.simple.eventbus.ThreadMode;
 import org.simple.eventbus.handler.AsyncEventHandler;
-import org.simple.eventbus.test.mock.User;
+import org.simple.eventbus.mock.User;
 
 @RunWith(AndroidJUnit4.class)
 public class ThreadModeTest {

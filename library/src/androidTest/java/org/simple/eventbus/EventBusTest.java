@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.simple.eventbus.test;
+package org.simple.eventbus;
 
 import android.util.Log;
 
@@ -25,13 +25,10 @@ import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.simple.eventbus.EventBus;
-import org.simple.eventbus.EventType;
-import org.simple.eventbus.Subscription;
-import org.simple.eventbus.test.mock.MockSubcriber;
-import org.simple.eventbus.test.mock.SingleSubscriber;
-import org.simple.eventbus.test.mock.StickySubscriber;
-import org.simple.eventbus.test.mock.User;
+import org.simple.eventbus.mock.MockSubcriber;
+import org.simple.eventbus.mock.SingleSubscriber;
+import org.simple.eventbus.mock.StickySubscriber;
+import org.simple.eventbus.mock.User;
 
 import java.util.Collection;
 import java.util.Collections;

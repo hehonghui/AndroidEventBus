@@ -27,22 +27,22 @@ import java.lang.reflect.Method;
     /**
      * 订阅者的目标函数
      */
-    public Method method;
+    Method method;
     /**
      * 事件类型
      */
-    public EventType eventType ;
+    EventType eventType ;
     /**
      * 处理事件的线程模式
      */
-    public ThreadMode threadMode;
+    ThreadMode threadMode;
 
     /**
      * @param md
-     * @param eventType
+     * @param type
      * @param mode
      */
-    public TargetMethod(Method md, EventType type, ThreadMode mode) {
+    TargetMethod(Method md, EventType type, ThreadMode mode) {
         this.method = md;
         this.method.setAccessible(true);
         this.eventType = type;
