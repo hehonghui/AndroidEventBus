@@ -76,8 +76,7 @@ class SubscriberMethodHunter {
                     if (paramsTypeClass != null && paramsTypeClass.length == 1) {
                         Class<?> paramType = convertType(paramsTypeClass[0]);
                         EventType eventType = new EventType(paramType, annotation.tag());
-                        TargetMethod subscribeMethod = new TargetMethod(method, eventType,
-                                annotation.mode());
+                        TargetMethod subscribeMethod = new TargetMethod(method, eventType, annotation.mode());
                         subscribe(eventType, subscribeMethod, subscriber);
                     }
                 }
@@ -145,8 +144,7 @@ class SubscriberMethodHunter {
     }
 
     private static boolean isObjectsEqual(Object cachedObj, Object subscriber) {
-        return cachedObj != null
-                && cachedObj.equals(subscriber);
+        return cachedObj != null && cachedObj.equals(subscriber);
     }
 
     /**

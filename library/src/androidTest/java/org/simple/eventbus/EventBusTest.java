@@ -145,6 +145,7 @@ public class EventBusTest extends TestCase {
         bus.postSticky("world", tag);
         assertEquals(2, bus.getStickyEvents().size());
 
+        bus.removeStickyEvent(String.class);
         assertEquals(1, bus.getStickyEvents().size());
 
         bus.removeStickyEvent(String.class, tag);
@@ -169,7 +170,7 @@ public class EventBusTest extends TestCase {
         // 以sticky的形式注册
         bus.registerSticky(subscriber);
         // 接收到数据
-        assertEquals("simple", bus.removeStickyEvent(String.class).event);
+        assertEquals("simple", bus.removeStickyEvent(String.class).event.toString());
 
         // post sticky事件, 含有tag, 这里需要注意
         bus.postSticky("simple_v2", "sticky_v2");

@@ -319,6 +319,7 @@ public final class EventBus {
     public synchronized void clear() {
         mLocalEvents.get().clear();
         mSubscriberMap.clear();
+        mStickyEvents.clear();
     }
 
     /**

@@ -19,7 +19,7 @@
 * [易泊商户](http://www.myebox.cn/)
 * [易方达移动OA](http://www.wandoujia.com/apps/com.efunds.trade)
 * [功夫泡](http://gongfupao.com)
-* * [魅族手机中的日历应用]()
+* [魅族手机中的日历应用]()
 
 `欢迎大家给我反馈使用情况`
   
