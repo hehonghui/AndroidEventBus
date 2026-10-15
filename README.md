@@ -2,7 +2,67 @@
 
 This is an EventBus library for Android. It simplifies the communication between Activities, Fragments, Threads, Services, etc. and lowers the coupling among them to a great extent, thus making simplifier codes, lower coupling possible and improving code quality.             
   
-[//]: # (   ****中文版 [README.md]&#40;README-ch.md&#41;.【该项目不再维护】****    )
+
+
+# AndroidEventBus — 2026 Roadmap
+
+## Vision
+
+Modernize AndroidEventBus into a lightweight, reliable, lifecycle-aware event bus for modern Android applications while preserving the simplicity and flexibility of its existing Java API.
+
+Our priorities are correctness, thread safety, backward compatibility, performance, and developer experience.
+
+## October 2026 — v1.1.0: Core Stability
+
+- [ ] Fix nested event dispatch and event queue consistency issues.
+- [ ] Improve singleton initialization and concurrency safety.
+- [ ] Fix sticky event concurrency and retention behavior.
+- [ ] Prevent duplicate event delivery caused by interface inheritance.
+- [ ] Improve subscriber identity and registration management.
+- [ ] Review weak-reference behavior and lifecycle guarantees.
+- [ ] Fix event matching cache invalidation.
+- [ ] Add unit tests for event delivery, threading, and inheritance.
+- [ ] Introduce GitHub Actions for automated builds and tests.
+
+**Goal:** Establish a stable, predictable, and well-tested event dispatching core.
+
+## November 2026 — v1.2.0: Modern Android Support
+
+- [ ] Add optional AndroidX Lifecycle integration.
+- [ ] Support automatic subscriber registration and unregistration.
+- [ ] Add Fragment view lifecycle support.
+- [ ] Introduce Kotlin Flow extensions.
+- [ ] Add configurable event executors and new threading modes.
+- [ ] Improve sticky event APIs.
+- [ ] Add configurable exception handling.
+- [ ] Support lazy initialization and graceful shutdown of background dispatchers.
+- [ ] Update Android build tooling and validate compatibility with modern Android SDKs.
+- [ ] Add Java, Kotlin, and Jetpack Compose examples.
+
+**Goal:** Provide seamless integration with modern Android application architecture.
+
+## December 2026 — v1.3.0: Performance and Developer Experience
+
+- [ ] Cache subscriber method metadata.
+- [ ] Explore optional KSP-based subscriber indexing.
+- [ ] Improve R8 and ProGuard compatibility.
+- [ ] Introduce optional event delivery diagnostics.
+- [ ] Add benchmark tests and performance regression tracking.
+- [ ] Improve documentation and migration guides.
+- [ ] Prepare Maven Central publishing.
+- [ ] Improve issue templates, contribution guidelines, and release automation.
+
+**Goal:** Make AndroidEventBus easier to integrate, diagnose, maintain, and contribute to.
+
+## Design Principles
+
+1. **Lightweight by default:** Keep the core library small and avoid unnecessary dependencies.
+2. **Backward compatibility:** Preserve existing public APIs whenever possible.
+3. **Optional integrations:** Lifecycle, Kotlin, Flow, and compiler integrations should remain optional.
+4. **Predictable behavior:** Event delivery, thread scheduling, and subscriber lifecycle rules must be clearly documented.
+5. **Reliability first:** Correctness and automated testing take priority over new features.
+6. **Open development:** Track changes and progress through GitHub Issues, pull requests, and releases.
+
 
 ## new feature
 
